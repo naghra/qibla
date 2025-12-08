@@ -1,0 +1,7 @@
+{
+  "name": "Qibla Finder Pro",
+  "description": "A modern, high-precision Qibla direction finder using geolocation and device orientation.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

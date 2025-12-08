@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مكتشف القبلة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; touch-action: manipulation; }
+        .compass-ring { will-change: transform; transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .smooth-rotate { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Disable text selection for app-like feel */
+        .no-select { -webkit-user-select: none; user-select: none; }
+        /* Hide scrollbar */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col relative overflow-hidden selection:bg-emerald-500 no-select">
+    
+    <!-- Background Effects -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
+
+    <!-- Header -->
+    <header class="relative z-20 flex justify-between items-center p-6 bg-gradient-to-b from-slate-950/80 to-transparent">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 rotate-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 19 21 12 17 5 21 12 2"></polygon></svg>
+            </div>
+            <h1 class="text-2xl font-bold">القبلة<span class="text-amber-500">برو</span></h1>
+        </div>
+        <button onclick="showManualInput()" class="p-2 bg-slate-900/50 border border-slate-800 rounded-lg hover:bg-slate-800 transition-colors text-slate-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto p-6">
+        
+        <!-- Loading View -->
+        <div id="loading-view" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-slate-950 transition-opacity duration-300">
+            <div class="w-16 h-16 border-4 border-slate-800 border-t-amber-500 rounded-full animate-spin mb-6"></div>
+            <p class="text-slate-400 text-lg">جاري تحديد موقعك...</p>
+            <button onclick="showManualInput()" class="mt-8 text-sm text-slate-500 underline hover:text-amber-500 transition-colors">تحديد الموقع يدوياً</button>
+        </div>
+
+        <!-- Permission View (For iOS) -->
+        <div id="permission-view" class="hidden absolute inset-0 z-30 flex flex-col items-center justify-center bg-slate-950 p-6 text-center fade-in">
+            <div class="w-20 h-20 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mb-6 shadow-xl shadow-amber-500/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-3">تفعيل البوصلة</h2>
+            <p class="text-slate-400 mb-8 max-w-xs">نحتاج إلى إذن للوصول إلى مستشعرات الحركة في جهازك لتوجيهك بدقة نحو القبلة.</p>
+            <button onclick="requestCompassPermission()" class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition-all shadow-lg shadow-amber-500/20 active:scale-95">
+                السماح بالوصول
+            </button>
+        </div>
+
+        <!-- Compass View -->
+        <div id="compass-view" class="hidden w-full flex-col items-center fade-in">
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-4 w-full mb-10">
+                <div class="bg-slate-900/50 backdrop-blur border border-slate-800 p-4 rounded-2xl text-center shadow-sm">
+                    <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">زاوية القبلة</span>
+                    <div class="text-2xl font-bold text-white mt-1 dir-ltr inline-block" id="qibla-degree">--°</div>
+                </div>
+                <div class="bg-slate-900/50 backdrop-blur border border-slate-800 p-4 rounded-2xl text-center shadow-sm">
+                    <span class="text-xs text-slate-400 uppercase tracking-wider font-bold">المسافة</span>
+                    <div class="text-2xl font-bold text-white mt-1" id="qibla-distance">-- كم</div>
+                </div>
+            </div>
+
+            <!-- Compass Circle -->
+            <div class="relative w-72 h-72 md:w-80 md:h-80 mb-12">
+                <!-- User Direction Indicator (Fixed Top) -->
+                <div class="absolute -top-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                    <div class="w-1.5 h-6 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.6)]"></div>
+                    <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-red-500 mt-1"></div>
+                </div>
+
+                <!-- Rotating Dial -->
+                <div id="compass-ring" class="w-full h-full rounded-full border-[8px] border-slate-800 bg-slate-900 shadow-2xl relative compass-ring">
+                    <!-- NSEW Labels -->
+                    <span class="absolute top-3 left-1/2 -translate-x-1/2 font-bold text-slate-500 text-lg">N</span>
+                    <span class="absolute bottom-3 left-1/2 -translate-x-1/2 font-bold text-slate-600">S</span>
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-600">W</span>
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-slate-600">E</span>
+                    
+                    <!-- Ticks -->
+                    <div class="absolute inset-2 rounded-full border border-slate-700 opacity-30"></div>
+                    <div class="absolute inset-4 rounded-full border-2 border-dashed border-slate-800/50"></div>
+                    
+                    <!-- Decorative Degrees -->
+                    <div class="absolute top-0 left-1/2 w-0.5 h-3 bg-slate-700 -translate-x-1/2"></div>
+                    <div class="absolute bottom-0 left-1/2 w-0.5 h-3 bg-slate-700 -translate-x-1/2"></div>
+                    <div class="absolute left-0 top-1/2 w-3 h-0.5 bg-slate-700 -translate-y-1/2"></div>
+                    <div class="absolute right-0 top-1/2 w-3 h-0.5 bg-slate-700 -translate-y-1/2"></div>
+
+                    <!-- Qibla Arrow (Rotates inside ring) -->
+                    <!-- Logic: This container is rotated by the Qibla Angle relative to North -->
+                    <div id="qibla-arrow-container" class="absolute inset-0 pointer-events-none smooth-rotate">
+                        <div class="absolute top-0 left-1/2 w-1 h-1/2 origin-bottom -translate-x-1/2 flex flex-col items-center justify-start pt-1">
+                            <!-- Icon -->
+                            <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(245,158,11,0.5)] z-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-slate-900" viewBox="0 0 24 24" fill="currentColor"><path d="M2,21h20V3H2V21z M12,8c1.1,0,2,0.9,2,2s-0.9,2-2,2s-2-0.9-2-2S10.9,8,12,8z"></path></svg>
+                            </div>
+                            <!-- Beam -->
+                            <div class="w-1 h-full bg-gradient-to-b from-amber-500 to-transparent opacity-50"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Hub -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-slate-200 rounded-full z-30 shadow-lg border-2 border-slate-400"></div>
+            </div>
+
+            <!-- Hint -->
+            <div class="text-center space-y-2 bg-slate-900/40 p-4 rounded-xl border border-slate-800/50">
+                <p class="text-sm font-medium text-slate-300">قم بمحاذاة رمز الكعبة مع المؤشر الأحمر</p>
+                <p class="text-xs text-slate-500">حرك الجهاز على شكل رقم 8 للمعايرة</p>
+            </div>
+            
+            <!-- Coordinates Debug -->
+            <div id="location-debug" class="mt-4 text-[10px] text-slate-600 font-mono dir-ltr">
+                Locating...
+            </div>
+        </div>
+
+        <!-- Manual Input Form -->
+        <div id="manual-view" class="hidden absolute inset-0 z-40 bg-slate-950/95 backdrop-blur-md flex items-center justify-center fade-in p-6">
+            <div class="w-full bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">تحديد الموقع يدوياً</h2>
+                    <button onclick="hideManualInput()" class="text-slate-500 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                
+                <form onsubmit="handleManualSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2 font-bold">خط العرض (Latitude)</label>
+                        <input type="number" step="any" id="input-lat" placeholder="مثال: 24.7136" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-700 focus:outline-none focus:border-amber-500 transition-colors" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2 font-bold">خط الطول (Longitude)</label>
+                        <input type="number" step="any" id="input-lng" placeholder="مثال: 46.6753" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-700 focus:outline-none focus:border-amber-500 transition-colors" required>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition-all mt-4">
+                        حفظ وتحديد القبلة
+                    </button>
+                </form>
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <button onclick="initLocation()" class="flex items-center justify-center gap-2 w-full text-slate-400 hover:text-white text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                        حاول التحديد التلقائي مجدداً
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Constants
+        const KAABA = { lat: 21.4225, lng: 39.8262 };
+        
+        // State
+        let userLocation = null;
+        let qiblaBearing = 0;
+        let compassHeading = 0;
+        
+        // DOM Elements
+        const views = {
+            loading: document.getElementById('loading-view'),
+            permission: document.getElementById('permission-view'),
+            compass: document.getElementById('compass-view'),
+            manual: document.getElementById('manual-view')
+        };
+        
+        const els = {
+            ring: document.getElementById('compass-ring'),
+            arrow: document.getElementById('qibla-arrow-container'),
+            degree: document.getElementById('qibla-degree'),
+            distance: document.getElementById('qibla-distance'),
+            debug: document.getElementById('location-debug')
+        };
+
+        // --- Core Logic ---
+
+        function initLocation() {
+            showView('loading');
+            hideManualInput();
+            
+            if (!navigator.geolocation) {
+                alert('المتصفح لا يدعم تحديد الموقع');
+                showManualInput();
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const coords = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
+                    };
+                    calculateQibla(coords);
+                    checkCompassPermission();
+                },
+                (err) => {
+                    console.error(err);
+                    showManualInput(); // Fallback directly to manual
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function calculateQibla(coords) {
+            userLocation = coords;
+            
+            // Convert to radians
+            const lat1 = toRad(coords.lat);
+            const lng1 = toRad(coords.lng);
+            const lat2 = toRad(KAABA.lat);
+            const lng2 = toRad(KAABA.lng);
+            
+            // Bearing Formula
+            const dLng = lng2 - lng1;
+            const y = Math.sin(dLng) * Math.cos(lat2);
+            const x = Math.cos(lat1) * Math.sin(lat2) - 
+                      Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+            
+            let brng = toDeg(Math.atan2(y, x));
+            qiblaBearing = (brng + 360) % 360; // Normalize to 0-360
+            
+            // Distance Formula (Haversine)
+            const R = 6371; // Earth Radius km
+            const dLat = lat2 - lat1;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1) * Math.cos(lat2) * 
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+
+            // Update UI
+            els.degree.innerText = Math.round(qiblaBearing) + '°';
+            els.distance.innerText = Math.round(distance).toLocaleString('en-US') + ' كم';
+            els.debug.innerText = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
+
+            // Set the Arrow Position relative to the ring
+            // The arrow is inside the ring container. 
+            // If the ring represents the card where 'N' is at 0 degrees (top),
+            // We rotate the arrow to the Qibla bearing relative to North.
+            els.arrow.style.transform = `rotate(${qiblaBearing}deg)`;
+        }
+
+        function handleOrientation(event) {
+            let heading = 0;
+            
+            // iOS
+            if (event.webkitCompassHeading) {
+                heading = event.webkitCompassHeading;
+            } 
+            // Android / Non-absolute standard
+            else if (event.alpha !== null) {
+                // Simplistic conversion for basic support
+                // For a robust implementation, device orientation logic is complex across Android devices.
+                // Assuming standard frame:
+                heading = 360 - event.alpha;
+            }
+
+            compassHeading = heading;
+            
+            // Rotate the Compass Ring
+            // If heading is 90 (East), 'N' should be at -90 (Left).
+            // So we rotate the ring by -heading.
+            els.ring.style.transform = `rotate(${-heading}deg)`;
+        }
+
+        // --- Permission Logic (iOS 13+) ---
+        function checkCompassPermission() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && 
+                typeof DeviceOrientationEvent.requestPermission === 'function') {
+                showView('permission');
+            } else {
+                startCompass();
+            }
+        }
+
+        function requestCompassPermission() {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            startCompass();
+                        } else {
+                            alert('تم رفض إذن البوصلة. لن يتحرك المؤشر.');
+                            startCompass(); // Show UI anyway
+                        }
+                    })
+                    .catch(console.error);
+            }
+        }
+
+        function startCompass() {
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            showView('compass');
+        }
+
+        // --- View Management ---
+        function showView(viewId) {
+            Object.values(views).forEach(el => {
+                if (el.id !== 'manual-view') el.classList.add('hidden');
+            });
+            views[viewId].classList.remove('hidden');
+        }
+
+        function showManualInput() {
+            views.manual.classList.remove('hidden');
+        }
+
+        function hideManualInput() {
+            views.manual.classList.add('hidden');
+        }
+
+        function handleManualSubmit(e) {
+            e.preventDefault();
+            const lat = parseFloat(document.getElementById('input-lat').value);
+            const lng = parseFloat(document.getElementById('input-lng').value);
+            
+            if (isNaN(lat) || isNaN(lng)) return;
+            
+            calculateQibla({ lat, lng });
+            hideManualInput();
+            checkCompassPermission();
+        }
+
+        // --- Helpers ---
+        function toRad(deg) { return deg * Math.PI / 180; }
+        function toDeg(rad) { return rad * 180 / Math.PI; }
+
+        // Start App
+        initLocation();
+
+    </script>
+</body>
+</html>
