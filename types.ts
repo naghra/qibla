@@ -7,6 +7,7 @@ export interface TravelerData {
   gender: string;
   email: string;
   phone: string;
+  phoneCountry?: string;
 }
 
 export interface TravelDetails {

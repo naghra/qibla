@@ -159,9 +159,26 @@ export interface Translations {
   apply: {
     pageTitle: string;
     pageSubtitle: string;
+    applyHeaderTitle: string;
+    applyOnlineNow: string;
     formTitle: string;
     stepOf: (step: number, total: number, label: string) => string;
     steps: string[];
+    formSteps: string[];
+    arriveQuestion: string;
+    departQuestion: string;
+    year: string;
+    month: string;
+    day: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    emailHelper: string;
+    phoneCountryLabel: string;
+    phoneLabel: string;
+    phoneSmsNote: string;
+    saveAndContinue: string;
+    stepPlaceholderTitle: string;
+    stepPlaceholderSubtitle: string;
     traveler: (n: number) => string;
     primary: string;
     addTraveler: string;

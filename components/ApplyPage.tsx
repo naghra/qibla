@@ -1,7 +1,8 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { Logo } from './Logo';
 import { ApplicationWizard } from './ApplicationWizard';
+import { TdacApplicationWizard } from './apply/TdacApplicationWizard';
+import { ChatWidget } from './ChatWidget';
 import { PlanId } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -12,9 +13,46 @@ interface ApplyPageProps {
 }
 
 export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => {
-  const { t, dir } = useLanguage();
+  const { t, dir, destination, service } = useLanguage();
   const { apply: a } = t;
   const BackIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
+
+  const isTdac = destination?.slug === 'thailand' && service?.slug === 'tdac';
+
+  if (isTdac) {
+    return (
+      <div className="min-h-screen bg-white">
+        <header className="border-b border-gray-100 bg-white">
+          <div className="mx-auto flex max-w-lg items-center justify-between px-5 py-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="rounded-lg p-2 text-gray-500 hover:bg-gray-50"
+              aria-label={t.nav.backHome}
+            >
+              <BackIcon className="size-5" />
+            </button>
+            <LanguageSwitcher variant="light" />
+          </div>
+        </header>
+
+        <main className="mx-auto w-full max-w-lg px-5 py-6 pb-28 sm:py-8">
+          <header className="mb-6">
+            <p className="text-base font-medium leading-snug text-blue-600">
+              {a.applyHeaderTitle}
+            </p>
+            <h1 className="mt-1 text-xl font-bold text-gray-900 sm:text-2xl">
+              {a.applyOnlineNow}
+            </h1>
+          </header>
+
+          <TdacApplicationWizard initialPlan={initialPlan} onComplete={onBack} />
+        </main>
+
+        <ChatWidget />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -27,7 +65,6 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
             <BackIcon className="size-4" />
             {t.nav.backHome}
           </button>
-          <Logo showText={false} />
           <LanguageSwitcher variant="light" />
         </div>
       </header>
