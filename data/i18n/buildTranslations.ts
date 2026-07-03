@@ -354,15 +354,15 @@ function buildHub(lang: Lang): Translations {
     },
     hero: {
       title: lang === 'en' ? 'Stress-free travel documents' : 'مستندات سفر بدون تعقيد',
-      subtitle: lang === 'en' ? 'Where are you traveling? Discover destinations and apply for required travel documents online.' : 'إلى أين تسافر؟ اكتشف الوجهات وقدّم طلبات مستندات السفر المطلوبة عبر الإنترنت.',
+      subtitle: '',
       trustItems: lang === 'en' ? ['Rated on Trustpilot', 'Secure Process', '24/7 Support', 'Real-time validation'] : ['تقييم على Trustpilot', 'معالجة آمنة', 'دعم 24/7', 'تحقق فوري'],
-      cta: lang === 'en' ? 'Browse destinations' : 'تصفح الوجهات',
-      disclaimer: lang === 'en' ? 'is an independent private company — not affiliated with any government. You can also apply via the' : 'شركة خاصة مستقلة — غير تابعة لأي جهة حكومية. يمكنك أيضاً التقديم عبر',
+      cta: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
+      disclaimer: lang === 'en' ? 'is an independent private company — not affiliated with, or operated by any government. You can also apply directly on the' : 'شركة خاصة مستقلة — غير تابعة أو مُشغّلة من أي جهة حكومية. يمكنك أيضاً التقديم مباشرة عبر',
       officialSite: lang === 'en' ? 'official government website' : 'الموقع الرسمي للحكومة',
     },
     about: {
       title: lang === 'en' ? 'Where are you traveling?' : 'إلى أين تسافر؟',
-      subtitle: lang === 'en' ? 'Discover breathtaking destinations. From pristine beaches to vibrant cultures, find your next adventure and required travel documents.' : 'اكتشف وجهات مميزة. من الشواطئ إلى الثقافات النابضة — اعثر على مغامرتك القادمة ومستندات السفر المطلوبة.',
+      subtitle: lang === 'en' ? 'Discover breathtaking destinations handpicked by travel experts. From pristine beaches to vibrant cultures, find your next adventure.' : 'اكتشف وجهات مختارة بعناية. من الشواطئ الخلابة إلى الثقافات النابضة — اعثر على مغامرتك القادمة.',
       glanceTitle: '',
       glanceSubtitle: '',
       requirementsTitle: '',
@@ -372,18 +372,46 @@ function buildHub(lang: Lang): Translations {
     stats: lang === 'en'
       ? [
           { value: '2+', label: 'Years of Experience' },
-          { value: '99.9%', label: 'Approval rate*' },
+          { value: 'Up to 99.9%', label: 'Approval rate*' },
           { value: '15+', label: 'Destinations' },
           { value: '24/7', label: 'Assistance' },
         ]
       : [
           { value: '+2', label: 'سنوات خبرة' },
-          { value: '99.9%', label: 'معدل الموافقة*' },
+          { value: 'حتى 99.9%', label: 'معدل الموافقة*' },
           { value: '+15', label: 'وجهة' },
           { value: '24/7', label: 'دعم متواصل' },
         ],
     statsNote: lang === 'en' ? '*Approval depends on the issuing authority and the accuracy of your information.' : '*تعتمد الموافقة على الجهة المختصة ودقة المعلومات المقدمة.',
-    ...sections,
+    features: {
+      ...sections.features,
+      sectionSubtitle: lang === 'en'
+        ? 'We simplify travel document applications with expert guidance, real-time validation, and 24/7 human support—so you can focus on planning your trip, not paperwork.'
+        : 'نبسّط طلبات مستندات السفر بإرشاد خبير وتحقق فوري ودعم بشري 24/7 — لتتفرغ لتخطيط رحلتك.',
+    },
+    steps: {
+      ...sections.steps,
+      sectionSubtitle: lang === 'en'
+        ? 'Our streamlined process takes you from choosing your destination to receiving approved travel documents—all online, in just minutes.'
+        : 'عملية مبسّطة من اختيار وجهتك إلى استلام مستندات السفر المعتمدة — كلها عبر الإنترنت في دقائق.',
+      items: lang === 'en'
+        ? [
+            { number: '01', title: 'Choose your destination and document', description: 'Select your country and document type—we instantly match you with the right options, requirements, and estimated processing times.' },
+            { number: '02', title: 'Complete your application online', description: 'Complete our guided form in minutes. Real-time validation catches errors before you submit, so nothing delays your approval.' },
+            { number: '03', title: 'Receive your documents and travel', description: 'Relax while our experts review and process everything. Your approved documents arrive straight to your inbox—ready to go.' },
+          ]
+        : [
+            { number: '01', title: 'اختر وجهتك ومستندك', description: 'اختر الدولة ونوع المستند — نعرض الخيارات والمتطلبات وأوقات المعالجة فوراً.' },
+            { number: '02', title: 'أكمل طلبك عبر الإنترنت', description: 'املأ النموذج الإرشادي في دقائق. التحقق الفوري يكتشف الأخطاء قبل الإرسال.' },
+            { number: '03', title: 'استلم مستنداتك وسافر', description: 'نراجع ونعالج طلبك. المستندات المعتمدة تصل إلى بريدك — جاهزة للسفر.' },
+          ],
+      ctaButton: lang === 'en' ? 'Get your travel documents' : 'احصل على مستندات السفر',
+    },
+    cta: {
+      ...sections.cta,
+      button: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
+    },
+    chat: sections.chat,
     pricing: genericPricing(lang, { name: { en: 'Travel', ar: 'السفر' }, priceFrom: 65, slug: '', countryCode: '', services: [] }, { slug: '', name: { en: 'Document', ar: 'مستند' }, shortName: { en: 'Travel Document', ar: 'مستند سفر' }, description: { en: '', ar: '' }, priceFrom: 65, detailed: false }),
     countries: {
       sectionTitle: '',

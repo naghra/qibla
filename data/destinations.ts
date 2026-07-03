@@ -74,7 +74,7 @@ export const destinations: DestinationDef[] = [
     slug: 'belize',
     countryCode: 'BZ',
     name: { en: 'Belize', ar: 'بيليز' },
-    priceFrom: 65,
+    priceFrom: 40,
     services: [{
       slug: 'travel-form',
       name: { en: 'Travel Form', ar: 'نموذج السفر' },
@@ -83,7 +83,7 @@ export const destinations: DestinationDef[] = [
         en: 'Belize Travel Form — complete your mandatory online entry form before arrival.',
         ar: 'نموذج سفر بيليز — أكمل نموذج الدخول الإلكتروني الإلزامي قبل الوصول.',
       },
-      priceFrom: 65,
+      priceFrom: 40,
       detailed: false,
     }],
   },
