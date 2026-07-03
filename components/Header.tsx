@@ -7,9 +7,10 @@ import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   onApply: () => void;
+  hubMode?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onApply }) => {
+export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
   const { t, pageScope } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
   const [open, setOpen] = useState(false);
@@ -76,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
               onClick={() => { setOpen(false); onApply(); }}
               className="mt-8 w-full rounded-2xl border border-blue-600 bg-blue-500 py-3 font-bold text-white"
             >
-              {t.nav.applyNow}
+              {hubMode ? t.hero.cta : t.nav.applyNow}
             </button>
           </div>
         </div>

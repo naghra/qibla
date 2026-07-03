@@ -1,6 +1,5 @@
 import React from 'react';
-import { SiteHeader } from '../components/SiteHeader';
-import { DestinationsGrid } from '../components/DestinationsGrid';
+import { HubHero } from '../components/HubHero';
 import { StatsBar } from '../components/Hero';
 import { Features } from '../components/Features';
 import { Steps } from '../components/Steps';
@@ -15,7 +14,7 @@ import { buildPath } from '../data/destinations';
 import { useNavigate } from 'react-router-dom';
 
 export const HubPage: React.FC = () => {
-  const { t, lang } = useLanguage();
+  const { lang } = useLanguage();
   const navigate = useNavigate();
 
   const scrollToDestinations = () => {
@@ -25,24 +24,8 @@ export const HubPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <StickyNav onApply={scrollToDestinations} hubMode />
-      <SiteHeader />
       <main>
-        <section className="container mx-auto space-y-6 px-4 pb-8 pt-4 text-center">
-          <h1 className="text-pretty text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
-            {t.hero.title}
-          </h1>
-          <p className="mx-auto max-w-2xl text-pretty text-base leading-relaxed text-gray-600 sm:text-lg">
-            {t.hero.subtitle}
-          </p>
-          <p className="mx-auto max-w-3xl text-pretty text-sm text-gray-400">
-            {t.siteName} {t.hero.disclaimer}{' '}
-            <a href="#" className="underline hover:text-gray-600">
-              {t.hero.officialSite}
-            </a>
-            .
-          </p>
-        </section>
-        <DestinationsGrid />
+        <HubHero onBrowse={scrollToDestinations} />
         <StatsBar />
         <Features onApply={scrollToDestinations} />
         <Steps onApply={() => navigate(buildPath(lang, 'thailand', 'tdac'))} />

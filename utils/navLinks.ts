@@ -5,7 +5,7 @@ export function getNavLinks(t: Translations, pageType: PageScope['type'] = 'serv
   if (pageType === 'hub') {
     return [
       { href: '#destinations', label: t.nav.howToApply },
-      { href: '#how-it-works', label: t.nav.howItWorks },
+      { href: '#about-us', label: t.nav.howItWorks },
       { href: '#faq', label: t.nav.faq },
       { href: '#contact', label: t.nav.contact },
     ];

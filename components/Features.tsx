@@ -17,11 +17,12 @@ interface FeaturesProps {
 }
 
 export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
-  const { t } = useLanguage();
+  const { t, pageScope } = useLanguage();
   const { features: f } = t;
+  const sectionId = pageScope.type === 'hub' ? 'about-us' : undefined;
 
   return (
-    <section className="container mx-auto space-y-12 px-4 py-24">
+    <section id={sectionId} className="container mx-auto space-y-12 px-4 py-24">
       <SectionHeader title={f.sectionTitle} subtitle={f.sectionSubtitle} />
 
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
