@@ -8,26 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        safelist: [
-          { pattern: /^(sm|md|lg|xl):/ },
-          'translate-x-0', 'translate-x-full', '-translate-x-full',
-          'admin-cards-wrap', 'admin-table-wrap', 'admin-mobile-bar', 'admin-desktop-bar',
-          'admin-bottom-nav', 'admin-desktop-sidebar', 'admin-mobile-drawer', 'admin-mobile-overlay',
-        ],
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['"IBM Plex Sans Arabic"', '"IBM Plex Sans"', 'sans-serif'],
-              quicksand: ['Quicksand', '"IBM Plex Sans"', 'sans-serif'],
-            },
-            borderRadius: { '4xl': '2rem' },
-          },
-        },
-      };
-    </script>
     <style>
       html { scroll-behavior: smooth; }
       body {
