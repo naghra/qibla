@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Zap, Smartphone } from 'lucide-react';
+import { CardSim, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { PricingPlanItem } from '../../data/i18n/types';
 import type { PlanId } from '../../types';
-import { applyCard, applyDividerText, applySection, applySectionInner } from './applyStyles';
+import {
+  applyCard,
+  applyDividerText,
+  applyResumeEsimCard,
+  applyResumePlanCard,
+  applySection,
+  applySectionInner,
+} from './applyStyles';
 
 interface ResumeStepProps {
   a: Translations['apply'];
@@ -31,10 +38,10 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
 
   return (
     <div className={`${applySection} w-full`}>
-      <div className={`${applySectionInner} space-y-5`}>
-        <div className="flex items-center justify-between text-base">
-          <span className="font-normal text-gray-950">{a.totalTravelers(travelerCount)}</span>
-          <span className="font-semibold text-gray-950" dir="ltr">
+      <div className={`${applySectionInner} space-y-6`}>
+        <div className="flex items-center justify-between text-base text-gray-950">
+          <span>{a.totalTravelers(travelerCount)}</span>
+          <span className="font-semibold" dir="ltr">
             ${total.toFixed(2)}
           </span>
         </div>
@@ -46,8 +53,8 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
             return (
               <label
                 key={plan.id}
-                className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition hover:border-gray-950 ${
-                  selected ? 'border-gray-950 bg-white' : 'border-gray-200 bg-white'
+                className={`${applyResumePlanCard} ${
+                  selected ? 'border-gray-950' : 'border-gray-200 hover:border-gray-400'
                 }`}
               >
                 <input
@@ -55,33 +62,35 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
                   name="processing-speed"
                   checked={selected}
                   onChange={() => onPlanChange(plan.id as PlanId)}
-                  className="mt-1 size-[18px] shrink-0 border-gray-400 text-gray-950 focus:ring-gray-950"
+                  className="apply-resume-radio mt-0.5 size-[18px] shrink-0 border-gray-300 text-gray-950 focus:ring-gray-950"
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
                       <p className="text-base font-semibold text-gray-950">{plan.name}</p>
                       <p className="mt-0.5 text-sm text-gray-500">{a.getInTime(plan.time)}</p>
-                      {isUltra && (
-                        <span className="mt-1.5 inline-flex items-center gap-1 text-sm font-medium text-blue-500">
-                          <Zap className="size-3.5 fill-blue-500 text-blue-500" />
-                          {a.fastest}
-                        </span>
-                      )}
                     </div>
                     <span className="shrink-0 text-base font-semibold text-gray-950" dir="ltr">
                       ${plan.priorityFee.toFixed(2)}
                     </span>
                   </div>
+                  {isUltra && (
+                    <div className="mt-3 flex justify-center">
+                      <span className="inline-flex items-center gap-1 text-sm font-medium text-purple-600">
+                        <Zap className="size-4 fill-purple-500 text-purple-500" strokeWidth={0} />
+                        {a.fastest}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </label>
             );
           })}
         </div>
 
-        <div className="flex items-center justify-between border-t border-gray-200 pt-4 text-sm">
+        <div className="flex items-center justify-between text-sm text-gray-950">
           <span className="text-gray-600">{a.estimatedProcessingAt}</span>
-          <span className="font-medium text-gray-950" dir="ltr">
+          <span className="font-medium" dir="ltr">
             {estimatedAt}
           </span>
         </div>
@@ -96,12 +105,12 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
           <button
             type="button"
             onClick={() => setEsimOpen(!esimOpen)}
-            className="flex w-full items-center gap-3 p-4 text-start"
+            className={`${applyResumeEsimCard} w-full text-start`}
           >
             <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600">
-              <Smartphone className="size-5" />
+              <CardSim className="size-5" strokeWidth={1.75} />
             </span>
-            <span className="min-w-0 flex-1 text-sm font-normal leading-snug text-gray-950">
+            <span className="min-w-0 flex-1 text-sm leading-snug text-gray-950">
               {a.esimTitle(destinationName)}
             </span>
             {esimOpen ? (
