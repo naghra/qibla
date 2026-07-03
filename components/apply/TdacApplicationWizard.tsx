@@ -46,8 +46,30 @@ const emptyTravel: TravelDetails = {
   accommodationCity: '',
 };
 
-function initDateParts(travelers: TravelerData[], field: 'dateOfBirth' | 'passportIssueDate' | 'passportExpiryDate'): DateParts[] {
-  return travelers.map((t) => travelerDateParts(t, field));
+function syncTravelerDates(traveler: TravelerData): TravelerData {
+  const dob = travelerDateParts(traveler, 'dateOfBirth');
+  const issue = travelerDateParts(traveler, 'passportIssueDate');
+  const expiry = travelerDateParts(traveler, 'passportExpiryDate');
+  return {
+    ...traveler,
+    dateOfBirth: traveler.dateOfBirth || datePartsToIso(dob),
+    passportIssueDate: traveler.passportIssueDate || datePartsToIso(issue),
+    passportExpiryDate: traveler.passportExpiryDate || datePartsToIso(expiry),
+  };
+}
+
+function hasDateParts(parts?: DateParts): boolean {
+  return Boolean(parts?.year && parts?.month && parts?.day);
+}
+
+function createTravelerBundle(lang: string) {
+  const traveler = syncTravelerDates(emptyTraveler(lang));
+  return {
+    traveler,
+    dob: travelerDateParts(traveler, 'dateOfBirth'),
+    issue: travelerDateParts(traveler, 'passportIssueDate'),
+    expiry: travelerDateParts(traveler, 'passportExpiryDate'),
+  };
 }
 
 interface TdacApplicationWizardProps {
@@ -71,15 +93,17 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   const [phoneCountry, setPhoneCountry] = useState(lang === 'ar' ? 'EG' : 'FR');
   const [phone, setPhone] = useState('');
 
+  const initialBundle = createTravelerBundle(lang);
+
   const [data, setData] = useState<ApplicationData>(() => ({
-    travelers: [emptyTraveler(lang)],
+    travelers: [initialBundle.traveler],
     travel: { ...emptyTravel },
     plan: initialPlan,
   }));
 
-  const [dobParts, setDobParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'dateOfBirth'));
-  const [issueParts, setIssueParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'passportIssueDate'));
-  const [expiryParts, setExpiryParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'passportExpiryDate'));
+  const [dobParts, setDobParts] = useState<DateParts[]>(() => [initialBundle.dob]);
+  const [issueParts, setIssueParts] = useState<DateParts[]>(() => [initialBundle.issue]);
+  const [expiryParts, setExpiryParts] = useState<DateParts[]>(() => [initialBundle.expiry]);
 
   const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const total = (selectedPlan.price + selectedPlan.priorityFee) * data.travelers.length;
@@ -119,11 +143,11 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   };
 
   const addTraveler = () => {
-    const next = emptyTraveler(lang);
-    setData({ ...data, travelers: [...data.travelers, next] });
-    setDobParts((p) => [...p, travelerDateParts(next, 'dateOfBirth')]);
-    setIssueParts((p) => [...p, travelerDateParts(next, 'passportIssueDate')]);
-    setExpiryParts((p) => [...p, travelerDateParts(next, 'passportExpiryDate')]);
+    const bundle = createTravelerBundle(lang);
+    setData({ ...data, travelers: [...data.travelers, bundle.traveler] });
+    setDobParts((p) => [...p, bundle.dob]);
+    setIssueParts((p) => [...p, bundle.issue]);
+    setExpiryParts((p) => [...p, bundle.expiry]);
   };
 
   const removeTraveler = (index: number) => {
@@ -147,16 +171,16 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
     }
     if (step === 1) {
       return data.travelers.every(
-        (tr) =>
+        (tr, i) =>
           tr.firstName.trim() &&
           tr.lastName.trim() &&
           tr.gender &&
           tr.passportCountry &&
           tr.nationality &&
           tr.passportNumber.trim() &&
-          tr.dateOfBirth &&
-          tr.passportIssueDate &&
-          tr.passportExpiryDate
+          hasDateParts(dobParts[i]) &&
+          hasDateParts(issueParts[i]) &&
+          hasDateParts(expiryParts[i])
       );
     }
     return true;
@@ -209,11 +233,11 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
     setPhone('');
     setArrival(defaultDateParts(7));
     setDeparture(defaultDateParts(14));
-    const fresh = emptyTraveler(lang);
-    setData({ travelers: [fresh], travel: { ...emptyTravel }, plan: initialPlan });
-    setDobParts(initDateParts([fresh], 'dateOfBirth'));
-    setIssueParts(initDateParts([fresh], 'passportIssueDate'));
-    setExpiryParts(initDateParts([fresh], 'passportExpiryDate'));
+    const fresh = createTravelerBundle(lang);
+    setData({ travelers: [fresh.traveler], travel: { ...emptyTravel }, plan: initialPlan });
+    setDobParts([fresh.dob]);
+    setIssueParts([fresh.issue]);
+    setExpiryParts([fresh.expiry]);
     onComplete?.();
   };
 
