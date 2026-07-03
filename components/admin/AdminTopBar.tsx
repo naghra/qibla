@@ -34,14 +34,14 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({ title }) => {
   };
 
   return (
-    <header className="sticky top-0 z-20 hidden border-b border-gray-200 bg-white/95 backdrop-blur lg:flex">
-      <div className="flex w-full items-center gap-4 px-6 py-3">
+    <header className="admin-desktop-bar sticky top-0 z-20 hidden border-b border-gray-200 bg-white/95 backdrop-blur md:flex">
+      <div className="flex w-full min-w-0 items-center gap-4 px-4 py-3 lg:px-6">
         {title && (
-          <h2 className="shrink-0 text-base font-bold text-gray-900">{title}</h2>
+          <h2 className="hidden shrink-0 text-base font-bold text-gray-900 lg:block">{title}</h2>
         )}
 
-        <form onSubmit={handleSearch} className="relative min-w-0 flex-1 max-w-md">
-          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
+        <form onSubmit={handleSearch} className="relative min-w-0 flex-1 lg:max-w-md">
+          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
           <input
             type="search"
             value={query}
@@ -51,15 +51,16 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({ title }) => {
           />
         </form>
 
-        <div className="ms-auto flex items-center gap-2">
+        <div className="ms-auto flex shrink-0 items-center gap-2">
           {pendingCount > 0 && (
             <button
               type="button"
               onClick={() => navigate('/admin/applications?status=pending')}
               className="flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100"
             >
-              <Bell className="size-4" />
-              {pendingCount} {adminLabels.topBar.pending}
+              <Bell className="size-4 shrink-0" />
+              <span className="hidden sm:inline">{pendingCount} {adminLabels.topBar.pending}</span>
+              <span className="sm:hidden">{pendingCount}</span>
             </button>
           )}
           <button
@@ -67,8 +68,8 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({ title }) => {
             onClick={handleExport}
             className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
-            <Download className="size-4" />
-            {adminLabels.topBar.export}
+            <Download className="size-4 shrink-0" />
+            <span className="hidden sm:inline">{adminLabels.topBar.export}</span>
           </button>
         </div>
       </div>

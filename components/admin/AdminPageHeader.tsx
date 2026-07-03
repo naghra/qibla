@@ -14,7 +14,7 @@ export const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({
   icon: Icon,
   actions,
 }) => (
-  <header className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
+  <header className="mb-4 flex flex-col gap-3 sm:mb-6">
     <div className="min-w-0">
       <div className="flex items-center gap-2">
         {Icon && (
@@ -22,10 +22,14 @@ export const AdminPageHeader: React.FC<AdminPageHeaderProps> = ({
             <Icon className="size-5" />
           </span>
         )}
-        <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">{title}</h1>
+        <h1 className="min-w-0 text-lg font-bold text-gray-900 sm:text-2xl">{title}</h1>
       </div>
       {subtitle && <p className="mt-1 text-sm text-gray-500">{subtitle}</p>}
     </div>
-    {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
+    {actions && (
+      <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+        {actions}
+      </div>
+    )}
   </header>
 );

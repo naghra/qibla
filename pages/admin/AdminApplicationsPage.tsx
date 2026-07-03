@@ -112,7 +112,7 @@ export const AdminApplicationsPage: React.FC = () => {
     new Date(iso).toLocaleString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
       <AdminPageHeader
         title={adminLabels.applications.title}
         subtitle={adminLabels.applications.subtitle}
@@ -121,7 +121,7 @@ export const AdminApplicationsPage: React.FC = () => {
           <button
             type="button"
             onClick={handleExport}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto"
           >
             <Download className="size-4" />
             {adminLabels.applications.exportFiltered}
@@ -205,7 +205,7 @@ export const AdminApplicationsPage: React.FC = () => {
         <EmptyState icon={FileText} title={adminLabels.applications.noResults} />
       ) : (
         <>
-          <div className="mb-3 flex items-center gap-2 lg:hidden">
+          <div className="admin-cards-toolbar mb-3 flex items-center gap-2">
             <input
               type="checkbox"
               checked={selected.size === paged.length && paged.length > 0}
@@ -215,7 +215,7 @@ export const AdminApplicationsPage: React.FC = () => {
             <span className="text-xs text-gray-500">{adminLabels.applications.selectAll}</span>
           </div>
 
-          <div className="mb-4 space-y-3 lg:hidden">
+          <div className="admin-cards-wrap mb-4 space-y-3">
             {paged.map((app) => (
               <ApplicationListCard
                 key={app.id}
@@ -234,7 +234,7 @@ export const AdminApplicationsPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="mb-4 hidden overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm lg:block">
+          <div className="admin-table-wrap mb-4 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

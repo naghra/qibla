@@ -5,6 +5,7 @@ import { AdminMobileHeader } from '../components/admin/AdminMobileHeader';
 import { AdminTopBar } from '../components/admin/AdminTopBar';
 import { AdminBottomNav } from '../components/admin/AdminBottomNav';
 import { adminLabels } from '../data/adminLabels';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 const pageTitles: Record<string, string> = {
   '/admin': adminLabels.dashboard.title,
@@ -24,14 +25,21 @@ export const AdminLayout: React.FC = () => {
   const { pathname } = useLocation();
   const title = resolveTitle(pathname);
 
+  useBodyScrollLock(sidebarOpen);
+
   return (
-    <div className="flex min-h-screen bg-slate-50" dir="rtl">
+    <div
+      data-admin-layout
+      className="admin-root flex min-h-[100dvh] w-full overflow-x-hidden bg-slate-50"
+      dir="rtl"
+      style={{ maxWidth: '100vw' }}
+    >
       <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-[100dvh] w-full min-w-0 flex-1 flex-col">
         <AdminMobileHeader title={title} onMenuClick={() => setSidebarOpen(true)} />
         <AdminTopBar title={title} />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto pb-20 lg:pb-0">
+        <main className="admin-main flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
           <Outlet />
         </main>
         <AdminBottomNav />

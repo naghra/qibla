@@ -26,7 +26,7 @@ export const DestinationBreakdown: React.FC<DestinationBreakdownProps> = ({ item
               {item.name}
             </span>
             <span className="shrink-0 text-gray-500">
-              {item.count} {adminLabels.dashboard.applications}
+              <span className="whitespace-nowrap">{item.count} {adminLabels.dashboard.applications}</span>
               <span className="mx-1 text-gray-300">·</span>
               <span dir="ltr">${item.revenue}</span>
             </span>

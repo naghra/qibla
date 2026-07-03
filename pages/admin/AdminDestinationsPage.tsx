@@ -27,7 +27,7 @@ export const AdminDestinationsPage: React.FC = () => {
   }, [search]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
       <AdminPageHeader
         title={adminLabels.destinations.title}
         subtitle={adminLabels.destinations.subtitle}
@@ -50,7 +50,7 @@ export const AdminDestinationsPage: React.FC = () => {
         />
       </div>
 
-      <div className="space-y-3 lg:hidden">
+      <div className="admin-cards-wrap space-y-3">
         {filtered.map((dest) =>
           dest.services.map((service) => (
             <article
@@ -91,7 +91,7 @@ export const AdminDestinationsPage: React.FC = () => {
         )}
       </div>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm lg:block">
+      <div className="admin-table-wrap overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

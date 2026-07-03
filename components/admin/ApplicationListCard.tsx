@@ -37,7 +37,7 @@ export const ApplicationListCard: React.FC<ApplicationListCardProps> = ({
   };
 
   return (
-    <article className={`rounded-xl border bg-white p-4 shadow-sm transition ${selected ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100'}`}>
+    <article className={`w-full max-w-full rounded-xl border bg-white p-4 shadow-sm transition ${selected ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100'}`}>
       <div className="mb-3 flex items-start gap-3">
         {selectable && (
           <input

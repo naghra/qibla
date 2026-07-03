@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   FileText,
   Clock,
-  CheckCircle,
   DollarSign,
   TrendingUp,
   LayoutDashboard,
@@ -64,7 +63,7 @@ export const AdminDashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
       <AdminPageHeader
         title={adminLabels.dashboard.title}
         subtitle={adminLabels.dashboard.subtitle}
@@ -73,7 +72,7 @@ export const AdminDashboardPage: React.FC = () => {
           <button
             type="button"
             onClick={handleExport}
-            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 sm:w-auto"
           >
             <Download className="size-4" />
             {adminLabels.dashboard.exportAll}
@@ -141,8 +140,14 @@ export const AdminDashboardPage: React.FC = () => {
               <span className="rounded-full bg-blue-200 px-2 py-0.5 text-xs font-bold">{stats.processing}</span>
             </button>
             <div className="grid grid-cols-2 gap-2 pt-1">
-              <StatCard label={adminLabels.dashboard.approved} value={stats.approved} icon={CheckCircle} accent="green" />
-              <StatCard label={adminLabels.dashboard.approvalRate} value={`${stats.approvalRate}%`} icon={TrendingUp} accent="blue" />
+              <div className="rounded-xl bg-emerald-50 px-3 py-2.5 text-center">
+                <p className="text-xs text-emerald-700">{adminLabels.dashboard.approved}</p>
+                <p className="text-lg font-bold text-emerald-900">{stats.approved}</p>
+              </div>
+              <div className="rounded-xl bg-blue-50 px-3 py-2.5 text-center">
+                <p className="text-xs text-blue-700">{adminLabels.dashboard.approvalRate}</p>
+                <p className="text-lg font-bold text-blue-900">{stats.approvalRate}%</p>
+              </div>
             </div>
           </div>
         </section>
@@ -180,12 +185,12 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="p-8 text-center text-sm text-gray-500">{adminLabels.dashboard.noApplications}</p>
         ) : (
           <>
-            <div className="space-y-3 p-4 lg:hidden">
+            <div className="admin-cards-wrap space-y-3 p-3 sm:p-4">
               {recent.map((app) => (
                 <ApplicationListCard key={app.id} app={app} formatDate={formatDate} onDelete={() => {}} compact />
               ))}
             </div>
-            <div className="hidden overflow-x-auto lg:block">
+            <div className="admin-table-wrap overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-50 text-start text-gray-500">
