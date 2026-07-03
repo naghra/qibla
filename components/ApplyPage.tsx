@@ -3,7 +3,6 @@ import { ArrowRight } from 'lucide-react';
 import { Logo } from './Logo';
 import { ApplicationWizard } from './ApplicationWizard';
 import { PlanId } from '../types';
-import { THAILAND_FLAG } from '../data/assets';
 
 interface ApplyPageProps {
   initialPlan?: PlanId;
