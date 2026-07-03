@@ -1,5 +1,5 @@
 {
-  "name": "qibla-finder-pro",
+  "name": "thailand-tdac-website",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "lucide-react": "^0.556.0"
   },
   "devDependencies": {

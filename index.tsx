@@ -1,2 +1,12 @@
-// تم تعطيل هذا الملف لأن التطبيق الآن يعمل بالكامل داخل index.html
-// This file is disabled as the app is now fully contained in index.html
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
+const root = document.getElementById('root');
+if (root) {
+  createRoot(root).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}

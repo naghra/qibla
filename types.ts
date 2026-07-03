@@ -1,15 +1,27 @@
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
+export interface TravelerData {
+  firstName: string;
+  lastName: string;
+  passportNumber: string;
+  nationality: string;
+  dateOfBirth: string;
+  gender: string;
+  email: string;
+  phone: string;
 }
 
-export interface QiblaData {
-  bearing: number; // Degrees from North
-  distance: number; // Kilometers
+export interface TravelDetails {
+  arrivalDate: string;
+  departureDate: string;
+  flightNumber: string;
+  purposeOfVisit: string;
+  accommodationAddress: string;
+  accommodationCity: string;
 }
 
-export enum CompassStatus {
-  WAITING_FOR_PERMISSION = 'WAITING_FOR_PERMISSION',
-  ACTIVE = 'ACTIVE',
-  UNSUPPORTED = 'UNSUPPORTED',
+export interface ApplicationData {
+  travelers: TravelerData[];
+  travel: TravelDetails;
+  plan: 'standard' | 'fast' | 'ultra';
 }
+
+export type PlanId = 'standard' | 'fast' | 'ultra';

@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# موقع بطاقة الوصول الرقمية التايلاندية TDAC
 
-# Run and deploy your AI Studio app
+موقع ويب مشابه لخدمات المساعدة في تقديم بطاقة الوصول الرقمية التايلاندية (TDAC)، باللغة العربية واتجاه RTL.
 
-This contains everything you need to run your app locally.
+## المميزات
 
-View your app in AI Studio: https://ai.studio/apps/drive/1xqgMYIFN-joOcGBmPplcTQcT0z1Omv4P
+- صفحة هبوط كاملة مع جميع الأقسام (معلومات، مميزات، خطوات، أسعار، دول، شهادات، أسئلة شائعة)
+- نموذج تقديم متعدد الخطوات مع دعم عدة مسافرين
+- ثلاث خطط أسعار (قياسي، سريع، فائق السرعة)
+- تصميم متجاوب يعمل على الجوال والحاسوب
+- واجهة عربية كاملة (RTL)
 
-## Run Locally
+## التشغيل
 
-**Prerequisites:**  Node.js
+```bash
+npm install
+npm run dev
+```
 
+افتح المتصفح على `http://localhost:3000`
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## البناء للإنتاج
+
+```bash
+npm run build
+npm run preview
+```
+
+## ملاحظة
+
+هذا موقع تجريبي/عرضي. ليس تابعاً لأي جهة حكومية. نموذج التقديم لا يعالج مدفوعات حقيقية.
