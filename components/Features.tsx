@@ -1,6 +1,7 @@
 import React from 'react';
-import { ListChecks, Headphones, Shield, Users, CheckCircle, Star } from 'lucide-react';
-import { features } from '../data/content';
+import { ListChecks, Headphones, Shield, Users, CheckCircle } from 'lucide-react';
+import { features, SITE_NAME } from '../data/content';
+import { PrimaryButton, SectionHeader } from './ui';
 
 const iconMap = {
   list: ListChecks,
@@ -16,55 +17,68 @@ interface FeaturesProps {
 
 export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-brand-600 font-bold text-sm uppercase tracking-wider mb-2">لماذا يختارنا المسافرون</p>
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">
-            الطريقة الذكية لتقديم بطاقة TDAC
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            نبسّط عملية التقديم بإرشاد خبير وتحقق فوري ودعم بشري — لتتفرغ لتخطيط رحلتك.
-          </p>
-        </div>
+    <section className="container mx-auto space-y-12 px-4 py-24">
+      <SectionHeader
+        title="لماذا يختارنا المسافرون"
+        subtitle="نبسّط عملية تقديم بطاقة الوصول الرقمية بإرشاد خبير وتحقق فوري ودعم بشري — لتتفرغ لتخطيط رحلتك."
+      />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {features.map((feature) => {
-            const Icon = iconMap[feature.icon as keyof typeof iconMap];
-            return (
-              <div
-                key={feature.title}
-                className="group p-6 rounded-2xl border border-slate-100 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-500/5 transition-all"
-              >
-                <div className="w-12 h-12 bg-brand-50 group-hover:bg-brand-100 rounded-xl flex items-center justify-center mb-4 transition-colors">
-                  <Icon className="w-6 h-6 text-brand-600" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{feature.description}</p>
+      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <article className="relative flex flex-col overflow-hidden rounded-4xl sm:col-span-2 sm:row-span-2">
+          <div className="pointer-events-none absolute -inset-full spin-slow bg-gradient-to-r from-blue-500 via-blue-100 to-white opacity-80" />
+          <div className="relative m-1 flex flex-1 flex-col justify-between gap-8 overflow-hidden rounded-4xl bg-blue-500 p-4 text-gray-50 sm:p-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://api.dicebear.com/7.x/shapes/svg?seed=travel&backgroundColor=ffffff"
+                  alt=""
+                  className="h-8 w-8 brightness-0 invert"
+                />
+                <p className="font-bold">{SITE_NAME}</p>
               </div>
-            );
-          })}
-        </div>
-
-        <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 lg:p-12 text-white text-center">
-          <div className="flex items-center justify-center gap-1 mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-5 h-5 text-accent-400 fill-accent-400" />
-            ))}
+              <h3 className="max-w-md text-pretty text-2xl font-bold">
+                الطريقة الذكية لتقديم بطاقة TDAC
+              </h3>
+              <p className="max-w-md text-pretty text-sm text-blue-100">
+                تجاوز المواقع الحكومية المعقدة. قدّم عبر الإنترنت مع نماذج إرشادية وتحقق فوري ومراجعة خبيرة.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="size-4 fill-blue-100" viewBox="0 0 256 256">
+                    <path d="M235.36,98.49A12.21,12.21,0,0,0,224.59,90l-61.47-5L139.44,27.67a12.37,12.37,0,0,0-22.88,0L92.88,85,31.41,90a12.45,12.45,0,0,0-7.07,21.84l46.85,40.41L56.87,212.64a12.35,12.35,0,0,0,18.51,13.49L128,193.77l52.62,32.36a12.12,12.12,0,0,0,13.69-.51,12.28,12.28,0,0,0,4.82-13l-14.32-60.42,46.85-40.41A12.29,12.29,0,0,0,235.36,98.49Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-sm text-blue-100">موثوق من مسافرين حول العالم</p>
+              <PrimaryButton onClick={onApply} className="w-full sm:w-auto">
+                ابدأ طلبك الآن
+              </PrimaryButton>
+            </div>
           </div>
-          <p className="text-blue-100 mb-2">موثوق من مسافرين حول العالم</p>
-          <h3 className="text-2xl lg:text-3xl font-extrabold mb-6">ابدأ طلبك الآن</h3>
-          <button
-            onClick={onApply}
-            className="inline-flex items-center px-8 py-4 bg-accent-500 hover:bg-accent-400 text-slate-900 font-bold rounded-xl transition-all shadow-xl active:scale-95"
-          >
-            ابدأ التقديم
-          </button>
-          <p className="text-sm text-blue-200 mt-4">
-            معدل موافقة يصل إلى 99.9% · دعم خبير 24/7 · استرداد جزئي قبل المعالجة
-          </p>
-        </div>
+        </article>
+
+        {features.map((feature) => {
+          const Icon = iconMap[feature.icon as keyof typeof iconMap];
+          return (
+            <article
+              key={feature.title}
+              className="space-y-4 rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 p-4 transition-all sm:p-8"
+            >
+              <div className="flex size-8 items-center justify-center rounded-xl bg-blue-100">
+                <Icon className="size-4 text-blue-500" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">{feature.title}</h3>
+              <p className="text-pretty text-sm leading-relaxed text-gray-600">{feature.description}</p>
+            </article>
+          );
+        })}
       </div>
+
+      <p className="text-center text-sm text-gray-500">
+        معدل موافقة يصل إلى 99.9% · دعم خبير 24/7 · استرداد جزئي قبل المعالجة
+      </p>
     </section>
   );
 };

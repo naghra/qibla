@@ -1,69 +1,158 @@
 import React from 'react';
-import { ArrowLeft, CheckCircle, FileText } from 'lucide-react';
+import { Header } from './Header';
+import { PrimaryButton, CheckItem } from './ui';
 import { requirements, SITE_NAME } from '../data/content';
+import { IMAGES, THAILAND_FLAG } from '../data/assets';
 
 interface HeroProps {
   onApply: () => void;
 }
 
+const trustItems = ['معالجة آمنة', 'دعم 24/7', 'تحقق فوري', 'مراجعة خبيرة'];
+
 export const Hero: React.FC<HeroProps> = ({ onApply }) => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 text-white">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full blur-3xl" />
+    <section className="p-4">
+      <div className="relative mx-auto flex min-h-[80svh] w-full max-w-5xl flex-col overflow-hidden rounded-4xl border-8 border-white">
+        <div className="relative z-10 flex flex-1 flex-col">
+          <Header onApply={onApply} />
+
+          <div className="mx-auto w-full max-w-xl flex-1 space-y-8 p-8 text-center text-white">
+            <div className="space-y-4">
+              <div className="relative -right-4 flex items-center justify-center gap-4">
+                <span className="text-5xl">{THAILAND_FLAG}</span>
+                <img
+                  src="https://api.dicebear.com/7.x/shapes/svg?seed=travel&backgroundColor=ffffff"
+                  alt=""
+                  className="h-12 w-12"
+                />
+              </div>
+              <h1 className="text-pretty text-2xl font-bold sm:text-3xl">
+                تقديم بطاقة الوصول الرقمية التايلاندية (TDAC) بدون تعقيد
+              </h1>
+              <p className="text-pretty text-sm leading-relaxed text-gray-200 sm:text-base">
+                {SITE_NAME} — خدمة مساعدة خاصة لتقديم بطاقة الوصول الرقمية التايلاندية عبر الإنترنت
+                والحصول على رمز QR لتسهيل إجراءات الهجرة.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              {trustItems.map((item) => (
+                <div key={item} className="flex items-center justify-center gap-2">
+                  <svg className="size-4 fill-blue-400" viewBox="0 0 256 256">
+                    <path d="M226.83,74.83l-128,128a4,4,0,0,1-5.66,0l-56-56a4,4,0,0,1,5.66-5.66L96,194.34,221.17,69.17a4,4,0,1,1,5.66,5.66Z" />
+                  </svg>
+                  <span className="font-medium text-gray-200">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="relative z-10 px-8 pb-6 text-center text-sm text-gray-300">
+            {SITE_NAME} شركة خاصة مستقلة — غير تابعة لأي جهة حكومية. يمكنك أيضاً التقديم عبر الموقع الرسمي للحكومة.
+          </p>
+        </div>
+
+        <div className="absolute inset-0 -z-10 overflow-hidden rounded-4xl">
+          <div className="hero-overlay absolute inset-0 rounded-4xl" />
+          <img
+            src={IMAGES.hero}
+            alt="تايلاند"
+            className="absolute inset-0 -z-10 size-full rounded-4xl object-cover object-center"
+          />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const HeroAbout: React.FC<{ onApply: () => void }> = ({ onApply }) => {
+  return (
+    <section id="how-to-apply" className="container mx-auto space-y-12 px-4 py-24">
+      <div className="space-y-4 text-center">
+        <h2 className="text-pretty text-3xl font-bold text-gray-900 sm:text-4xl">
+          عن بطاقة الوصول الرقمية TDAC {THAILAND_FLAG}
+        </h2>
+        <p className="mx-auto max-w-2xl text-pretty text-base leading-relaxed text-gray-600 sm:text-xl">
+          بطاقة TDAC هي متطلب إلزامي لدخول تايلاند لجميع غير التايلانديين. أكمل طلبك عبر الإنترنت
+          قبل المغادرة واحصل على رمز QR لتسهيل إجراءات الهجرة.
+        </p>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-            <FileText className="w-4 h-4 text-accent-400" />
-            بطاقة الوصول الرقمية التايلاندية TDAC
+      <div className="rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 p-4 sm:p-8">
+        <div className="space-y-8 p-4">
+          <div className="flex items-center gap-4">
+            <div className="flex size-8 items-center justify-center rounded-xl bg-blue-100 text-blue-500">
+              <svg className="size-4 fill-current" viewBox="0 0 256 256">
+                <path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,16V88H32V64Zm0,128H32V104H224v88Z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">نظرة سريعة على بطاقة الوصول</h3>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-6">
-            تقديم بطاقة الوصول الرقمية التايلاندية
-            <span className="text-accent-400"> بدون تعقيد</span>
-          </h1>
-
-          <p className="text-lg text-blue-100 leading-relaxed mb-8 max-w-2xl">
-            بطاقة TDAC هي متطلب إلزامي لجميع غير التايلانديين. أكمل طلبك عبر الإنترنت قبل المغادرة
-            واحصل على رمز QR لتسهيل إجراءات الهجرة.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 mb-10">
-            <button
-              onClick={onApply}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent-500 hover:bg-accent-400 text-slate-900 font-bold rounded-xl transition-all shadow-xl shadow-accent-500/30 hover:shadow-accent-500/50 active:scale-95 text-lg"
-            >
-              قدّم طلبك الآن
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 font-bold rounded-xl transition-all"
-            >
-              كيف يعمل
-            </a>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {[
+              { title: 'وقت المعالجة', text: 'فوري — تُنشأ بطاقتك ورمز QR مباشرة بعد الإرسال.' },
+              { title: 'الصلاحية', text: 'صالحة حتى تاريخ الوصول المحدد في البطاقة.' },
+              { title: 'مدة الإقامة', text: 'تُحدد حسب حالة التأشيرة وقرار ضابط الهجرة.' },
+              { title: 'الدخول', text: 'دخول واحد — قدّم طلباً جديداً لكل دخول إلى تايلاند.' },
+              { title: 'كيفية التقديم', text: '100% عبر الإنترنت من أي جهاز قبل رحلتك.' },
+              { title: 'عند الوصول', text: 'اعرض البطاقة مع رمز QR من هاتفك أو بريدك الإلكتروني.' },
+            ].map((item) => (
+              <div key={item.title} className="space-y-2">
+                <div className="flex items-center gap-2 font-medium text-blue-500">
+                  <svg className="size-4 fill-blue-500" viewBox="0 0 256 256">
+                    <path d="M226.83,74.83l-128,128a4,4,0,0,1-5.66,0l-56-56a4,4,0,0,1,5.66-5.66L96,194.34,221.17,69.17a4,4,0,1,1,5.66,5.66Z" />
+                  </svg>
+                  {item.title}
+                </div>
+                <p className="text-pretty text-sm leading-relaxed text-gray-600">{item.text}</p>
+              </div>
+            ))}
           </div>
 
-          <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-6">
-            <p className="text-sm text-blue-200 mb-4 font-medium">ما ستحتاجه للتقديم:</p>
-            <ul className="grid sm:grid-cols-2 gap-2">
+          <div className="space-y-4 border-t border-gray-200 pt-8">
+            <h4 className="font-bold text-gray-900">ما ستحتاجه للتقديم</h4>
+            <ul className="grid gap-2 sm:grid-cols-2">
               {requirements.map((req) => (
-                <li key={req} className="flex items-center gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 text-accent-400 shrink-0" />
-                  {req}
-                </li>
+                <CheckItem key={req}>{req}</CheckItem>
               ))}
             </ul>
+            <div className="pt-4">
+              <PrimaryButton onClick={onApply}>قدّم الآن عبر الإنترنت</PrimaryButton>
+            </div>
+            <p className="text-pretty text-xs leading-relaxed text-gray-500">
+              {SITE_NAME} شركة خاصة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.
+              يمكنك أيضاً التقديم عبر الموقع الرسمي للحكومة.
+            </p>
           </div>
         </div>
       </div>
+    </section>
+  );
+};
 
-      <div className="bg-amber-500/90 text-amber-950 text-center py-3 px-4 text-sm font-medium">
-        {SITE_NAME} شركة خاصة مستقلة — غير تابعة لأي جهة حكومية. يمكنك أيضاً التقديم عبر الموقع الرسمي للحكومة.
+export const StatsBar: React.FC = () => {
+  const stats = [
+    { value: '~5 د', label: 'وقت المعالجة' },
+    { value: '99.9%', label: 'معدل الموافقة*' },
+    { value: '30 يوم', label: 'الصلاحية' },
+    { value: '24/7', label: 'دعم متواصل' },
+  ];
+
+  return (
+    <section className="container mx-auto px-4 pb-16">
+      <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        {stats.map((stat) => (
+          <div key={stat.label} className="text-center">
+            <p className="text-3xl font-bold text-gray-900 sm:text-4xl">{stat.value}</p>
+            <p className="mt-1 text-sm text-gray-600">{stat.label}</p>
+          </div>
+        ))}
       </div>
+      <p className="mt-6 text-center text-xs text-gray-400">
+        *تعتمد الموافقة على الجهة المختصة ودقة المعلومات المقدمة.
+      </p>
     </section>
   );
 };

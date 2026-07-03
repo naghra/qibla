@@ -5,44 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="تقديم بطاقة الوصول الرقمية التايلاندية TDAC عبر الإنترنت — معالجة سريعة ودعم خبير على مدار الساعة" />
     <title>بطاقة الوصول الرقمية التايلاندية TDAC — سفر ذكي سفر سريع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ['Tajawal', 'sans-serif'] },
-            colors: {
-              brand: {
-                50: '#eff6ff',
-                100: '#dbeafe',
-                500: '#3b82f6',
-                600: '#2563eb',
-                700: '#1d4ed8',
-                800: '#1e40af',
-                900: '#1e3a8a',
-              },
-              accent: {
-                400: '#fbbf24',
-                500: '#f59e0b',
-                600: '#d97706',
-              },
-            },
+            fontFamily: { sans: ['Rubik', 'sans-serif'] },
+            borderRadius: { '4xl': '2rem' },
           },
         },
       };
     </script>
     <style>
       html { scroll-behavior: smooth; }
-      body { font-family: 'Tajawal', sans-serif; }
-      .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+      body {
+        font-family: 'Rubik', sans-serif;
+        color: #3c4043;
+        background: #fff;
+      }
+      .text-pretty { text-wrap: pretty; }
+      .hero-overlay { background-color: rgba(22, 36, 86, 0.7); }
+      .spin-slow {
+        animation: spin 3s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .fade-in { animation: fadeIn 0.4s ease-out forwards; }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(16px); }
+        from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
       }
     </style>
   </head>
-  <body class="bg-white text-slate-800 antialiased">
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

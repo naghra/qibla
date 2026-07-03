@@ -1,59 +1,49 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle } from 'lucide-react';
 import { faqs } from '../data/content';
+import { SectionHeader } from './ui';
 
 export const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-16 lg:py-24 bg-slate-50">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-700 rounded-full px-4 py-1.5 text-sm font-bold mb-4">
-            <HelpCircle className="w-4 h-4" />
-            الأسئلة الشائعة
-          </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">
-            إجابات على أسئلتك
-          </h2>
-          <p className="text-slate-600">
-            كل ما تحتاج معرفته عن بطاقة TDAC والمعالجة والرسوم والأمان.
-          </p>
-        </div>
+    <section id="faq" className="container mx-auto space-y-12 px-4 py-24">
+      <SectionHeader
+        title="الأسئلة الشائعة"
+        subtitle="إجابات عن بطاقة TDAC وأوقات المعالجة والرسوم وكيف نحافظ على أمان معلوماتك."
+      />
 
-        <div className="space-y-3">
-          {faqs.map((faq, index) => (
-            <div
-              key={faq.question}
-              className="bg-white rounded-2xl border border-slate-100 overflow-hidden"
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-5 text-right hover:bg-slate-50 transition-colors"
+      <div className="mx-auto max-w-3xl space-y-3">
+        {faqs.map((faq, index) => (
+          <div
+            key={faq.question}
+            className="cursor-pointer rounded-2xl bg-gradient-to-tl from-white to-blue-100/30 p-4 transition-all"
+            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="font-bold text-gray-900">{faq.question}</h3>
+              <svg
+                className={`size-4 shrink-0 transition-transform ${openIndex === index ? 'rotate-180' : ''}`}
+                viewBox="0 0 256 256"
+                fill="currentColor"
               >
-                <ChevronDown
-                  className={`w-5 h-5 text-slate-400 shrink-0 transition-transform ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                />
-                <span className="font-bold text-slate-900 pr-4">{faq.question}</span>
-              </button>
-              {openIndex === index && (
-                <div className="px-5 pb-5 text-slate-600 leading-relaxed text-sm fade-in">
-                  {faq.answer}
-                </div>
-              )}
+                <path d="M210.83,98.83l-80,80a4,4,0,0,1-5.66,0l-80-80a4,4,0,0,1,5.66-5.66L128,170.34l77.17-77.17a4,4,0,1,1,5.66,5.66Z" />
+              </svg>
             </div>
-          ))}
-        </div>
-
-        <p className="text-center text-sm text-slate-500 mt-8">
-          لم تجد إجابتك؟{' '}
-          <a href="#contact" className="text-brand-600 font-bold hover:underline">
-            تواصل مع فريق الدعم 24/7
-          </a>
-        </p>
+            {openIndex === index && (
+              <p className="pt-4 text-pretty text-sm leading-relaxed text-gray-600 fade-in">
+                {faq.answer}
+              </p>
+            )}
+          </div>
+        ))}
       </div>
+
+      <p className="text-center text-sm text-gray-500">
+        لم تجد إجابتك؟{' '}
+        <a href="#contact" className="font-bold text-blue-500 underline">
+          تواصل مع فريق الدعم 24/7
+        </a>
+      </p>
     </section>
   );
 };

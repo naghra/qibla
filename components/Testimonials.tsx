@@ -1,34 +1,33 @@
 import React from 'react';
-import { Quote } from 'lucide-react';
 import { testimonials } from '../data/content';
+import { SectionHeader } from './ui';
 
 export const Testimonials: React.FC = () => {
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">
-            ماذا يقول مسافرونا
-          </h2>
-          <p className="text-slate-600">تجارب حقيقية من مسافرين وثقوا بنا في طلبات بطاقة TDAC.</p>
-        </div>
+    <section className="container mx-auto space-y-12 px-4 py-24">
+      <SectionHeader
+        title="ماذا يقول مسافرونا"
+        subtitle="تجارب حقيقية من مسافرين وثقوا بنا في طلبات بطاقة TDAC."
+      />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div
-              key={t.name}
-              className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:shadow-md transition-shadow"
-            >
-              <Quote className="w-8 h-8 text-brand-200 mb-4" />
-              <p className="text-slate-700 leading-relaxed mb-6 text-sm">&ldquo;{t.quote}&rdquo;</p>
-              <div>
-                <p className="font-bold text-slate-900">{t.name}</p>
-                <p className="text-xs text-slate-500">{t.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {testimonials.map((t) => (
+          <blockquote
+            key={t.name}
+            className="rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 p-4 sm:p-8"
+          >
+            <p className="text-pretty text-sm leading-relaxed text-gray-600">
+              &ldquo;{t.quote}&rdquo;
+            </p>
+            <footer className="mt-6">
+              <p className="font-bold text-gray-900">{t.name}</p>
+              <p className="text-xs text-gray-500">{t.role}</p>
+            </footer>
+          </blockquote>
+        ))}
       </div>
+
+      <p className="text-center text-sm text-gray-500">موثوق من مسافرين حول العالم</p>
     </section>
   );
 };

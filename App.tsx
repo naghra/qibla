@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { AboutSection } from './components/AboutSection';
+import { Hero, HeroAbout, StatsBar } from './components/Hero';
 import { Features } from './components/Features';
 import { Steps } from './components/Steps';
 import { Pricing } from './components/Pricing';
@@ -24,10 +22,10 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header onApply={() => openForm()} />
       <main>
         <Hero onApply={() => openForm()} />
-        <AboutSection />
+        <HeroAbout onApply={() => openForm()} />
+        <StatsBar />
         <Features onApply={() => openForm()} />
         <Steps onApply={() => openForm()} />
         <Pricing onApply={(plan) => openForm(plan)} />

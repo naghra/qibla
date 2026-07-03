@@ -83,25 +83,25 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
   };
 
   const inputClass =
-    'w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all text-sm';
+    'w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className="relative bg-white w-full sm:max-w-2xl sm:rounded-3xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl fade-in">
+      <div className="relative w-full sm:max-w-2xl max-h-[95vh] overflow-hidden flex flex-col bg-white shadow-2xl fade-in sm:rounded-4xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100">
+        <div className="flex items-center justify-between border-b border-gray-100 p-5">
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900">طلب بطاقة TDAC</h2>
+            <h2 className="text-xl font-bold text-gray-900">طلب بطاقة TDAC</h2>
             {step < 3 && (
-              <p className="text-sm text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-sm text-gray-500">
                 الخطوة {step + 1} من 3 — {stepLabels[step]}
               </p>
             )}
           </div>
           <button onClick={handleClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
@@ -113,7 +113,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                 <div
                   key={s}
                   className={`h-1.5 flex-1 rounded-full transition-colors ${
-                    s <= step ? 'bg-brand-600' : 'bg-slate-200'
+                    s <= step ? 'bg-blue-500' : 'bg-gray-200'
                   }`}
                 />
               ))}
@@ -126,13 +126,13 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
           {step === 0 && (
             <div className="space-y-6">
               {data.travelers.map((traveler, index) => (
-                <div key={index} className="border border-slate-100 rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-4">
+                <div key={index} className="rounded-4xl border border-gray-100 bg-gradient-to-tl from-white to-blue-100/30 p-5">
+                  <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <User className="w-5 h-5 text-brand-600" />
-                      <h3 className="font-bold text-slate-900">
+                      <User className="size-5 text-blue-500" />
+                      <h3 className="font-bold text-gray-900">
                         مسافر {index + 1}
-                        {index === 0 && <span className="text-xs text-brand-600 mr-2">(رئيسي)</span>}
+                        {index === 0 && <span className="mr-2 text-xs text-blue-500">(رئيسي)</span>}
                       </h3>
                     </div>
                     {index > 0 && (
@@ -147,7 +147,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">الاسم الأول *</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">الاسم الأول *</label>
                       <input
                         className={inputClass}
                         value={traveler.firstName}
@@ -156,7 +156,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">اسم العائلة *</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">اسم العائلة *</label>
                       <input
                         className={inputClass}
                         value={traveler.lastName}
@@ -165,7 +165,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">رقم جواز السفر *</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">رقم جواز السفر *</label>
                       <input
                         className={inputClass}
                         value={traveler.passportNumber}
@@ -175,7 +175,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">الجنسية *</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">الجنسية *</label>
                       <select
                         className={inputClass}
                         value={traveler.nationality}
@@ -188,7 +188,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">تاريخ الميلاد</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">تاريخ الميلاد</label>
                       <input
                         type="date"
                         className={inputClass}
@@ -197,7 +197,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">الجنس</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">الجنس</label>
                       <select
                         className={inputClass}
                         value={traveler.gender}
@@ -209,7 +209,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">البريد الإلكتروني *</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">البريد الإلكتروني *</label>
                       <input
                         type="email"
                         className={inputClass}
@@ -220,7 +220,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1.5">رقم الهاتف</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-1.5">رقم الهاتف</label>
                       <input
                         type="tel"
                         className={inputClass}
@@ -236,7 +236,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
 
               <button
                 onClick={addTraveler}
-                className="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:border-brand-300 hover:text-brand-600 transition-colors flex items-center justify-center gap-2"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 py-3 text-sm font-bold text-gray-600 transition-colors hover:border-blue-300 hover:text-blue-600"
               >
                 <Plus className="w-4 h-4" />
                 إضافة مسافر
@@ -247,13 +247,13 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
           {step === 1 && (
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-2">
-                <Plane className="w-5 h-5 text-brand-600" />
-                <h3 className="font-bold text-slate-900">تفاصيل الرحلة</h3>
+                <Plane className="size-5 text-blue-500" />
+                <h3 className="font-bold text-gray-900">تفاصيل الرحلة</h3>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">تاريخ الوصول *</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">تاريخ الوصول *</label>
                   <input
                     type="date"
                     className={inputClass}
@@ -262,7 +262,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">تاريخ المغادرة</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">تاريخ المغادرة</label>
                   <input
                     type="date"
                     className={inputClass}
@@ -271,7 +271,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">رقم رحلة الوصول *</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">رقم رحلة الوصول *</label>
                   <input
                     className={inputClass}
                     value={data.travel.flightNumber}
@@ -281,7 +281,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">غرض الزيارة</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">غرض الزيارة</label>
                   <select
                     className={inputClass}
                     value={data.travel.purposeOfVisit}
@@ -297,13 +297,13 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
               </div>
 
               <div className="flex items-center gap-2 mt-6 mb-2">
-                <Home className="w-5 h-5 text-brand-600" />
-                <h3 className="font-bold text-slate-900">الإقامة في تايلاند</h3>
+                <Home className="size-5 text-blue-500" />
+                <h3 className="font-bold text-gray-900">الإقامة في تايلاند</h3>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">عنوان الإقامة *</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">عنوان الإقامة *</label>
                   <input
                     className={inputClass}
                     value={data.travel.accommodationAddress}
@@ -312,7 +312,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1.5">المدينة</label>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5">المدينة</label>
                   <input
                     className={inputClass}
                     value={data.travel.accommodationCity}
@@ -328,17 +328,17 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
             <div className="space-y-6">
               <div>
                 <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5 text-brand-600" />
+                  <CreditCard className="size-5 text-blue-500" />
                   اختر خطة المعالجة
                 </h3>
                 <div className="space-y-3">
                   {pricingPlans.map((plan) => (
                     <label
                       key={plan.id}
-                      className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-4 transition-all ${
                         data.plan === plan.id
-                          ? 'border-brand-500 bg-brand-50'
-                          : 'border-slate-100 hover:border-slate-200'
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-100 hover:border-gray-200'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -347,14 +347,14 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                           name="plan"
                           checked={data.plan === plan.id}
                           onChange={() => setData({ ...data, plan: plan.id as PlanId })}
-                          className="w-4 h-4 text-brand-600"
+                          className="size-4 text-blue-500"
                         />
                         <div>
-                          <p className="font-bold text-slate-900">{plan.name}</p>
-                          <p className="text-xs text-slate-500">{plan.time}</p>
+                          <p className="font-bold text-gray-900">{plan.name}</p>
+                          <p className="text-xs text-gray-500">{plan.time}</p>
                         </div>
                       </div>
-                      <p className="font-bold text-brand-600">
+                      <p className="font-bold text-blue-500">
                         ${plan.price + plan.priorityFee}
                       </p>
                     </label>
@@ -362,27 +362,27 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
                 </div>
               </div>
 
-              <div className="bg-slate-50 rounded-2xl p-5 space-y-3">
-                <h4 className="font-bold text-slate-900">ملخص الطلب</h4>
+              <div className="space-y-3 rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 p-5">
+                <h4 className="font-bold text-gray-900">ملخص الطلب</h4>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">عدد المسافرين</span>
+                  <span className="text-gray-600">عدد المسافرين</span>
                   <span className="font-medium">{data.travelers.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">الخطة</span>
+                  <span className="text-gray-600">الخطة</span>
                   <span className="font-medium">{selectedPlan.name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">رسوم لكل مسافر</span>
+                  <span className="text-gray-600">رسوم لكل مسافر</span>
                   <span className="font-medium">${totalPerTraveler}</span>
                 </div>
-                <div className="border-t border-slate-200 pt-3 flex justify-between font-bold text-slate-900">
+                <div className="flex justify-between border-t border-gray-200 pt-3 font-bold text-gray-900">
                   <span>الإجمالي</span>
-                  <span className="text-brand-600 text-lg">${total}</span>
+                  <span className="text-lg text-blue-500">${total}</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400 text-center">
+              <p className="text-center text-xs text-gray-400">
                 بالمتابعة، أنت توافق على شروط الخدمة. هذا نموذج تجريبي — لن تتم معالجة دفع حقيقي.
               </p>
             </div>
@@ -393,12 +393,12 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
-              <h3 className="text-2xl font-extrabold text-slate-900 mb-3">تم إرسال طلبك بنجاح!</h3>
-              <p className="text-slate-600 mb-2">
+              <h3 className="mb-3 text-2xl font-bold text-gray-900">تم إرسال طلبك بنجاح!</h3>
+              <p className="mb-2 text-gray-600">
                 شكراً {data.travelers[0].firstName}! سنراجع طلبك ونرسل بطاقة TDAC إلى:
               </p>
-              <p className="font-bold text-brand-600 mb-6" dir="ltr">{data.travelers[0].email}</p>
-              <p className="text-sm text-slate-500">
+              <p className="mb-6 font-bold text-blue-500" dir="ltr">{data.travelers[0].email}</p>
+              <p className="text-sm text-gray-500">
                 وقت المعالجة المتوقع: <strong>{selectedPlan.time}</strong>
               </p>
             </div>
@@ -407,32 +407,32 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({ isOpen, onClos
 
         {/* Footer */}
         {step < 3 && (
-          <div className="p-5 border-t border-slate-100 flex gap-3">
+          <div className="flex gap-3 border-t border-gray-100 p-5">
             {step > 0 && (
               <button
                 onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-2 rounded-2xl border border-gray-200 px-5 py-3 font-bold text-gray-700 transition-colors hover:bg-gray-50"
               >
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="size-4" />
                 السابق
               </button>
             )}
             <button
               onClick={() => (step === 2 ? handleSubmit() : setStep(step + 1))}
               disabled={!canProceed()}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all active:scale-95"
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-blue-600 bg-blue-500 px-5 py-3 font-bold text-white transition active:scale-95 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {step === 2 ? 'إرسال الطلب' : 'التالي'}
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="size-4" />
             </button>
           </div>
         )}
 
         {step === 3 && (
-          <div className="p-5 border-t border-slate-100">
+          <div className="border-t border-gray-100 p-5">
             <button
               onClick={handleClose}
-              className="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-all"
+              className="w-full rounded-2xl border border-blue-600 bg-blue-500 py-3 font-bold text-white transition hover:bg-blue-600"
             >
               إغلاق
             </button>
