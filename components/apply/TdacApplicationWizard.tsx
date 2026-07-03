@@ -6,7 +6,7 @@ import { YourInfoStep } from './YourInfoStep';
 import { ResumeStep } from './ResumeStep';
 import { getDialPrefix } from './PhoneCountrySelect';
 import { travelerDateParts } from './TravelerInfoCard';
-import { applyBtnGhost, applyBtnPrimary } from './applyStyles';
+import { applyBtnPrevious, applyBtnPrimary } from './applyStyles';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
@@ -337,13 +337,7 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
         />
       )}
 
-      <div className="mx-auto flex w-full flex-col-reverse gap-4 sm:flex-row sm:gap-8">
-        {step > 0 && (
-          <button type="button" onClick={handleBack} className={`${applyBtnGhost} sm:flex-1`}>
-            <PrevChevron className="size-4" />
-            {a.previousStep}
-          </button>
-        )}
+      <div className="mx-auto flex w-full flex-col gap-4">
         <button
           type="button"
           onClick={handleContinue}
@@ -362,6 +356,12 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
             </>
           )}
         </button>
+        {step > 0 && (
+          <button type="button" onClick={handleBack} className={applyBtnPrevious}>
+            <PrevChevron className="size-4" />
+            {a.previousStep}
+          </button>
+        )}
       </div>
       </div>
     </div>

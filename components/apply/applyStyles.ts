@@ -25,6 +25,8 @@ export const applyBtnPrimary =
   'apply-btn-primary relative flex w-full flex-1 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-blue-600 bg-blue-500 px-6 py-3 text-lg font-medium text-gray-50 transition hover:bg-blue-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 export const applyBtnGhost =
   'flex w-full items-center justify-center gap-1.5 py-2.5 text-sm font-medium text-gray-600 transition hover:text-gray-950';
+export const applyBtnPrevious =
+  'flex w-full items-center justify-center gap-1.5 py-2 text-sm font-medium text-gray-600 transition hover:text-gray-950';
 export const applyBtnAddTraveler =
   'flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-gray-100 py-4 text-base font-medium text-gray-950 transition hover:border-gray-950 hover:bg-gray-200';
 export const applyTravelerHeader =
@@ -44,3 +46,9 @@ export const applyDateSelectShell =
   'apply-date-select-shell relative flex min-w-0 rounded-2xl border border-gray-200 bg-white outline-none transition hover:border-gray-950 cursor-pointer';
 export const applyDateSelectInner =
   'apply-date-select-inner w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent px-5 py-3.5 text-base text-gray-950 outline-none pe-10 sm:px-6';
+
+/** Step 3 resume — plan cards & eSIM row */
+export const applyResumePlanCard =
+  'apply-resume-plan flex cursor-pointer items-start gap-3 rounded-2xl border bg-white p-4 transition';
+export const applyResumeEsimCard =
+  'apply-resume-esim flex items-center gap-3 p-4 transition hover:bg-gray-50/50';

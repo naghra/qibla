@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check } from 'lucide-react';
 
 interface ApplyStepperProps {
   steps: string[];
@@ -28,18 +29,23 @@ export const ApplyStepper: React.FC<ApplyStepperProps> = ({ steps, current }) =>
                       : 'border border-gray-200 bg-white text-gray-950'
                   }`}
                 >
-                  {index + 1}
+                  {done ? <Check className="size-4" strokeWidth={2.5} /> : index + 1}
                 </span>
                 <span
-                  className={`mt-1 max-w-[5.5rem] text-center text-xs font-medium sm:max-w-none sm:text-base ${
-                    active ? 'text-gray-950' : 'font-bold text-gray-600'
+                  className={`mt-1 max-w-[5.5rem] px-1 text-center text-xs font-medium sm:max-w-none sm:text-base ${
+                    active ? 'text-gray-950' : done ? 'font-medium text-gray-700' : 'font-bold text-gray-600'
                   }`}
                 >
                   {label}
                 </span>
               </div>
               {!isLast && (
-                <span className="apply-stepper-bar ms-2 h-1 flex-1 rounded-full bg-gray-200" aria-hidden />
+                <span
+                  className={`apply-stepper-bar ms-2 h-1 flex-1 rounded-full ${
+                    index < current ? 'bg-gray-950' : 'bg-gray-200'
+                  }`}
+                  aria-hidden
+                />
               )}
             </div>
           </li>
