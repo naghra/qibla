@@ -2,7 +2,7 @@ import React from 'react';
 import { Header } from './Header';
 import { HeroShell } from './HeroShell';
 import { HeroBadge } from './HeroBadge';
-import { DocumentPicker } from './DocumentPicker';
+import { SelectedDocument } from './SelectedDocument';
 import { HeroDisclaimer } from './HeroDisclaimer';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -37,7 +37,7 @@ export const CountryHero: React.FC<CountryHeroProps> = ({ onApply }) => {
           )}
         </div>
 
-        <DocumentPicker mode="services" destination={destination} />
+        <SelectedDocument destination={destination} />
       </div>
 
       <HeroDisclaimer />
