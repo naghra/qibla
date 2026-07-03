@@ -59,9 +59,9 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
 
           <div className="mx-auto w-full max-w-xl flex-1 space-y-8 p-8 text-center text-white">
             <div className="space-y-4">
-              <div className="relative -right-4 flex items-center justify-center gap-4">
+              <div className="relative -right-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <span className="text-5xl">{THAILAND_FLAG}</span>
-                <Logo className="h-12" inverted />
+                <Logo className="h-10" inverted showText={false} />
               </div>
               <h1 className="text-pretty text-2xl font-bold sm:text-3xl lg:text-4xl">
                 تقديم بطاقة الوصول الرقمية التايلاندية (TDAC) بدون تعقيد

@@ -22,7 +22,7 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
         <div className="container mx-auto flex items-center justify-between gap-4 p-4">
           <a href="#" className="flex items-center gap-3" onClick={() => window.scrollTo({ top: 0 })}>
             <span className="text-2xl">{THAILAND_FLAG}</span>
-            <Logo />
+            <Logo showText={false} />
           </a>
 
           <nav className="hidden items-center gap-6 lg:flex">

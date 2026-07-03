@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
         <div className="flex items-center justify-between gap-4">
           <div className="order-1 mr-auto flex items-center gap-4">
             <span className="text-4xl leading-none">{THAILAND_FLAG}</span>
-            <Logo inverted className="h-8" />
+            <Logo inverted className="h-8" showText={false} />
             <span className="sr-only font-bold">{SITE_NAME}</span>
           </div>
 

@@ -24,7 +24,7 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
           </button>
           <div className="flex items-center gap-2">
             <span>{THAILAND_FLAG}</span>
-            <Logo />
+            <Logo showText={false} />
           </div>
           <div className="w-24" />
         </div>
