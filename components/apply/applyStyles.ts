@@ -35,12 +35,12 @@ export const applyDashedBox =
 export const applyHelper = 'mt-1 text-sm text-gray-500';
 export const applyDividerText = 'px-3 text-xs text-gray-400';
 
-/** Step 1 date pickers — pill selects in 3-column grid */
+/** Step 1 date pickers — rounded boxes matching reference */
 export const applyDateSection = 'space-y-2';
-export const applyDateQuestion = 'font-medium text-sm text-gray-950';
-export const applyDateGrid = 'grid grid-cols-3 gap-4 sm:gap-8';
+export const applyDateQuestion = 'text-base font-medium text-gray-950';
+export const applyDateGrid = 'apply-date-grid grid gap-4 sm:gap-8';
 export const applyDateSubLabel = 'mb-1 block text-sm font-medium text-gray-950';
 export const applyDateSelectShell =
-  'apply-date-select-shell relative flex min-w-0 rounded-full border border-gray-200 bg-white outline-none transition hover:border-gray-950 cursor-pointer';
+  'apply-date-select-shell relative flex min-w-0 rounded-2xl border border-gray-200 bg-white outline-none transition hover:border-gray-950 cursor-pointer';
 export const applyDateSelectInner =
-  'apply-date-select-inner w-full min-w-0 appearance-none border-0 bg-transparent px-4 py-3 text-sm text-gray-950 outline-none pe-9 sm:px-5 sm:text-base';
+  'apply-date-select-inner w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent px-5 py-3.5 text-base text-gray-950 outline-none pe-10 sm:px-6';
