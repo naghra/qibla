@@ -10,8 +10,8 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { PrimaryButton, CheckItem } from './ui';
-import { glanceItems, requirements, SITE_NAME } from '../data/content';
 import { THAILAND_FLAG } from '../data/assets';
+import { useLanguage } from '../context/LanguageContext';
 
 const iconMap: Record<string, LucideIcon> = {
   clock: Clock,
@@ -27,36 +27,35 @@ interface GlanceSectionProps {
 }
 
 export const GlanceSection: React.FC<GlanceSectionProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+
   return (
     <section id="how-to-apply" className="container mx-auto space-y-12 px-4 py-24">
       <div className="space-y-4 text-center">
         <h2 className="text-pretty text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
-          عن بطاقة الوصول الرقمية TDAC {THAILAND_FLAG}
+          {t.about.title} {THAILAND_FLAG}
         </h2>
         <p className="mx-auto max-w-2xl text-pretty text-base leading-relaxed text-gray-600 sm:text-xl">
-          بطاقة TDAC هي متطلب إلزامي لدخول تايلاند لجميع غير التايلانديين. أكمل طلبك عبر الإنترنت
-          قبل المغادرة واحصل على رمز QR لتسهيل إجراءات الهجرة.
+          {t.about.subtitle}
         </p>
       </div>
 
       <div className="overflow-hidden rounded-4xl border border-blue-100/60 bg-gradient-to-br from-white via-blue-50/40 to-blue-100/30 shadow-sm">
-        {/* Card header */}
         <div className="border-b border-blue-100/60 bg-white/60 px-6 py-5 sm:px-8">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-blue-500 text-white shadow-md shadow-blue-500/20">
               <FileText className="size-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900 sm:text-xl">نظرة سريعة على بطاقة الوصول</h3>
-              <p className="text-sm text-gray-500">كل ما تحتاج معرفته قبل التقديم</p>
+              <h3 className="text-lg font-bold text-gray-900 sm:text-xl">{t.about.glanceTitle}</h3>
+              <p className="text-sm text-gray-500">{t.about.glanceSubtitle}</p>
             </div>
           </div>
         </div>
 
         <div className="space-y-8 p-6 sm:p-8">
-          {/* Info grid */}
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {glanceItems.map((item) => {
+            {t.glanceItems.map((item) => {
               const Icon = iconMap[item.icon];
               return (
                 <div
@@ -78,21 +77,20 @@ export const GlanceSection: React.FC<GlanceSectionProps> = ({ onApply }) => {
             })}
           </dl>
 
-          {/* Requirements */}
           <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8">
             <div className="mb-5 flex items-center gap-2">
               <span className="h-1 w-8 rounded-full bg-blue-500" />
-              <h4 className="text-base font-bold text-gray-900">ما ستحتاجه للتقديم</h4>
+              <h4 className="text-base font-bold text-gray-900">{t.about.requirementsTitle}</h4>
             </div>
             <ul className="mb-6 grid gap-3 sm:grid-cols-2">
-              {requirements.map((req) => (
+              {t.requirements.map((req) => (
                 <CheckItem key={req}>{req}</CheckItem>
               ))}
             </ul>
             <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <PrimaryButton onClick={onApply}>قدّم الآن عبر الإنترنت</PrimaryButton>
+              <PrimaryButton onClick={onApply}>{t.about.applyCta}</PrimaryButton>
               <p className="max-w-sm text-pretty text-xs leading-relaxed text-gray-500">
-                {SITE_NAME} شركة خاصة — غير تابعة لأي جهة حكومية.
+                {t.siteName} {t.about.requirementsDisclaimer}
               </p>
             </div>
           </div>

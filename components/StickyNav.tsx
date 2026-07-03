@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
-import { SITE_NAME, navLinks } from '../data/content';
 import { PrimaryButton } from './ui';
 import { useScroll } from '../hooks/useScroll';
+import { useLanguage } from '../context/LanguageContext';
+import { getNavLinks } from '../utils/navLinks';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface StickyNavProps {
   onApply: () => void;
 }
 
 export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+  const navLinks = getNavLinks(t);
   const scrolled = useScroll();
   const [open, setOpen] = useState(false);
 
@@ -17,7 +21,7 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
 
   return (
     <>
-      <div className="fixed top-0 right-0 left-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
+      <div className="fixed top-0 inset-x-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
         <div className="container mx-auto flex items-center justify-between gap-4 p-4">
           <a href="#" className="flex items-center gap-3" onClick={() => window.scrollTo({ top: 0 })}>
             <Logo showText={false} />
@@ -36,13 +40,14 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
           </nav>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher variant="light" className="hidden sm:inline-flex" />
             <PrimaryButton onClick={onApply} className="hidden px-4 py-2 text-sm sm:inline-flex">
-              قدّم الآن
+              {t.nav.applyNow}
             </PrimaryButton>
             <button
               onClick={() => setOpen(true)}
               className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
-              aria-label="القائمة"
+              aria-label={t.nav.menu}
             >
               <Menu className="size-6" />
             </button>
@@ -54,10 +59,13 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
         <div className="fixed inset-0 z-[60] bg-white fade-in lg:hidden">
           <div className="flex min-h-full flex-col p-6">
             <div className="mb-6 flex items-center justify-between">
-              <span className="font-bold text-gray-900">{SITE_NAME}</span>
-              <button onClick={() => setOpen(false)} className="text-gray-500">
-                <X className="size-6" />
-              </button>
+              <span className="font-bold text-gray-900">{t.siteName}</span>
+              <div className="flex items-center gap-3">
+                <LanguageSwitcher variant="light" />
+                <button onClick={() => setOpen(false)} className="text-gray-500">
+                  <X className="size-6" />
+                </button>
+              </div>
             </div>
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -72,7 +80,7 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
               ))}
             </nav>
             <PrimaryButton onClick={() => { setOpen(false); onApply(); }} className="mt-6 w-full">
-              قدّم الآن
+              {t.nav.applyNow}
             </PrimaryButton>
           </div>
         </div>

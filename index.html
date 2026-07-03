@@ -7,13 +7,15 @@
     <title>بطاقة الوصول الرقمية التايلاندية TDAC — سفر ذكي سفر سريع</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ['"IBM Plex Sans Arabic"', 'sans-serif'] },
+            fontFamily: {
+              sans: ['"IBM Plex Sans Arabic"', '"IBM Plex Sans"', 'sans-serif'],
+            },
             borderRadius: { '4xl': '2rem' },
           },
         },
@@ -22,9 +24,12 @@
     <style>
       html { scroll-behavior: smooth; }
       body {
-        font-family: 'IBM Plex Sans Arabic', sans-serif;
+        font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
         color: #3c4043;
         background: #fff;
+      }
+      html[lang="en"] body {
+        font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', sans-serif;
       }
       .text-pretty { text-wrap: pretty; }
       .hero-overlay { background-color: rgba(22, 36, 86, 0.7); }

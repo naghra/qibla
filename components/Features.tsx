@@ -1,8 +1,8 @@
 import React from 'react';
 import { ListChecks, Headphones, Shield, Users, CheckCircle } from 'lucide-react';
-import { features, SITE_NAME } from '../data/content';
 import { Logo } from './Logo';
 import { PrimaryButton, SectionHeader } from './ui';
+import { useLanguage } from '../context/LanguageContext';
 
 const iconMap = {
   list: ListChecks,
@@ -17,12 +17,12 @@ interface FeaturesProps {
 }
 
 export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+  const { features: f } = t;
+
   return (
     <section className="container mx-auto space-y-12 px-4 py-24">
-      <SectionHeader
-        title="لماذا يختارنا المسافرون"
-        subtitle="نبسّط عملية تقديم بطاقة الوصول الرقمية بإرشاد خبير وتحقق فوري ودعم بشري — لتتفرغ لتخطيط رحلتك."
-      />
+      <SectionHeader title={f.sectionTitle} subtitle={f.sectionSubtitle} />
 
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <article className="relative flex flex-col overflow-hidden rounded-4xl sm:col-span-2 sm:row-span-2">
@@ -31,14 +31,10 @@ export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Logo inverted className="h-8" />
-                <p className="font-bold">{SITE_NAME}</p>
+                <p className="font-bold">{t.siteName}</p>
               </div>
-              <h3 className="max-w-md text-pretty text-2xl font-bold">
-                الطريقة الذكية لتقديم بطاقة TDAC
-              </h3>
-              <p className="max-w-md text-pretty text-sm text-blue-100">
-                تجاوز المواقع الحكومية المعقدة. قدّم عبر الإنترنت مع نماذج إرشادية وتحقق فوري ومراجعة خبيرة.
-              </p>
+              <h3 className="max-w-md text-pretty text-2xl font-bold">{f.cardTitle}</h3>
+              <p className="max-w-md text-pretty text-sm text-blue-100">{f.cardSubtitle}</p>
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-1">
@@ -48,15 +44,15 @@ export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
                   </svg>
                 ))}
               </div>
-              <p className="text-sm text-blue-100">موثوق من مسافرين حول العالم</p>
+              <p className="text-sm text-blue-100">{f.trusted}</p>
               <PrimaryButton onClick={onApply} className="w-full sm:w-auto">
-                ابدأ طلبك الآن
+                {f.cta}
               </PrimaryButton>
             </div>
           </div>
         </article>
 
-        {features.map((feature) => {
+        {f.items.map((feature) => {
           const Icon = iconMap[feature.icon as keyof typeof iconMap];
           return (
             <article
@@ -73,9 +69,7 @@ export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
         })}
       </div>
 
-      <p className="text-center text-sm text-gray-500">
-        معدل موافقة يصل إلى 99.9% · دعم خبير 24/7 · استرداد جزئي قبل المعالجة
-      </p>
+      <p className="text-center text-sm text-gray-500">{f.footerNote}</p>
     </section>
   );
 };
