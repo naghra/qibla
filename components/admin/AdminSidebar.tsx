@@ -10,10 +10,11 @@ import {
 } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { adminLabels } from '../../data/adminLabels';
+import { getPendingCount } from '../../services/applicationStore';
 
 const navItems = [
   { to: '/admin', end: true, label: adminLabels.nav.dashboard, icon: LayoutDashboard },
-  { to: '/admin/applications', end: false, label: adminLabels.nav.applications, icon: FileText },
+  { to: '/admin/applications', end: false, label: adminLabels.nav.applications, icon: FileText, showBadge: true },
   { to: '/admin/destinations', end: false, label: adminLabels.nav.destinations, icon: Globe },
 ];
 
@@ -25,6 +26,7 @@ interface AdminSidebarProps {
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ open, onClose }) => {
   const { logout } = useAdminAuth();
   const navigate = useNavigate();
+  const pending = getPendingCount();
 
   const handleNav = () => onClose();
 
@@ -33,26 +35,26 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ open, onClose }) => 
       {open && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           aria-label="إغلاق القائمة"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 end-0 z-50 flex w-72 max-w-[88vw] flex-col border-s border-gray-200 bg-white shadow-xl transition-transform duration-300 lg:static lg:z-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none ${
+        className={`fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] flex-col border-e border-white/10 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl transition-transform duration-300 ease-out lg:static lg:z-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none ${
           open ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         } ${!open ? 'pointer-events-none lg:pointer-events-auto' : ''}`}
       >
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-5">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
           <div>
-            <p className="text-lg font-bold text-gray-900">{adminLabels.siteName}</p>
-            <p className="text-xs text-gray-500">Admin Panel</p>
+            <p className="text-lg font-bold">{adminLabels.siteName}</p>
+            <p className="text-xs text-slate-400">{adminLabels.siteTagline}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden"
+            className="rounded-lg p-2 text-slate-400 hover:bg-white/10 lg:hidden"
             aria-label="إغلاق"
           >
             <X className="size-5" />
@@ -60,7 +62,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ open, onClose }) => 
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {navItems.map(({ to, end, label, icon: Icon }) => (
+          {navItems.map(({ to, end, label, icon: Icon, showBadge }) => (
             <NavLink
               key={to}
               to={to}
@@ -69,23 +71,28 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ open, onClose }) => 
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                   isActive
-                    ? 'bg-blue-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/30'
+                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
               <Icon className="size-5 shrink-0" />
-              {label}
+              <span className="flex-1">{label}</span>
+              {showBadge && pending > 0 && (
+                <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
+                  {pending}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        <div className="space-y-1 border-t border-gray-100 p-3">
+        <div className="space-y-1 border-t border-white/10 p-3">
           <a
             href="/en/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white"
           >
             <ExternalLink className="size-5" />
             {adminLabels.nav.publicSite}
@@ -96,7 +103,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ open, onClose }) => 
               logout();
               navigate('/admin/login');
             }}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/10"
           >
             <LogOut className="size-5" />
             {adminLabels.nav.logout}

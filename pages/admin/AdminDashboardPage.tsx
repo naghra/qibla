@@ -1,31 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   FileText,
   Clock,
   CheckCircle,
   DollarSign,
   TrendingUp,
+  LayoutDashboard,
+  Download,
+  ArrowLeft,
 } from 'lucide-react';
 import { StatCard } from '../../components/admin/StatCard';
 import { StatusBadge } from '../../components/admin/StatusBadge';
 import { ApplicationListCard } from '../../components/admin/ApplicationListCard';
+import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
+import { StatusBarChart } from '../../components/admin/StatusBarChart';
+import { WeeklyChart } from '../../components/admin/WeeklyChart';
+import { DestinationBreakdown } from '../../components/admin/DestinationBreakdown';
 import { adminLabels } from '../../data/adminLabels';
 import {
+  downloadCsv,
+  exportApplicationsCsv,
   getApplications,
+  getDailyCounts,
   getDashboardStats,
+  getTopDestinations,
   seedDemoApplicationsIfEmpty,
 } from '../../services/applicationStore';
-import type { StoredApplication } from '../../types/admin';
+import type { ApplicationStatus, StoredApplication } from '../../types/admin';
 
 export const AdminDashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(getDashboardStats());
   const [recent, setRecent] = useState<StoredApplication[]>([]);
+  const [daily, setDaily] = useState(getDailyCounts());
+  const [destinations, setDestinations] = useState(getTopDestinations());
 
   useEffect(() => {
     seedDemoApplicationsIfEmpty();
     setStats(getDashboardStats());
-    setRecent(getApplications().slice(0, 8));
+    setRecent(getApplications().slice(0, 6));
+    setDaily(getDailyCounts());
+    setDestinations(getTopDestinations());
   }, []);
 
   const formatDate = (iso: string) =>
@@ -36,31 +52,127 @@ export const AdminDashboardPage: React.FC = () => {
       minute: '2-digit',
     });
 
+  const handleExport = () => {
+    downloadCsv(`qibla-applications-${Date.now()}.csv`, exportApplicationsCsv(getApplications()));
+  };
+
+  const statusData: Record<ApplicationStatus, number> = {
+    pending: stats.pending,
+    processing: stats.processing,
+    approved: stats.approved,
+    rejected: stats.rejected,
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <header className="mb-6 lg:mb-8">
-        <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">{adminLabels.dashboard.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{adminLabels.dashboard.subtitle}</p>
-      </header>
+      <AdminPageHeader
+        title={adminLabels.dashboard.title}
+        subtitle={adminLabels.dashboard.subtitle}
+        icon={LayoutDashboard}
+        actions={
+          <button
+            type="button"
+            onClick={handleExport}
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700"
+          >
+            <Download className="size-4" />
+            {adminLabels.dashboard.exportAll}
+          </button>
+        }
+      />
 
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:mb-8 xl:grid-cols-4">
-        <StatCard label={adminLabels.dashboard.totalApplications} value={stats.total} icon={FileText} />
-        <StatCard label={adminLabels.dashboard.todayApplications} value={stats.todayCount} icon={TrendingUp} accent="green" />
-        <StatCard label={adminLabels.dashboard.pending} value={stats.pending} icon={Clock} accent="amber" />
-        <StatCard label={adminLabels.dashboard.revenue} value={`$${stats.totalRevenue.toFixed(0)}`} icon={DollarSign} accent="green" />
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <StatCard
+          label={adminLabels.dashboard.totalApplications}
+          value={stats.total}
+          icon={FileText}
+          onClick={() => navigate('/admin/applications')}
+        />
+        <StatCard
+          label={adminLabels.dashboard.todayApplications}
+          value={stats.todayCount}
+          icon={TrendingUp}
+          accent="green"
+          hint={`${adminLabels.dashboard.weekApplications}: ${stats.weekCount}`}
+        />
+        <StatCard
+          label={adminLabels.dashboard.pending}
+          value={stats.pending}
+          icon={Clock}
+          accent="amber"
+          onClick={() => navigate('/admin/applications?status=pending')}
+        />
+        <StatCard
+          label={adminLabels.dashboard.revenue}
+          value={`$${stats.totalRevenue.toFixed(0)}`}
+          icon={DollarSign}
+          accent="violet"
+          hint={`${adminLabels.dashboard.weekRevenue}: $${stats.weekRevenue.toFixed(0)}`}
+        />
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 lg:mb-8">
-        <StatCard label={adminLabels.dashboard.processing} value={stats.processing} icon={Clock} accent="blue" />
-        <StatCard label={adminLabels.dashboard.approved} value={stats.approved} icon={CheckCircle} accent="green" />
-        <StatCard label={adminLabels.dashboard.rejected} value={stats.rejected} icon={FileText} accent="red" />
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5 lg:col-span-2">
+          <h2 className="mb-4 text-sm font-bold text-gray-900 sm:text-base">
+            {adminLabels.dashboard.weeklyChart}
+          </h2>
+          <WeeklyChart data={daily} />
+        </section>
+
+        <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-4 text-sm font-bold text-gray-900 sm:text-base">
+            {adminLabels.dashboard.quickActions}
+          </h2>
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => navigate('/admin/applications?status=pending')}
+              className="flex w-full items-center justify-between rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900 hover:bg-amber-100"
+            >
+              {adminLabels.dashboard.viewPending}
+              <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-bold">{stats.pending}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/admin/applications?status=processing')}
+              className="flex w-full items-center justify-between rounded-xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-900 hover:bg-blue-100"
+            >
+              {adminLabels.dashboard.viewProcessing}
+              <span className="rounded-full bg-blue-200 px-2 py-0.5 text-xs font-bold">{stats.processing}</span>
+            </button>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <StatCard label={adminLabels.dashboard.approved} value={stats.approved} icon={CheckCircle} accent="green" />
+              <StatCard label={adminLabels.dashboard.approvalRate} value={`${stats.approvalRate}%`} icon={TrendingUp} accent="blue" />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-4 text-sm font-bold text-gray-900 sm:text-base">
+            {adminLabels.dashboard.statusBreakdown}
+          </h2>
+          <StatusBarChart data={statusData} total={stats.total} />
+        </section>
+
+        <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-4 text-sm font-bold text-gray-900 sm:text-base">
+            {adminLabels.dashboard.topDestinations}
+          </h2>
+          <DestinationBreakdown items={destinations} />
+        </section>
       </div>
 
       <section className="rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-4 py-3 sm:px-5 sm:py-4">
           <h2 className="text-sm font-bold text-gray-900 sm:text-base">{adminLabels.dashboard.recentApplications}</h2>
-          <Link to="/admin/applications" className="shrink-0 text-xs font-medium text-blue-600 hover:underline sm:text-sm">
+          <Link
+            to="/admin/applications"
+            className="flex shrink-0 items-center gap-1 text-xs font-medium text-blue-600 hover:underline sm:text-sm"
+          >
             {adminLabels.dashboard.viewAll}
+            <ArrowLeft className="size-3.5" />
           </Link>
         </div>
 
@@ -68,18 +180,12 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="p-8 text-center text-sm text-gray-500">{adminLabels.dashboard.noApplications}</p>
         ) : (
           <>
-            <div className="space-y-3 p-4 md:hidden">
+            <div className="space-y-3 p-4 lg:hidden">
               {recent.map((app) => (
-                <ApplicationListCard
-                  key={app.id}
-                  app={app}
-                  formatDate={formatDate}
-                  onDelete={() => {}}
-                  compact
-                />
+                <ApplicationListCard key={app.id} app={app} formatDate={formatDate} onDelete={() => {}} compact />
               ))}
             </div>
-            <div className="hidden overflow-x-auto md:block">
+            <div className="hidden overflow-x-auto lg:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-50 text-start text-gray-500">
