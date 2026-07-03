@@ -1,30 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { countriesData, countryFlag } from '../data/countries';
 import { SectionHeader } from './ui';
+import { useLanguage } from '../context/LanguageContext';
+import { getCountryName } from '../utils/countryName';
 
 export const Countries: React.FC = () => {
+  const { t, lang } = useLanguage();
+  const { countries: c } = t;
   const [search, setSearch] = useState('');
   const [showAll, setShowAll] = useState(false);
 
-  const filtered = countriesData.filter((c) => c.name.includes(search));
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return countriesData;
+    return countriesData.filter((country) => {
+      const display = getCountryName(country, lang).toLowerCase();
+      return display.includes(q) || country.name.includes(search) || country.code.toLowerCase().includes(q);
+    });
+  }, [search, lang]);
+
   const displayed = showAll ? filtered : filtered.slice(0, 20);
 
   return (
     <section className="container mx-auto space-y-12 px-4 py-24">
-      <SectionHeader
-        title="الدول التي تتطلب بطاقة TDAC"
-        subtitle="يجب على جميع المسافرين الدوليين إلى تايلاند إكمال نموذج الوصول الرقمي قبل الوصول."
-      />
+      <SectionHeader title={c.sectionTitle} subtitle={c.sectionSubtitle} />
 
       <div className="relative mx-auto max-w-md">
-        <Search className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute start-4 top-1/2 size-5 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
-          placeholder="ابحث عن بلدك..."
+          placeholder={c.searchPlaceholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-2xl border border-gray-200 bg-white py-3.5 pr-12 pl-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="w-full rounded-2xl border border-gray-200 bg-white py-3.5 ps-12 pe-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
         />
       </div>
 
@@ -41,10 +50,12 @@ export const Countries: React.FC = () => {
               >
                 {countryFlag(country.code)}
               </span>
-              <span className="truncate font-medium text-gray-800">{country.name}</span>
+              <span className="truncate font-medium text-gray-800">
+                {getCountryName(country, lang)}
+              </span>
             </div>
             <span className="shrink-0 rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold text-red-600">
-              مطلوب
+              {c.required}
             </span>
           </li>
         ))}
@@ -56,14 +67,12 @@ export const Countries: React.FC = () => {
             onClick={() => setShowAll(!showAll)}
             className="text-sm font-bold text-blue-500 hover:text-blue-600"
           >
-            {showAll ? 'عرض أقل' : `عرض جميع ${filtered.length} دولة`}
+            {showAll ? c.showLess : c.showAll(filtered.length)}
           </button>
         </div>
       )}
 
-      <p className="text-center text-sm text-gray-500">
-        ابحث عن بلدك أعلاه للتحقق مما إذا كانت بطاقة الوصول مطلوبة لجنسيتك
-      </p>
+      <p className="text-center text-sm text-gray-500">{c.footerNote}</p>
     </section>
   );
 };

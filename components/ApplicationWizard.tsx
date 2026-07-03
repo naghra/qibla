@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, CheckCircle, User, Plane, Home, CreditCard, Plus, Trash2 } from 'lucide-react';
-import { pricingPlans } from '../data/content';
-import { countries } from '../data/countries';
+import { countriesData } from '../data/countries';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { getCountryName } from '../utils/countryName';
 
 const emptyTraveler = (): TravelerData => ({
   firstName: '',
@@ -24,8 +25,6 @@ const emptyTravel: TravelDetails = {
   accommodationCity: '',
 };
 
-const stepLabels = ['المسافرون', 'تفاصيل السفر', 'المراجعة والدفع', 'تم الإرسال'];
-
 interface ApplicationWizardProps {
   initialPlan?: PlanId;
   onComplete?: () => void;
@@ -37,6 +36,10 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
   onComplete,
   variant = 'page',
 }) => {
+  const { t, lang, dir } = useLanguage();
+  const a = t.apply;
+  const plans = t.pricing.plans;
+
   const [step, setStep] = useState(0);
   const [data, setData] = useState<ApplicationData>({
     travelers: [emptyTraveler()],
@@ -44,9 +47,12 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
     plan: initialPlan,
   });
 
-  const selectedPlan = pricingPlans.find((p) => p.id === data.plan)!;
+  const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const totalPerTraveler = selectedPlan.price + selectedPlan.priorityFee;
   const total = totalPerTraveler * data.travelers.length;
+
+  const PrevIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
+  const NextIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
 
   const updateTraveler = (index: number, field: keyof TravelerData, value: string) => {
     const travelers = [...data.travelers];
@@ -64,7 +70,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
   const canProceed = () => {
     if (step === 0) {
       return data.travelers.every(
-        (t) => t.firstName && t.lastName && t.passportNumber && t.nationality && t.email
+        (tr) => tr.firstName && tr.lastName && tr.passportNumber && tr.nationality && tr.email
       );
     }
     if (step === 1) {
@@ -84,12 +90,16 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
   const inputClass =
     'w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
 
+  const sortedCountries = [...countriesData].sort((x, y) =>
+    getCountryName(x, lang).localeCompare(getCountryName(y, lang), lang === 'ar' ? 'ar' : 'en')
+  );
+
   return (
     <div className={variant === 'modal' ? 'flex max-h-[70vh] flex-col' : ''}>
       {step < 3 && (
         <div className={variant === 'page' ? 'mb-6' : 'px-1 pb-4'}>
           <p className="mb-3 text-sm text-gray-500">
-            الخطوة {step + 1} من 3 — {stepLabels[step]}
+            {a.stepOf(step + 1, 3, a.steps[step])}
           </p>
           <div className="flex gap-2">
             {[0, 1, 2].map((s) => (
@@ -116,8 +126,8 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                   <div className="flex items-center gap-2">
                     <User className="size-5 text-blue-500" />
                     <h3 className="font-bold text-gray-900">
-                      مسافر {index + 1}
-                      {index === 0 && <span className="mr-2 text-xs text-blue-500">(رئيسي)</span>}
+                      {a.traveler(index + 1)}
+                      {index === 0 && <span className="ms-2 text-xs text-blue-500">{a.primary}</span>}
                     </h3>
                   </div>
                   {index > 0 && (
@@ -130,39 +140,49 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                   )}
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {(
-                    [
-                      ['firstName', 'الاسم الأول *', 'أحمد', 'text'],
-                      ['lastName', 'اسم العائلة *', 'محمد', 'text'],
-                      ['passportNumber', 'رقم جواز السفر *', 'A12345678', 'text'],
-                    ] as const
-                  ).map(([field, label, placeholder]) => (
-                    <div key={field}>
-                      <label className="mb-1.5 block text-xs font-bold text-gray-500">{label}</label>
-                      <input
-                        className={inputClass}
-                        value={traveler[field]}
-                        onChange={(e) => updateTraveler(index, field, e.target.value)}
-                        placeholder={placeholder}
-                        dir={field === 'passportNumber' ? 'ltr' : undefined}
-                      />
-                    </div>
-                  ))}
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-gray-500">الجنسية *</label>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.firstName}</label>
+                    <input
+                      className={inputClass}
+                      value={traveler.firstName}
+                      onChange={(e) => updateTraveler(index, 'firstName', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.lastName}</label>
+                    <input
+                      className={inputClass}
+                      value={traveler.lastName}
+                      onChange={(e) => updateTraveler(index, 'lastName', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.passport}</label>
+                    <input
+                      className={inputClass}
+                      value={traveler.passportNumber}
+                      onChange={(e) => updateTraveler(index, 'passportNumber', e.target.value)}
+                      placeholder="A12345678"
+                      dir="ltr"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.nationality}</label>
                     <select
                       className={inputClass}
                       value={traveler.nationality}
                       onChange={(e) => updateTraveler(index, 'nationality', e.target.value)}
                     >
-                      <option value="">اختر الجنسية</option>
-                      {countries.map((c) => (
-                        <option key={c} value={c}>{c}</option>
+                      <option value="">{a.selectNationality}</option>
+                      {sortedCountries.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {getCountryName(c, lang)}
+                        </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-gray-500">تاريخ الميلاد</label>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.dateOfBirth}</label>
                     <input
                       type="date"
                       className={inputClass}
@@ -171,19 +191,19 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-gray-500">الجنس</label>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.gender}</label>
                     <select
                       className={inputClass}
                       value={traveler.gender}
                       onChange={(e) => updateTraveler(index, 'gender', e.target.value)}
                     >
-                      <option value="">اختر</option>
-                      <option value="male">ذكر</option>
-                      <option value="female">أنثى</option>
+                      <option value="">{a.selectGender}</option>
+                      <option value="male">{a.male}</option>
+                      <option value="female">{a.female}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-gray-500">البريد الإلكتروني *</label>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.email}</label>
                     <input
                       type="email"
                       className={inputClass}
@@ -194,13 +214,13 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs font-bold text-gray-500">رقم الهاتف</label>
+                    <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.phone}</label>
                     <input
                       type="tel"
                       className={inputClass}
                       value={traveler.phone}
                       onChange={(e) => updateTraveler(index, 'phone', e.target.value)}
-                      placeholder="+966..."
+                      placeholder="+1..."
                       dir="ltr"
                     />
                   </div>
@@ -212,7 +232,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
               className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 py-3 text-sm font-bold text-gray-600 hover:border-blue-300 hover:text-blue-600"
             >
               <Plus className="size-4" />
-              إضافة مسافر
+              {a.addTraveler}
             </button>
           </div>
         )}
@@ -221,11 +241,11 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
           <div className="space-y-4">
             <div className="mb-2 flex items-center gap-2">
               <Plane className="size-5 text-blue-500" />
-              <h3 className="font-bold text-gray-900">تفاصيل الرحلة</h3>
+              <h3 className="font-bold text-gray-900">{a.travelDetails}</h3>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">تاريخ الوصول *</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.arrivalDate}</label>
                 <input
                   type="date"
                   className={inputClass}
@@ -234,7 +254,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">تاريخ المغادرة</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.departureDate}</label>
                 <input
                   type="date"
                   className={inputClass}
@@ -243,7 +263,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">رقم رحلة الوصول *</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.flightNumber}</label>
                 <input
                   className={inputClass}
                   value={data.travel.flightNumber}
@@ -253,45 +273,44 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">غرض الزيارة</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.purpose}</label>
                 <select
                   className={inputClass}
                   value={data.travel.purposeOfVisit}
                   onChange={(e) => setData({ ...data, travel: { ...data.travel, purposeOfVisit: e.target.value } })}
                 >
-                  <option value="">اختر الغرض</option>
-                  <option value="tourism">سياحة</option>
-                  <option value="business">أعمال</option>
-                  <option value="transit">عبور</option>
-                  <option value="other">أخرى</option>
+                  <option value="">{a.selectPurpose}</option>
+                  <option value="tourism">{a.tourism}</option>
+                  <option value="business">{a.business}</option>
+                  <option value="transit">{a.transit}</option>
+                  <option value="other">{a.other}</option>
                 </select>
               </div>
             </div>
             <div className="mb-2 mt-6 flex items-center gap-2">
               <Home className="size-5 text-blue-500" />
-              <h3 className="font-bold text-gray-900">الإقامة في تايلاند</h3>
+              <h3 className="font-bold text-gray-900">{a.accommodation}</h3>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">عنوان الإقامة *</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.address}</label>
                 <input
                   className={inputClass}
                   value={data.travel.accommodationAddress}
                   onChange={(e) =>
                     setData({ ...data, travel: { ...data.travel, accommodationAddress: e.target.value } })
                   }
-                  placeholder="اسم الفندق أو العنوان الكامل"
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-gray-500">المدينة</label>
+                <label className="mb-1.5 block text-xs font-bold text-gray-500">{a.city}</label>
                 <input
                   className={inputClass}
                   value={data.travel.accommodationCity}
                   onChange={(e) =>
                     setData({ ...data, travel: { ...data.travel, accommodationCity: e.target.value } })
                   }
-                  placeholder="بانكوك"
+                  placeholder={lang === 'ar' ? 'بانكوك' : 'Bangkok'}
                 />
               </div>
             </div>
@@ -303,10 +322,10 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
             <div>
               <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-900">
                 <CreditCard className="size-5 text-blue-500" />
-                اختر خطة المعالجة
+                {a.selectPlan}
               </h3>
               <div className="space-y-3">
-                {pricingPlans.map((plan) => (
+                {plans.map((plan) => (
                   <label
                     key={plan.id}
                     className={`flex cursor-pointer items-center justify-between rounded-2xl border-2 p-4 transition-all ${
@@ -334,27 +353,25 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
               </div>
             </div>
             <div className="space-y-3 rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 p-5">
-              <h4 className="font-bold text-gray-900">ملخص الطلب</h4>
+              <h4 className="font-bold text-gray-900">{a.orderSummary}</h4>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">عدد المسافرين</span>
+                <span className="text-gray-600">{a.travelersCount}</span>
                 <span className="font-medium">{data.travelers.length}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">الخطة</span>
+                <span className="text-gray-600">{a.plan}</span>
                 <span className="font-medium">{selectedPlan.name}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">رسوم لكل مسافر</span>
+                <span className="text-gray-600">{a.feePerTraveler}</span>
                 <span className="font-medium">${totalPerTraveler}</span>
               </div>
               <div className="flex justify-between border-t border-gray-200 pt-3 font-bold text-gray-900">
-                <span>الإجمالي</span>
+                <span>{a.total}</span>
                 <span className="text-lg text-blue-500">${total}</span>
               </div>
             </div>
-            <p className="text-center text-xs text-gray-400">
-              بالمتابعة، أنت توافق على شروط الخدمة. هذا نموذج تجريبي — لن تتم معالجة دفع حقيقي.
-            </p>
+            <p className="text-center text-xs text-gray-400">{a.termsNote}</p>
           </div>
         )}
 
@@ -363,13 +380,11 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
             <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-green-100">
               <CheckCircle className="size-10 text-green-600" />
             </div>
-            <h3 className="mb-3 text-2xl font-bold text-gray-900">تم إرسال طلبك بنجاح!</h3>
-            <p className="mb-2 text-gray-600">
-              شكراً {data.travelers[0].firstName}! سنراجع طلبك ونرسل بطاقة TDAC إلى:
-            </p>
+            <h3 className="mb-3 text-2xl font-bold text-gray-900">{a.successTitle}</h3>
+            <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0].firstName)}</p>
             <p className="mb-6 font-bold text-blue-500" dir="ltr">{data.travelers[0].email}</p>
             <p className="text-sm text-gray-500">
-              وقت المعالجة المتوقع: <strong>{selectedPlan.time}</strong>
+              {a.expectedTime} <strong>{selectedPlan.time}</strong>
             </p>
           </div>
         )}
@@ -381,8 +396,8 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
             onClick={() => setStep(step - 1)}
             className="flex items-center gap-2 rounded-2xl border border-gray-200 px-5 py-3 font-bold text-gray-700 hover:bg-gray-50"
           >
-            <ArrowRight className="size-4" />
-            السابق
+            <PrevIcon className="size-4" />
+            {a.prev}
           </button>
         )}
         {step < 3 ? (
@@ -391,15 +406,15 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
             disabled={!canProceed()}
             className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-blue-600 bg-blue-500 px-5 py-3 font-bold text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {step === 2 ? 'إرسال الطلب' : 'التالي'}
-            <ArrowLeft className="size-4" />
+            {step === 2 ? a.submit : a.next}
+            <NextIcon className="size-4" />
           </button>
         ) : (
           <button
             onClick={handleDone}
             className="w-full rounded-2xl border border-blue-600 bg-blue-500 py-3 font-bold text-white hover:bg-blue-600"
           >
-            العودة للرئيسية
+            {a.backToHome}
           </button>
         )}
       </div>

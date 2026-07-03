@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { SITE_NAME, navLinks } from '../data/content';
+import { useLanguage } from '../context/LanguageContext';
+import { getNavLinks } from '../utils/navLinks';
 import { Logo } from './Logo';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   onApply: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+  const navLinks = getNavLinks(t);
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <header className="container mx-auto p-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="order-1 mr-auto flex items-center gap-4">
+          <div className="order-1 ms-auto flex items-center gap-4">
             <Logo inverted className="h-8" showText={false} />
-            <span className="sr-only font-bold">{SITE_NAME}</span>
+            <span className="sr-only font-bold">{t.siteName}</span>
           </div>
 
           <nav className="hidden items-center gap-6 lg:flex">
@@ -31,13 +35,16 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
             ))}
           </nav>
 
-          <button
-            onClick={() => setOpen(true)}
-            className="order-3 ml-auto text-white lg:hidden"
-            aria-label="القائمة"
-          >
-            <Menu className="size-8" />
-          </button>
+          <div className="order-3 flex items-center gap-3 me-auto lg:me-0">
+            <LanguageSwitcher className="hidden sm:inline-flex" />
+            <button
+              onClick={() => setOpen(true)}
+              className="text-white lg:hidden"
+              aria-label={t.nav.menu}
+            >
+              <Menu className="size-8" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -46,9 +53,12 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
           <div className="flex min-h-full flex-col p-8">
             <div className="mb-8 flex items-center justify-between">
               <Logo />
-              <button onClick={() => setOpen(false)} className="text-gray-500">
-                <X className="size-6" />
-              </button>
+              <div className="flex items-center gap-3">
+                <LanguageSwitcher variant="light" />
+                <button onClick={() => setOpen(false)} className="text-gray-500">
+                  <X className="size-6" />
+                </button>
+              </div>
             </div>
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -66,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
               onClick={() => { setOpen(false); onApply(); }}
               className="mt-8 w-full rounded-2xl border border-blue-600 bg-blue-500 py-3 font-bold text-white"
             >
-              قدّم الآن
+              {t.nav.applyNow}
             </button>
           </div>
         </div>

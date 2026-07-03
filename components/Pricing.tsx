@@ -1,23 +1,23 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
-import { pricingPlans } from '../data/content';
 import { PlanId } from '../types';
 import { PrimaryButton, SectionHeader } from './ui';
+import { useLanguage } from '../context/LanguageContext';
 
 interface PricingProps {
   onApply: (plan?: PlanId) => void;
 }
 
 export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+  const { pricing: p } = t;
+
   return (
     <section className="container mx-auto space-y-12 px-4 py-24">
-      <SectionHeader
-        title="خطط أسعار بطاقة TDAC"
-        subtitle="اختر سرعة المعالجة المناسبة لجدول سفرك. تبدأ رسوم الخدمة من 65.00$ للمسافر."
-      />
+      <SectionHeader title={p.sectionTitle} subtitle={p.sectionSubtitle} />
 
       <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {pricingPlans.map((plan) => (
+        {p.plans.map((plan) => (
           <li
             key={plan.id}
             className="group overflow-hidden rounded-4xl bg-gradient-to-tl from-white to-blue-100/30 transition-all"
@@ -30,7 +30,7 @@ export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
               <div className="mt-4 space-y-1">
                 <p className="text-xs font-medium uppercase text-blue-500">{plan.time}</p>
                 <h3 className="text-lg font-bold text-gray-900">
-                  {plan.name} — بطاقة TDAC
+                  {plan.name} — TDAC
                 </h3>
               </div>
 
@@ -47,16 +47,16 @@ export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
                       <span className="text-2xl font-bold text-gray-900">
                         ${plan.price + plan.priorityFee}
                       </span>
-                      <span className="text-xs text-gray-400">رسوم خدمة</span>
+                      <span className="text-xs text-gray-400">{p.serviceFee}</span>
                     </div>
                     <p className="mt-1 text-xs text-gray-500">
-                      ${plan.price}/مسافر + ${plan.priorityFee} رسوم أولوية لمرة واحدة
+                      {p.feePlusPriority(plan.price, plan.priorityFee)}
                     </p>
                   </>
                 ) : (
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-gray-900">${plan.price}</span>
-                    <span className="text-xs text-gray-400">رسوم خدمة / مسافر</span>
+                    <span className="text-xs text-gray-400">{p.perTraveler}</span>
                   </div>
                 )}
               </div>
@@ -74,7 +74,7 @@ export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
 
               <div className="mt-6">
                 <PrimaryButton onClick={() => onApply(plan.id as PlanId)} className="w-full">
-                  قدّم الآن
+                  {p.applyNow}
                 </PrimaryButton>
               </div>
             </article>

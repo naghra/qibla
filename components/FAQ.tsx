@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { faqs } from '../data/content';
 import { SectionHeader } from './ui';
+import { useLanguage } from '../context/LanguageContext';
 
 export const FAQ: React.FC = () => {
+  const { t } = useLanguage();
+  const { faq: f } = t;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section id="faq" className="container mx-auto space-y-12 px-4 py-24">
-      <SectionHeader
-        title="الأسئلة الشائعة"
-        subtitle="إجابات عن بطاقة TDAC وأوقات المعالجة والرسوم وكيف نحافظ على أمان معلوماتك."
-      />
+      <SectionHeader title={f.sectionTitle} subtitle={f.sectionSubtitle} />
 
       <div className="mx-auto max-w-3xl space-y-3">
-        {faqs.map((faq, index) => (
+        {f.items.map((faq, index) => (
           <div
             key={faq.question}
             className="cursor-pointer rounded-2xl bg-gradient-to-tl from-white to-blue-100/30 p-4 transition-all"
@@ -39,9 +38,9 @@ export const FAQ: React.FC = () => {
       </div>
 
       <p className="text-center text-sm text-gray-500">
-        لم تجد إجابتك؟{' '}
+        {f.contactNote}{' '}
         <a href="#contact" className="font-bold text-blue-500 underline">
-          تواصل مع فريق الدعم 24/7
+          {f.contactLink}
         </a>
       </p>
     </section>

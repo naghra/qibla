@@ -1,20 +1,15 @@
 import React from 'react';
 import { Header } from './Header';
 import { PrimaryButton } from './ui';
-import { SITE_NAME } from '../data/content';
 import { IMAGES } from '../data/assets';
 import { Logo } from './Logo';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeroProps {
   onApply: () => void;
 }
 
-const trustItems = [
-  { icon: 'star', label: 'تقييم ممتاز على Trustpilot' },
-  { icon: 'lock', label: 'معالجة آمنة' },
-  { icon: 'check', label: 'دعم 24/7' },
-  { icon: 'check', label: 'تحقق فوري' },
-];
+const trustIcons = ['star', 'lock', 'check', 'check'];
 
 const TrustIcon: React.FC<{ type: string }> = ({ type }) => {
   if (type === 'star') {
@@ -39,13 +34,15 @@ const TrustIcon: React.FC<{ type: string }> = ({ type }) => {
 };
 
 export const Hero: React.FC<HeroProps> = ({ onApply }) => {
+  const { t } = useLanguage();
+
   return (
     <section className="p-4">
       <div className="relative mx-auto flex min-h-[80svh] w-full max-w-5xl flex-col overflow-hidden rounded-4xl border-8 border-white">
         <div className="hero-fallback absolute inset-0 overflow-hidden rounded-4xl">
           <img
             src={IMAGES.hero}
-            alt="تايلاند"
+            alt="Thailand"
             className="absolute inset-0 h-full w-full rounded-4xl object-cover object-center"
             loading="eager"
             fetchPriority="high"
@@ -63,38 +60,38 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
                 <Logo className="h-10" inverted showText={false} />
               </div>
               <h1 className="text-pretty text-2xl font-bold sm:text-3xl lg:text-4xl">
-                تقديم بطاقة الوصول الرقمية التايلاندية (TDAC) بدون تعقيد
+                {t.hero.title}
               </h1>
               <p className="text-pretty text-sm leading-relaxed text-gray-200 sm:text-base">
-                أكمل طلب بطاقة الوصول الرقمية قبل المغادرة واحصل على رمز QR لتسهيل إجراءات الهجرة في تايلاند.
+                {t.hero.subtitle}
               </p>
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              {trustItems.map((item) => (
-                <div key={item.label} className="flex items-center justify-center gap-2">
-                  <TrustIcon type={item.icon} />
-                  <span className="font-medium text-gray-200">{item.label}</span>
+              {t.hero.trustItems.map((label, i) => (
+                <div key={label} className="flex items-center justify-center gap-2">
+                  <TrustIcon type={trustIcons[i] ?? 'check'} />
+                  <span className="font-medium text-gray-200">{label}</span>
                 </div>
               ))}
             </div>
 
             <div>
               <PrimaryButton onClick={onApply} className="px-8 py-3.5 text-base">
-                قدّم الآن عبر الإنترنت
+                {t.hero.cta}
               </PrimaryButton>
             </div>
           </div>
 
           <p className="relative z-10 px-8 pb-6 text-center text-sm text-gray-300">
-            {SITE_NAME} شركة خاصة مستقلة — غير تابعة لأي جهة حكومية. يمكنك أيضاً التقديم عبر{' '}
+            {t.siteName} {t.hero.disclaimer}{' '}
             <a
               href="https://tdac.immigration.go.th/"
               target="_blank"
               rel="noopener noreferrer"
               className="underline transition hover:text-white"
             >
-              الموقع الرسمي للحكومة
+              {t.hero.officialSite}
             </a>
             .
           </p>
@@ -107,26 +104,19 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
 export { GlanceSection as HeroAbout } from './GlanceSection';
 
 export const StatsBar: React.FC = () => {
-  const stats = [
-    { value: '~5 د', label: 'وقت المعالجة' },
-    { value: '99.9%', label: 'معدل الموافقة*' },
-    { value: '30 يوم', label: 'الصلاحية' },
-    { value: '24/7', label: 'دعم متواصل' },
-  ];
+  const { t } = useLanguage();
 
   return (
     <section className="container mx-auto px-4 pb-16">
       <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-        {stats.map((stat) => (
+        {t.stats.map((stat) => (
           <div key={stat.label} className="text-center">
             <p className="text-3xl font-bold text-gray-900 sm:text-5xl">{stat.value}</p>
             <p className="mt-1 text-sm text-gray-600">{stat.label}</p>
           </div>
         ))}
       </div>
-      <p className="mt-6 text-center text-xs text-gray-400">
-        *تعتمد الموافقة على الجهة المختصة ودقة المعلومات المقدمة.
-      </p>
+      <p className="mt-6 text-center text-xs text-gray-400">{t.statsNote}</p>
     </section>
   );
 };
