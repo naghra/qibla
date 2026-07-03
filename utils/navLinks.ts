@@ -1,4 +1,4 @@
-import { MapPin, Star, HelpCircle, Mail, ListOrdered, Info } from 'lucide-react';
+import { MapPin, Star, HelpCircle, Mail, ListOrdered, Info, FileText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { Translations } from '../data/i18n/types';
 import type { PageScope } from '../data/destinations';
@@ -20,10 +20,9 @@ export function getNavLinks(t: Translations, pageType: PageScope['type'] = 'serv
   }
   if (pageType === 'country') {
     return [
-      { href: '#documents', label: t.nav.travelDocuments ?? t.nav.howToApply, icon: MapPin },
-      { href: '#about-us', label: t.nav.howItWorks, icon: Star },
-      { href: '#faq', label: t.nav.faq, icon: HelpCircle },
+      { href: '#documents', label: t.nav.travelDocuments ?? t.nav.howToApply, icon: FileText },
       { href: '#contact', label: t.nav.contact, icon: Mail },
+      { href: '#faq', label: t.nav.faq, icon: HelpCircle },
     ];
   }
   return [
