@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
 import type { Lang } from '../../data/i18n/types';
 import {
+  applyFieldGroup,
+  applyQuestion,
+  applySelectInner,
+  applySelectShell,
+  applySubLabel,
+} from './applyStyles';
+import {
   DateParts,
   getDayOptions,
   getMonthOptions,
@@ -16,9 +23,6 @@ interface DateDropdownGroupProps {
   monthLabel: string;
   dayLabel: string;
 }
-
-const selectClass =
-  'w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
 
 export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
   label,
@@ -37,47 +41,60 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
     if (value.day && Number(value.day) > days.length) {
       onChange({ ...value, day: String(days.length) });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value.year, value.month, days.length]);
 
   return (
-    <fieldset className="space-y-3">
-      <legend className="text-sm font-medium text-gray-900">{label}</legend>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+    <fieldset className={applyFieldGroup}>
+      <legend className={applyQuestion}>{label}</legend>
+      <div className="grid grid-cols-3 gap-4">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">{yearLabel}</label>
-          <select
-            className={selectClass}
-            value={value.year}
-            onChange={(e) => onChange({ ...value, year: e.target.value })}
-          >
-            {years.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
+          <label className={applySubLabel}>{yearLabel}</label>
+          <div className={applySelectShell}>
+            <select
+              className={applySelectInner}
+              value={value.year}
+              onChange={(e) => onChange({ ...value, year: e.target.value })}
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">{monthLabel}</label>
-          <select
-            className={selectClass}
-            value={value.month}
-            onChange={(e) => onChange({ ...value, month: e.target.value })}
-          >
-            {months.map((m) => (
-              <option key={m.value} value={m.value}>{m.label}</option>
-            ))}
-          </select>
+          <label className={applySubLabel}>{monthLabel}</label>
+          <div className={applySelectShell}>
+            <select
+              className={applySelectInner}
+              value={value.month}
+              onChange={(e) => onChange({ ...value, month: e.target.value })}
+            >
+              {months.map((m) => (
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">{dayLabel}</label>
-          <select
-            className={selectClass}
-            value={value.day}
-            onChange={(e) => onChange({ ...value, day: e.target.value })}
-          >
-            {days.map((d) => (
-              <option key={d} value={d}>{d.padStart(2, '0')}</option>
-            ))}
-          </select>
+          <label className={applySubLabel}>{dayLabel}</label>
+          <div className={applySelectShell}>
+            <select
+              className={applySelectInner}
+              value={value.day}
+              onChange={(e) => onChange({ ...value, day: e.target.value })}
+            >
+              {days.map((d) => (
+                <option key={d} value={d}>
+                  {d.padStart(2, '0')}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </fieldset>

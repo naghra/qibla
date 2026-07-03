@@ -4,8 +4,9 @@ import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
 import { YourInfoStep } from './YourInfoStep';
 import { ResumeStep } from './ResumeStep';
-import { travelerDateParts } from './TravelerInfoCard';
 import { getDialPrefix } from './PhoneCountrySelect';
+import { travelerDateParts } from './TravelerInfoCard';
+import { applyBtnGhost, applyBtnPrimary } from './applyStyles';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
@@ -217,10 +218,6 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   };
 
   const formSteps = a.formSteps;
-  const primaryBtnClass =
-    step === 0
-      ? 'bg-gray-900 hover:bg-gray-800'
-      : 'bg-blue-600 hover:bg-blue-700';
 
   if (step === 3) {
     return (
@@ -248,9 +245,12 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   }
 
   return (
-    <div>
-      <ApplyStepper steps={formSteps} current={step} />
+    <div data-apply-form-inner className="mb-0 flex flex-col items-start gap-8">
+      <div className="w-full">
+        <ApplyStepper steps={formSteps} current={step} />
+      </div>
 
+      <div className="w-full space-y-12">
       {step === 0 && (
         <TripDetailsStep
           a={a}
@@ -313,35 +313,32 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
         />
       )}
 
-      <div className="mt-8 space-y-3">
-        <button
-          type="button"
-          onClick={handleContinue}
-          disabled={!canProceed()}
-          className={`flex w-full items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${primaryBtnClass}`}
-        >
-          {step === 2 ? (
-            <>
-              {a.submit}
-              <Plane className="size-4" />
-            </>
-          ) : (
-            <>
-              {a.saveAndContinue}
-              <NextChevron className="size-4" />
-            </>
-          )}
-        </button>
+      <div className="mx-auto flex w-full flex-col-reverse gap-4 sm:flex-row sm:gap-8">
         {step > 0 && (
-          <button
-            type="button"
-            onClick={handleBack}
-            className="flex w-full items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-          >
+          <button type="button" onClick={handleBack} className={`${applyBtnGhost} sm:flex-1`}>
             <PrevChevron className="size-4" />
             {a.previousStep}
           </button>
         )}
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={!canProceed()}
+          className={applyBtnPrimary}
+        >
+          {step === 2 ? (
+            <>
+              {a.submit}
+              <Plane className="size-5" />
+            </>
+          ) : (
+            <>
+              {a.saveAndContinue}
+              <NextChevron className="size-5" />
+            </>
+          )}
+        </button>
+      </div>
       </div>
     </div>
   );

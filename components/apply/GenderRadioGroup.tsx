@@ -1,4 +1,5 @@
 import React from 'react';
+import { applyQuestion } from './applyStyles';
 
 interface GenderOption {
   value: string;
@@ -20,16 +21,16 @@ export const GenderRadioGroup: React.FC<GenderRadioGroupProps> = ({
   options,
   onChange,
 }) => (
-  <fieldset>
-    <legend className="mb-2 block text-sm font-medium text-gray-900">{label}</legend>
+  <fieldset className="space-y-2">
+    <legend className={applyQuestion}>{label}</legend>
     <div className="space-y-2">
       {options.map((opt) => {
         const selected = value === opt.value;
         return (
           <label
             key={opt.value}
-            className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition ${
-              selected ? 'border-gray-900 bg-gray-50' : 'border-gray-200 bg-white hover:border-gray-300'
+            className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-4 transition hover:border-gray-950 ${
+              selected ? 'border-gray-950 bg-white' : 'border-gray-200 bg-white'
             }`}
           >
             <input
@@ -38,9 +39,9 @@ export const GenderRadioGroup: React.FC<GenderRadioGroupProps> = ({
               value={opt.value}
               checked={selected}
               onChange={() => onChange(opt.value)}
-              className="size-4 border-gray-300 text-gray-900 focus:ring-gray-900"
+              className="size-[18px] shrink-0 border-gray-400 text-gray-950 focus:ring-gray-950"
             />
-            <span className="text-sm font-medium text-gray-900">{opt.label}</span>
+            <span className="text-base font-normal text-gray-950">{opt.label}</span>
           </label>
         );
       })}

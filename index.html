@@ -105,6 +105,40 @@
           display: none !important;
         }
       }
+
+      /* Apply form — reference-style fields & selects */
+      [data-apply-form] {
+        color: #09090b;
+        -webkit-font-smoothing: antialiased;
+      }
+      [data-apply-form] .apply-select-shell::after {
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        width: 1rem;
+        height: 1rem;
+        transform: translateY(-50%);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%235f6368' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      [dir="rtl"] [data-apply-form] .apply-select-shell::after {
+        right: auto;
+        left: 1rem;
+      }
+      [data-apply-form] .apply-field-shell:focus-within,
+      [data-apply-form] .apply-select-shell:focus-within {
+        border-color: #09090b;
+      }
+      [data-apply-form] .apply-input-inner:focus,
+      [data-apply-form] .apply-select-inner:focus {
+        outline: none;
+      }
+      [data-apply-form] .apply-stepper-item:last-child .apply-stepper-bar {
+        display: none;
+      }
     </style>
   </head>
   <body class="antialiased">

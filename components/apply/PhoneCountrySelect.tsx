@@ -3,6 +3,12 @@ import { countriesData, countryFlag } from '../../data/countries';
 import { getPhoneMeta } from '../../data/phoneMeta';
 import type { Lang } from '../../data/i18n/types';
 import { getCountryName } from '../../utils/countryName';
+import {
+  applyFieldGroup,
+  applyLabel,
+  applySelectShell,
+  applySelectWithFlagInner,
+} from './applyStyles';
 
 interface PhoneCountrySelectProps {
   value: string;
@@ -10,9 +16,6 @@ interface PhoneCountrySelectProps {
   lang: Lang;
   label: string;
 }
-
-const selectClass =
-  'w-full appearance-none rounded-lg border border-gray-200 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500';
 
 export function formatPhoneCountryOption(iso2: string, lang: Lang): string {
   const country = countriesData.find((c) => c.code === iso2);
@@ -31,23 +34,14 @@ export const PhoneCountrySelect: React.FC<PhoneCountrySelectProps> = ({
     getCountryName(a, lang).localeCompare(getCountryName(b, lang), lang === 'ar' ? 'ar' : 'en')
   );
 
-  const selected = countriesData.find((c) => c.code === value);
-  const meta = getPhoneMeta(value);
-
   return (
-    <div>
-      <label className="mb-1.5 block text-sm font-medium text-gray-900">{label}</label>
-      <div className="relative">
-        {selected && (
-          <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-base" aria-hidden>
-            {countryFlag(value)}
-          </span>
-        )}
-        <select
-          className={`${selectClass} ${selected ? 'ps-10' : ''}`}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        >
+    <div className={applyFieldGroup}>
+      <label className={applyLabel}>{label}</label>
+      <div className={applySelectShell}>
+        <span className="pointer-events-none absolute start-4 top-1/2 z-[1] -translate-y-1/2 text-lg leading-none" aria-hidden>
+          {countryFlag(value)}
+        </span>
+        <select className={applySelectWithFlagInner} value={value} onChange={(e) => onChange(e.target.value)}>
           {sorted.map((c) => (
             <option key={c.code} value={c.code}>
               {formatPhoneCountryOption(c.code, lang)}
@@ -55,11 +49,6 @@ export const PhoneCountrySelect: React.FC<PhoneCountrySelectProps> = ({
           ))}
         </select>
       </div>
-      {selected && (
-        <p className="mt-1 text-xs text-gray-500" dir="ltr">
-          {meta.iso3} · {getCountryName(selected, lang)} ({meta.dial})
-        </p>
-      )}
     </div>
   );
 };

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { Lang } from '../../data/i18n/types';
 import type { TravelerData } from '../../types';
 import { TravelerInfoCard, travelerDateParts } from './TravelerInfoCard';
+import { applyBtnAddTraveler, applySection } from './applyStyles';
 import { DateParts, datePartsToIso } from '../../utils/dateParts';
 
 interface YourInfoStepProps {
@@ -35,7 +36,7 @@ export const YourInfoStep: React.FC<YourInfoStepProps> = ({
   onIssueChange,
   onExpiryChange,
 }) => (
-  <div className="space-y-4">
+  <div className={`${applySection} w-full space-y-4`}>
     {travelers.map((traveler, index) => (
       <TravelerInfoCard
         key={index}
@@ -58,11 +59,7 @@ export const YourInfoStep: React.FC<YourInfoStepProps> = ({
       />
     ))}
 
-    <button
-      type="button"
-      onClick={onAddTraveler}
-      className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-100 py-3.5 text-sm font-medium text-gray-800 transition hover:bg-gray-200"
-    >
+    <button type="button" onClick={onAddTraveler} className={applyBtnAddTraveler}>
       <Plus className="size-4" />
       {a.addTraveler}
     </button>

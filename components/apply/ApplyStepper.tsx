@@ -1,5 +1,4 @@
 import React from 'react';
-import { Check } from 'lucide-react';
 
 interface ApplyStepperProps {
   steps: string[];
@@ -7,37 +6,42 @@ interface ApplyStepperProps {
 }
 
 export const ApplyStepper: React.FC<ApplyStepperProps> = ({ steps, current }) => (
-  <nav aria-label="Progress" className="mb-8">
-    <ol className="flex items-start justify-between">
+  <nav aria-label="Progress" className="w-full">
+    <ol className="apply-stepper flex w-full flex-row items-center gap-2">
       {steps.map((label, index) => {
         const active = index === current;
         const done = index < current;
+        const isLast = index === steps.length - 1;
+        const filled = done || active;
+
         return (
-          <li key={label} className="flex flex-1 flex-col items-center">
+          <li
+            key={label}
+            className={`apply-stepper-item flex items-center ${isLast ? 'flex-none' : 'w-0 flex-1'}`}
+          >
             <div className="flex w-full items-center">
-              {index > 0 && (
-                <div className={`h-px flex-1 ${done || active ? 'bg-gray-900' : 'bg-gray-200'}`} />
-              )}
-              <div
-                className={`flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition ${
-                  active || done
-                    ? 'bg-gray-900 text-white'
-                    : 'border-2 border-gray-200 bg-white text-gray-400'
-                }`}
-              >
-                {done ? <Check className="size-4" strokeWidth={3} /> : index + 1}
+              <div className="flex flex-col items-center">
+                <span
+                  className={`inline-flex size-8 items-center justify-center rounded-full text-sm font-bold ${
+                    filled
+                      ? 'bg-gray-950 text-gray-50'
+                      : 'border border-gray-200 bg-white text-gray-950'
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span
+                  className={`mt-1 max-w-[5.5rem] text-center text-xs font-medium sm:max-w-none sm:text-base ${
+                    active ? 'text-gray-950' : 'font-bold text-gray-600'
+                  }`}
+                >
+                  {label}
+                </span>
               </div>
-              {index < steps.length - 1 && (
-                <div className={`h-px flex-1 ${done ? 'bg-gray-900' : 'bg-gray-200'}`} />
+              {!isLast && (
+                <span className="apply-stepper-bar ms-2 h-1 flex-1 rounded-full bg-gray-200" aria-hidden />
               )}
             </div>
-            <span
-              className={`mt-2 max-w-[5.5rem] text-center text-xs leading-tight sm:max-w-none sm:text-sm ${
-                active ? 'font-semibold text-gray-900' : 'text-gray-400'
-              }`}
-            >
-              {label}
-            </span>
           </li>
         );
       })}
