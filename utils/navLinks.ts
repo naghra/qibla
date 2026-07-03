@@ -13,7 +13,7 @@ export function getNavLinks(t: Translations, pageType: PageScope['type'] = 'serv
   if (pageType === 'country') {
     return [
       { href: '#services', label: t.nav.travelDocuments ?? t.nav.howToApply },
-      { href: '#how-it-works', label: t.nav.howItWorks },
+      { href: '#about-us', label: t.nav.howItWorks },
       { href: '#faq', label: t.nav.faq },
       { href: '#contact', label: t.nav.contact },
     ];

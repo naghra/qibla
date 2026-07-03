@@ -19,7 +19,8 @@ interface FeaturesProps {
 export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
   const { t, pageScope } = useLanguage();
   const { features: f } = t;
-  const sectionId = pageScope.type === 'hub' ? 'about-us' : undefined;
+  const sectionId =
+    pageScope.type === 'hub' || pageScope.type === 'country' ? 'about-us' : undefined;
 
   return (
     <section id={sectionId} className="container mx-auto space-y-12 px-4 py-24">
