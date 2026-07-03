@@ -32,7 +32,7 @@ export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
           <div className="relative m-1 flex flex-1 flex-col justify-between gap-8 overflow-hidden rounded-4xl bg-blue-500 p-4 text-gray-50 sm:p-8">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <Logo inverted className="h-8" />
+                <Logo inverted className="h-8" showText={false} />
                 <p className="font-bold">{t.siteName}</p>
               </div>
               <h3 className="max-w-md text-pretty text-2xl font-bold">{f.cardTitle}</h3>
