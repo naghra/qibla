@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import type { Lang } from '../../data/i18n/types';
 import {
-  applyFieldGroup,
-  applyQuestion,
-  applySelectInner,
-  applySelectShell,
-  applySubLabel,
+  applyDateGrid,
+  applyDateQuestion,
+  applyDateSection,
+  applyDateSelectInner,
+  applyDateSelectShell,
+  applyDateSubLabel,
 } from './applyStyles';
 import {
   DateParts,
@@ -24,6 +25,33 @@ interface DateDropdownGroupProps {
   dayLabel: string;
 }
 
+function DateSelect({
+  id,
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-w-0">
+      <label htmlFor={id} className={applyDateSubLabel}>
+        {label}
+      </label>
+      <div className={applyDateSelectShell}>
+        <select id={id} className={applyDateSelectInner} value={value} onChange={(e) => onChange(e.target.value)}>
+          {children}
+        </select>
+      </div>
+    </div>
+  );
+}
+
 export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
   label,
   value,
@@ -36,6 +64,7 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
   const years = getYearOptions();
   const months = getMonthOptions(lang);
   const days = getDayOptions(value.year, value.month);
+  const uid = label.replace(/\s+/g, '-').slice(0, 24);
 
   useEffect(() => {
     if (value.day && Number(value.day) > days.length) {
@@ -45,58 +74,48 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
   }, [value.year, value.month, days.length]);
 
   return (
-    <fieldset className={applyFieldGroup}>
-      <legend className={applyQuestion}>{label}</legend>
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <label className={applySubLabel}>{yearLabel}</label>
-          <div className={applySelectShell}>
-            <select
-              className={applySelectInner}
-              value={value.year}
-              onChange={(e) => onChange({ ...value, year: e.target.value })}
-            >
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <label className={applySubLabel}>{monthLabel}</label>
-          <div className={applySelectShell}>
-            <select
-              className={applySelectInner}
-              value={value.month}
-              onChange={(e) => onChange({ ...value, month: e.target.value })}
-            >
-              {months.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <label className={applySubLabel}>{dayLabel}</label>
-          <div className={applySelectShell}>
-            <select
-              className={applySelectInner}
-              value={value.day}
-              onChange={(e) => onChange({ ...value, day: e.target.value })}
-            >
-              {days.map((d) => (
-                <option key={d} value={d}>
-                  {d.padStart(2, '0')}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+    <section className={applyDateSection} aria-label={label}>
+      <p className={applyDateQuestion}>{label}</p>
+      <div className={applyDateGrid}>
+        <DateSelect
+          id={`${uid}-year`}
+          label={yearLabel}
+          value={value.year}
+          onChange={(year) => onChange({ ...value, year })}
+        >
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </DateSelect>
+
+        <DateSelect
+          id={`${uid}-month`}
+          label={monthLabel}
+          value={value.month}
+          onChange={(month) => onChange({ ...value, month })}
+        >
+          {months.map((m) => (
+            <option key={m.value} value={m.value}>
+              {m.label}
+            </option>
+          ))}
+        </DateSelect>
+
+        <DateSelect
+          id={`${uid}-day`}
+          label={dayLabel}
+          value={value.day}
+          onChange={(day) => onChange({ ...value, day })}
+        >
+          {days.map((d) => (
+            <option key={d} value={d}>
+              {d.padStart(2, '0')}
+            </option>
+          ))}
+        </DateSelect>
       </div>
-    </fieldset>
+    </section>
   );
 };

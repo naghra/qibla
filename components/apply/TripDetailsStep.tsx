@@ -49,25 +49,27 @@ export const TripDetailsStep: React.FC<TripDetailsStepProps> = ({
   return (
     <div className={`${applySection} w-full`}>
       <div className={applySectionInner}>
-        <DateDropdownGroup
-          label={a.arriveQuestion}
-          value={arrival}
-          onChange={onArrivalChange}
-          lang={lang}
-          yearLabel={a.year}
-          monthLabel={a.month}
-          dayLabel={a.day}
-        />
+        <div className="space-y-8">
+          <DateDropdownGroup
+            label={a.arriveQuestion}
+            value={arrival}
+            onChange={onArrivalChange}
+            lang={lang}
+            yearLabel={a.year}
+            monthLabel={a.month}
+            dayLabel={a.day}
+          />
 
-        <DateDropdownGroup
-          label={a.departQuestion}
-          value={departure}
-          onChange={onDepartureChange}
-          lang={lang}
-          yearLabel={a.year}
-          monthLabel={a.month}
-          dayLabel={a.day}
-        />
+          <DateDropdownGroup
+            label={a.departQuestion}
+            value={departure}
+            onChange={onDepartureChange}
+            lang={lang}
+            yearLabel={a.year}
+            monthLabel={a.month}
+            dayLabel={a.day}
+          />
+        </div>
 
         <div className={applyFieldGroup}>
           <label htmlFor="apply-email" className={applyLabel}>
