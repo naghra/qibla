@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Trash2, Eye } from 'lucide-react';
 import { StatusBadge } from '../../components/admin/StatusBadge';
+import { ApplicationListCard } from '../../components/admin/ApplicationListCard';
 import { adminLabels } from '../../data/adminLabels';
 import {
   deleteApplication,
@@ -48,14 +49,14 @@ export const AdminApplicationsPage: React.FC = () => {
     });
 
   return (
-    <div className="p-6 lg:p-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{adminLabels.applications.title}</h1>
+    <div className="p-4 sm:p-6 lg:p-8">
+      <header className="mb-4 sm:mb-6">
+        <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">{adminLabels.applications.title}</h1>
         <p className="mt-1 text-sm text-gray-500">{adminLabels.applications.subtitle}</p>
       </header>
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1">
+        <div className="relative min-w-0 flex-1">
           <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
           <input
             type="search"
@@ -68,7 +69,7 @@ export const AdminApplicationsPage: React.FC = () => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as ApplicationStatus | 'all')}
-          className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none sm:w-auto"
         >
           <option value="all">{adminLabels.applications.filterAll}</option>
           {(Object.keys(adminLabels.status) as ApplicationStatus[]).map((s) => (
@@ -79,68 +80,84 @@ export const AdminApplicationsPage: React.FC = () => {
         </select>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] text-sm">
-            <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-start text-gray-500">
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.id}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.applicant}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.destination}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.service}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.plan}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.amount}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.status}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.date}</th>
-                <th className="px-4 py-3 font-medium">{adminLabels.applications.actions}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((app) => (
-                <tr key={app.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
-                  <td className="px-4 py-3 font-mono text-xs" dir="ltr">{app.id}</td>
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-gray-900">
-                      {app.data.travelers[0]?.firstName} {app.data.travelers[0]?.lastName}
-                    </p>
-                    <p className="text-xs text-gray-500" dir="ltr">{app.data.travelers[0]?.email}</p>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{app.destinationName}</td>
-                  <td className="px-4 py-3 text-gray-600">{app.serviceName}</td>
-                  <td className="px-4 py-3">{app.planName}</td>
-                  <td className="px-4 py-3 font-medium" dir="ltr">${app.totalAmount}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={app.status} />
-                  </td>
-                  <td className="px-4 py-3 text-gray-500">{formatDate(app.createdAt)}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Link
-                        to={`/admin/applications/${app.id}`}
-                        className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
-                        title={adminLabels.applications.view}
-                      >
-                        <Eye className="size-4" />
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(app.id)}
-                        className="rounded-lg p-2 text-red-600 hover:bg-red-50"
-                        title={adminLabels.applications.delete}
-                      >
-                        <Trash2 className="size-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {filtered.length === 0 && (
-          <p className="p-8 text-center text-sm text-gray-500">{adminLabels.applications.noResults}</p>
-        )}
-      </div>
+      {filtered.length === 0 ? (
+        <p className="rounded-2xl border border-gray-100 bg-white p-8 text-center text-sm text-gray-500 shadow-sm">
+          {adminLabels.applications.noResults}
+        </p>
+      ) : (
+        <>
+          <div className="space-y-3 md:hidden">
+            {filtered.map((app) => (
+              <ApplicationListCard
+                key={app.id}
+                app={app}
+                formatDate={formatDate}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+
+          <div className="hidden overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm md:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50 text-start text-gray-500">
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.id}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.applicant}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.destination}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.service}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.plan}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.amount}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.status}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.date}</th>
+                    <th className="px-4 py-3 font-medium">{adminLabels.applications.actions}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((app) => (
+                    <tr key={app.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+                      <td className="px-4 py-3 font-mono text-xs" dir="ltr">{app.id}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-gray-900">
+                          {app.data.travelers[0]?.firstName} {app.data.travelers[0]?.lastName}
+                        </p>
+                        <p className="text-xs text-gray-500" dir="ltr">{app.data.travelers[0]?.email}</p>
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">{app.destinationName}</td>
+                      <td className="px-4 py-3 text-gray-600">{app.serviceName}</td>
+                      <td className="px-4 py-3">{app.planName}</td>
+                      <td className="px-4 py-3 font-medium" dir="ltr">${app.totalAmount}</td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={app.status} />
+                      </td>
+                      <td className="px-4 py-3 text-gray-500">{formatDate(app.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <Link
+                            to={`/admin/applications/${app.id}`}
+                            className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                            title={adminLabels.applications.view}
+                          >
+                            <Eye className="size-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(app.id)}
+                            className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                            title={adminLabels.applications.delete}
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

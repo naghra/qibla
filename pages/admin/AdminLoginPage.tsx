@@ -20,8 +20,8 @@ export const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 p-4" dir="rtl">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white p-8 shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 p-4 sm:p-6" dir="rtl">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white p-6 shadow-2xl sm:rounded-3xl sm:p-8">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-blue-100">
             <Lock className="size-7 text-blue-600" />
@@ -61,7 +61,7 @@ export const AdminLoginPage: React.FC = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-gray-400">{adminLabels.login.hint}</p>
+        <p className="mt-4 text-center text-xs text-gray-400 sm:mt-6">{adminLabels.login.hint}</p>
       </div>
     </div>
   );

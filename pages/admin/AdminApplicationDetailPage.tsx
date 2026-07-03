@@ -43,20 +43,20 @@ export const AdminApplicationDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 lg:p-8" dir="rtl">
+    <div className="p-4 sm:p-6 lg:p-8" dir="rtl">
       <button
         type="button"
         onClick={() => navigate('/admin/applications')}
-        className="mb-6 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600"
+        className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600"
       >
         <ArrowRight className="size-4" />
         {adminLabels.detail.back}
       </button>
 
-      <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{adminLabels.detail.title}</h1>
-          <p className="mt-1 font-mono text-sm text-gray-500" dir="ltr">{app.id}</p>
+      <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">{adminLabels.detail.title}</h1>
+          <p className="mt-1 break-all font-mono text-xs text-gray-500 sm:text-sm" dir="ltr">{app.id}</p>
         </div>
         <StatusBadge status={app.status} />
       </header>
