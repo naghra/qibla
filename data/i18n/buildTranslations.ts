@@ -443,10 +443,13 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     nav: {
       ...hub.nav,
       howToApply: lang === 'en' ? 'Travel documents' : 'مستندات السفر',
+      howItWorks: lang === 'en' ? 'About us' : 'من نحن',
     },
     hero: {
       title: lang === 'en' ? `Travel documents for ${label}` : `مستندات السفر إلى ${label}`,
-      subtitle: lang === 'en' ? `We provide all essential travel documents for ${label}, ensuring a seamless travel experience.` : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة.`,
+      subtitle: lang === 'en'
+        ? `We provide all the essential travel documents for ${label}, ensuring a seamless and stress-free travel experience.`
+        : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة وبدون تعقيد.`,
       trustItems: hub.hero.trustItems,
       cta: lang === 'en' ? 'Apply now' : 'قدّم الآن',
       disclaimer: hub.hero.disclaimer,
@@ -464,17 +467,45 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     stats: lang === 'en'
       ? [
           { value: '2+', label: 'Years of Experience' },
-          { value: '99.9%', label: 'Approval rate*' },
+          { value: 'Up to 99.9%', label: 'Approval rate*' },
           { value: `${docCount}+`, label: `${label} Documents` },
           { value: '24/7', label: 'Assistance' },
         ]
       : [
           { value: '+2', label: 'سنوات خبرة' },
-          { value: '99.9%', label: 'معدل الموافقة*' },
+          { value: 'حتى 99.9%', label: 'معدل الموافقة*' },
           { value: `${docCount}+`, label: `مستندات ${label}` },
           { value: '24/7', label: 'دعم متواصل' },
         ],
-    ...sections,
+    features: {
+      ...sections.features,
+      sectionSubtitle: lang === 'en'
+        ? `We simplify ${label} travel document applications with expert guidance, real-time validation, and 24/7 human support—so you can focus on planning your trip, not paperwork.`
+        : `نبسّط طلبات مستندات سفر ${label} بإرشاد خبير وتحقق فوري ودعم بشري 24/7.`,
+      cardTitle: lang === 'en' ? `The smart way to apply for your ${label} travel documents` : `الطريقة الذكية لتقديم مستندات ${label}`,
+    },
+    steps: {
+      ...sections.steps,
+      sectionSubtitle: lang === 'en'
+        ? `Our streamlined process takes you from choosing your ${label} document to receiving approved travel documents—all online, in just minutes.`
+        : `عملية مبسّطة من اختيار مستند ${label} إلى استلام المستندات المعتمدة — عبر الإنترنت في دقائق.`,
+      ctaTitle: lang === 'en' ? `Start your stress-free ${label} application today` : `ابدأ طلب ${label} بدون تعقيد اليوم`,
+      ctaSubtitle: lang === 'en'
+        ? `Join travelers worldwide who simplified their ${label} travel document applications with our expert-guided process.`
+        : `انضم للمسافرين الذين بسّطوا طلبات مستندات ${label}.`,
+      ctaButton: lang === 'en' ? `Get your ${label} travel documents` : `احصل على مستندات ${label}`,
+    },
+    cta: {
+      ...sections.cta,
+      title: lang === 'en' ? `Your ${label} travel documents, just a few clicks away` : `مستندات ${label} — بضغطات قليلة`,
+      button: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
+    },
+    chat: {
+      ...sections.chat,
+      greeting: lang === 'en'
+        ? `Hello! How can we help with your ${label} travel document application?`
+        : `مرحباً! كيف نساعدك في طلب مستندات ${label}؟`,
+    },
     pricing: genericPricing(lang, dest, dest.services[0]),
     testimonials: {
       ...sharedTestimonials[lang],
@@ -516,7 +547,7 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
       officialSite: country.hero.officialSite,
     },
     about: {
-      title: lang === 'en' ? `About ${doc}` : `عن ${doc}`,
+      title: lang === 'en' ? `About the ${doc}` : `عن ${doc}`,
       subtitle: service.description[lang],
       glanceTitle: lang === 'en' ? `${doc} at a glance` : `نظرة سريعة على ${doc}`,
       glanceSubtitle: lang === 'en' ? 'Everything you need to know before applying' : 'كل ما تحتاج معرفته قبل التقديم',
@@ -526,14 +557,14 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     },
     stats: lang === 'en'
       ? [
-          { value: '~5m', label: 'Processing Time' },
-          { value: '99.9%', label: 'Approval rate*' },
+          { value: 'Instant', label: 'Processing Time' },
+          { value: 'Up to 99.9%', label: 'Approval rate*' },
           { value: '30d', label: 'Valid for' },
           { value: '24/7', label: 'Assistance' },
         ]
       : [
-          { value: '~5 د', label: 'وقت المعالجة' },
-          { value: '99.9%', label: 'معدل الموافقة*' },
+          { value: 'فوري', label: 'وقت المعالجة' },
+          { value: 'حتى 99.9%', label: 'معدل الموافقة*' },
           { value: '30 يوم', label: 'الصلاحية' },
           { value: '24/7', label: 'دعم متواصل' },
         ],
@@ -567,20 +598,24 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     apply: genericApply(lang, dest, service),
     glanceItems: lang === 'en'
       ? [
-          { icon: 'clock', title: 'Processing time', highlight: 'Fast', text: 'Your document is processed quickly after submission.' },
-          { icon: 'calendar', title: 'Validity', highlight: 'Until arrival', text: 'Valid for your planned travel dates.' },
-          { icon: 'globe', title: 'How to apply', highlight: '100% online', text: `Apply from any device before your ${label} trip.` },
-          { icon: 'qr', title: 'On arrival', highlight: 'Show document', text: 'Present from your device or email at immigration.' },
+          { icon: 'clock', title: 'Processing time', highlight: 'Instant', text: `Your ${doc} confirmation and QR code are generated immediately after submission.` },
+          { icon: 'calendar', title: 'Validity', highlight: 'Until arrival', text: `Valid until you arrive in ${label} for the date on your document.` },
+          { icon: 'hourglass', title: 'Stay duration', highlight: 'Visa dependent', text: 'Determined by your visa status and immigration officer.' },
+          { icon: 'refresh', title: 'Entries', highlight: 'Single entry', text: `One ${doc} per trip. A new submission is required for each visit to ${label}.` },
+          { icon: 'globe', title: 'How to apply', highlight: '100% online', text: `Complete the form from any device before your flight to ${label}.` },
+          { icon: 'qr', title: 'On arrival', highlight: 'Show QR code', text: 'Present from your device or email at immigration. Printing optional as backup.' },
         ]
       : [
-          { icon: 'clock', title: 'وقت المعالجة', highlight: 'سريع', text: 'يُعالج مستندك بسرعة بعد الإرسال.' },
-          { icon: 'calendar', title: 'الصلاحية', highlight: 'حتى الوصول', text: 'صالح لتواريخ سفرك المحددة.' },
-          { icon: 'globe', title: 'كيفية التقديم', highlight: '100% عبر الإنترنت', text: `قدّم من أي جهاز قبل رحلتك إلى ${label}.` },
-          { icon: 'qr', title: 'عند الوصول', highlight: 'اعرض المستند', text: 'من هاتفك أو بريدك عند الهجرة.' },
+          { icon: 'clock', title: 'وقت المعالجة', highlight: 'فوري', text: `تأكيد ${doc} ورمز QR يُنشآن مباشرة بعد الإرسال.` },
+          { icon: 'calendar', title: 'الصلاحية', highlight: 'حتى الوصول', text: `صالح حتى وصولك إلى ${label} في التاريخ المحدد.` },
+          { icon: 'hourglass', title: 'مدة الإقامة', highlight: 'حسب التأشيرة', text: 'تُحدد حسب حالة التأشيرة وقرار الهجرة.' },
+          { icon: 'refresh', title: 'الدخول', highlight: 'دخول واحد', text: `${doc} واحد لكل رحلة. طلب جديد مطلوب لكل زيارة إلى ${label}.` },
+          { icon: 'globe', title: 'كيفية التقديم', highlight: '100% عبر الإنترنت', text: `أكمل النموذج من أي جهاز قبل رحلتك إلى ${label}.` },
+          { icon: 'qr', title: 'عند الوصول', highlight: 'اعرض رمز QR', text: 'من هاتفك أو بريدك عند الهجرة. الطباعة اختيارية.' },
         ],
     requirements: lang === 'en'
-      ? ['Passport details', 'Travel details including arrival flight and date', `Accommodation address in ${label}`, 'Purpose of travel', 'Valid email address']
-      : ['تفاصيل جواز السفر', 'تفاصيل السفر بما فيها رحلة الوصول', `عنوان الإقامة في ${label}`, 'غرض السفر', 'بريد إلكتروني صالح'],
+      ? ['Passport details', 'Travel details including arrival flight and date', `Accommodation address in ${label}`, 'Purpose of travel', `Valid email address to receive your ${doc}`]
+      : ['تفاصيل جواز السفر', 'تفاصيل السفر بما فيها رحلة الوصول', `عنوان الإقامة في ${label}`, 'غرض السفر', `بريد إلكتروني صالح لاستلام ${doc}`],
   };
 }
 

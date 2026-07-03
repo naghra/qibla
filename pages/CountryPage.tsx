@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SiteHeader } from '../components/SiteHeader';
-import { ServiceCards } from '../components/ServiceCards';
+import { CountryHero } from '../components/CountryHero';
 import { StatsBar } from '../components/Hero';
 import { Features } from '../components/Features';
 import { Steps } from '../components/Steps';
@@ -15,7 +14,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { buildPath } from '../data/destinations';
 
 export const CountryPage: React.FC = () => {
-  const { lang, destination, t } = useLanguage();
+  const { lang, destination } = useLanguage();
   const navigate = useNavigate();
 
   if (!destination) return null;
@@ -31,18 +30,8 @@ export const CountryPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <StickyNav onApply={goApply} />
-      <SiteHeader />
       <main>
-        <section className="container mx-auto space-y-4 px-4 pb-4 pt-4 text-center">
-          <p className="mx-auto max-w-3xl text-pretty text-sm text-gray-400">
-            {t.siteName} {t.hero.disclaimer}{' '}
-            <a href="#" className="underline hover:text-gray-600">
-              {t.hero.officialSite}
-            </a>
-            .
-          </p>
-        </section>
-        <ServiceCards />
+        <CountryHero onApply={goApply} />
         <StatsBar />
         <Features onApply={goService} />
         <Steps onApply={goApply} />
