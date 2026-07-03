@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LangLayout } from './layouts/LangLayout';
 import { HubPage } from './pages/HubPage';
 import { CountryPage } from './pages/CountryPage';
@@ -13,6 +13,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/apply" element={<LegacyApplyRedirect />} />
+        {/* Legacy: old TDAC landing without lang prefix */}
+        <Route path="/thailand/tdac/*" element={<Navigate to="/en/thailand/tdac" replace />} />
         <Route path="/:lang" element={<LangLayout />}>
           <Route index element={<HubPage />} />
           <Route path=":country" element={<CountryPage />} />
