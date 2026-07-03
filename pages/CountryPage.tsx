@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { CountryHero } from '../components/CountryHero';
 import { ServiceCards } from '../components/ServiceCards';
 import { StatsBar } from '../components/Hero';
@@ -19,6 +19,16 @@ export const CountryPage: React.FC = () => {
   const navigate = useNavigate();
 
   if (!destination) return null;
+
+  // Single document per destination — open service page directly (no picker step).
+  if (destination.services.length === 1) {
+    return (
+      <Navigate
+        to={buildPath(lang, destination.slug, destination.services[0].slug)}
+        replace
+      />
+    );
+  }
 
   const primaryService = destination.services[0];
   const goApply = () => {

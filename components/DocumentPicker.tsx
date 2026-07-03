@@ -54,10 +54,16 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = ({ mode, destinatio
   const docLabel = (n: number) =>
     lang === 'en' ? `${n} document${n > 1 ? 's' : ''}` : n === 1 ? 'مستند واحد' : `${n} مستندات`;
 
-  const renderDestinationRow = (dest: DestinationDef) => (
+  const renderDestinationRow = (dest: DestinationDef) => {
+    const target =
+      dest.services.length === 1
+        ? buildPath(lang, dest.slug, dest.services[0].slug)
+        : buildPath(lang, dest.slug);
+
+    return (
     <Link
       key={dest.slug}
-      to={buildPath(lang, dest.slug)}
+      to={target}
       className="group flex items-center justify-between gap-4 border-b border-gray-50 px-5 py-4 transition last:border-0 hover:bg-blue-50/60"
     >
       <span className="font-bold text-gray-900">{dest.name[lang]}</span>
@@ -69,7 +75,8 @@ export const DocumentPicker: React.FC<DocumentPickerProps> = ({ mode, destinatio
         <Chevron className="size-4 text-blue-500" />
       </div>
     </Link>
-  );
+    );
+  };
 
   const renderServiceRow = (service: ServiceDef) => (
     <button

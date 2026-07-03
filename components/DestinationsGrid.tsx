@@ -21,10 +21,16 @@ export const DestinationsGrid: React.FC = () => {
       </div>
 
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {destinations.map((dest) => (
+        {destinations.map((dest) => {
+          const href =
+            dest.services.length === 1
+              ? buildPath(lang, dest.slug, dest.services[0].slug)
+              : buildPath(lang, dest.slug);
+
+          return (
           <li key={dest.slug}>
             <Link
-              to={buildPath(lang, dest.slug)}
+              to={href}
               className="group flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition hover:border-blue-200 hover:shadow-md"
             >
               <div className="flex min-w-0 items-center gap-4">
@@ -43,7 +49,8 @@ export const DestinationsGrid: React.FC = () => {
               <Chevron className="size-5 shrink-0 text-blue-500 transition group-hover:translate-x-0.5" />
             </Link>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </section>
   );
