@@ -42,6 +42,18 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
   return (
     <section className="p-4">
       <div className="relative mx-auto flex min-h-[80svh] w-full max-w-5xl flex-col overflow-hidden rounded-4xl border-8 border-white">
+        <div className="hero-fallback absolute inset-0 overflow-hidden rounded-4xl">
+          <img
+            src={IMAGES.hero}
+            alt="تايلاند"
+            className="absolute inset-0 h-full w-full rounded-4xl object-cover object-center"
+            loading="eager"
+            fetchPriority="high"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="hero-overlay absolute inset-0 rounded-4xl" aria-hidden />
+        </div>
+
         <div className="relative z-10 flex flex-1 flex-col">
           <Header onApply={onApply} />
 
@@ -87,15 +99,6 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
             </a>
             .
           </p>
-        </div>
-
-        <div className="absolute inset-0 -z-10 overflow-hidden rounded-4xl">
-          <div className="hero-overlay absolute inset-0 rounded-4xl" />
-          <img
-            src={IMAGES.hero}
-            alt="تايلاند"
-            className="absolute inset-0 -z-10 size-full rounded-4xl object-cover object-center"
-          />
         </div>
       </div>
     </section>

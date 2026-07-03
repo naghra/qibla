@@ -32,7 +32,8 @@ export const Steps: React.FC<StepsProps> = ({ onApply }) => {
         <img
           src={IMAGES.tourist}
           alt="مسافر"
-          className="aspect-4/5 w-full max-w-xs justify-self-center overflow-hidden rounded-4xl object-cover lg:max-w-none"
+          className="aspect-[4/5] min-h-[320px] w-full max-w-xs justify-self-center rounded-4xl object-cover lg:max-w-none"
+          loading="lazy"
         />
       </div>
 
