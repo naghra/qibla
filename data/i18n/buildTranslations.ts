@@ -217,14 +217,14 @@ function genericPricing(lang: Lang, dest: DestinationDef, service: ServiceDef): 
   const doc = service.shortName[lang];
   const price = service.priceFrom;
   const plans = [
-    { id: 'standard' as const, name: lang === 'en' ? 'Standard' : 'قياسي', time: lang === 'en' ? '~8 hours' : '~8 ساعات', price, priorityFee: 0, description: lang === 'en' ? 'Standard processing with expert review and full support.' : 'معالجة قياسية مع مراجعة خبيرة ودعم كامل.', features: lang === 'en' ? ['Expert review', '24/7 Support', 'Partial refund before processing'] : ['مراجعة خبيرة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
-    { id: 'fast' as const, name: lang === 'en' ? 'Fast' : 'سريع', time: lang === 'en' ? '2 hours' : '2 ساعة', price, priorityFee: 20, description: lang === 'en' ? 'Priority processing in 2 hours.' : 'معالجة أولوية خلال ساعتين.', features: lang === 'en' ? ['Priority processing', '24/7 Support', 'Partial refund before processing'] : ['معالجة أولوية', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: true },
-    { id: 'ultra' as const, name: lang === 'en' ? 'Ultra Fast' : 'فائق السرعة', time: lang === 'en' ? '15 minutes' : '15 دقيقة', price, priorityFee: 25, description: lang === 'en' ? 'Urgent processing for last-minute travelers.' : 'معالجة عاجلة للمسافرين في اللحظة الأخيرة.', features: lang === 'en' ? ['Ultra-fast processing', '24/7 Support', 'Partial refund before processing'] : ['معالجة فائقة السرعة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
+    { id: 'standard' as const, name: lang === 'en' ? 'Standard' : 'قياسي', time: lang === 'en' ? '~8 hours' : '~8 ساعات', price, priorityFee: 0, description: lang === 'en' ? `Apply online for your ${doc} with standard processing. Includes expert document review, real-time validation, and full support throughout your application.` : `قدّم ${doc} عبر الإنترنت بمعالجة قياسية. تشمل مراجعة خبيرة وتحقق فوري ودعم كامل.`, features: lang === 'en' ? ['Expert review', '24/7 Support', 'Partial refund before processing'] : ['مراجعة خبيرة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
+    { id: 'fast' as const, name: lang === 'en' ? 'Fast' : 'سريع', time: lang === 'en' ? '2 hours' : '2 ساعة', price, priorityFee: 20, description: lang === 'en' ? `Get your ${doc} approved faster with priority processing. Expedited expert review so your travel documents are ready in just 2 hours.` : `احصل على ${doc} أسرع بمعالجة أولوية. مراجعة خبيرة مستعجلة خلال ساعتين.`, features: lang === 'en' ? ['Priority processing', '24/7 Support', 'Partial refund before processing'] : ['معالجة أولوية', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: true },
+    { id: 'ultra' as const, name: lang === 'en' ? 'Ultra Fast' : 'فائق السرعة', time: lang === 'en' ? '15 minutes' : '15 دقيقة', price, priorityFee: 25, description: lang === 'en' ? `Urgent ${doc} processing for last-minute travelers. Our fastest tier gets your travel documents reviewed and ready in just 15 minutes.` : `معالجة عاجلة لـ${doc} للمسافرين في اللحظة الأخيرة. أسرع مستوى — جاهز خلال 15 دقيقة.`, features: lang === 'en' ? ['Ultra-fast processing', '24/7 Support', 'Partial refund before processing'] : ['معالجة فائقة السرعة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
   ];
   if (lang === 'en') {
     return {
       sectionTitle: `${doc} pricing plans`,
-      sectionSubtitle: `Choose the processing speed that fits your schedule. Service fee from $${price.toFixed(2)} per traveler.`,
+      sectionSubtitle: `Choose the processing speed that best fits your travel schedule. Apply online for your ${doc} from $${price.toFixed(2)} service fee per traveler.`,
       serviceFee: 'service fee',
       perTraveler: 'service fee / traveler',
       oneTimePriority: 'one-time priority fee',
@@ -235,7 +235,7 @@ function genericPricing(lang: Lang, dest: DestinationDef, service: ServiceDef): 
   }
   return {
     sectionTitle: `خطط أسعار ${doc}`,
-    sectionSubtitle: `اختر سرعة المعالجة. تبدأ رسوم الخدمة من ${price}$ للمسافر.`,
+    sectionSubtitle: `اختر سرعة المعالجة المناسبة. قدّم ${doc} عبر الإنترنت برسوم خدمة تبدأ من ${price}$ للمسافر.`,
     serviceFee: 'رسوم خدمة',
     perTraveler: 'رسوم خدمة / مسافر',
     oneTimePriority: 'رسوم أولوية لمرة واحدة',

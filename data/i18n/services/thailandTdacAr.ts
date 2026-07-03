@@ -79,9 +79,9 @@ export const thailandTdacAr: Translations = {
       `$${base}/مسافر + $${priority} رسوم أولوية لمرة واحدة`,
     applyNow: 'قدّم الآن',
     plans: [
-      { id: 'standard', name: 'قياسي', time: '~8 ساعات', price: 65, priorityFee: 0, description: 'معالجة قياسية مع مراجعة خبيرة ودعم كامل.', features: ['مراجعة خبيرة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
-      { id: 'fast', name: 'سريع', time: '2 ساعة', price: 65, priorityFee: 20, description: 'معالجة أولوية — مستنداتك جاهزة خلال ساعتين.', features: ['معالجة أولوية', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: true },
-      { id: 'ultra', name: 'فائق السرعة', time: '15 دقيقة', price: 65, priorityFee: 25, description: 'أسرع مستوى معالجة للمسافرين في اللحظة الأخيرة.', features: ['معالجة فائقة السرعة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
+      { id: 'standard', name: 'قياسي', time: '~8 ساعات', price: 65, priorityFee: 0, description: 'قدّم بطاقة TDAC التايلاندية عبر الإنترنت بمعالجة قياسية. تشمل مراجعة خبيرة وتحقق فوري ودعم كامل طوال طلبك.', features: ['مراجعة خبيرة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
+      { id: 'fast', name: 'سريع', time: '2 ساعة', price: 65, priorityFee: 20, description: 'احصل على بطاقة TDAC أسرع بمعالجة أولوية. مراجعة خبيرة مستعجلة لتكون مستنداتك جاهزة خلال ساعتين.', features: ['معالجة أولوية', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: true },
+      { id: 'ultra', name: 'فائق السرعة', time: '15 دقيقة', price: 65, priorityFee: 25, description: 'معالجة عاجلة لبطاقة TDAC للمسافرين في اللحظة الأخيرة. أسرع مستوى — مراجعة مستنداتك وجاهزيتها خلال 15 دقيقة.', features: ['معالجة فائقة السرعة', 'دعم 24/7', 'استرداد جزئي قبل المعالجة'], popular: false },
     ],
   },
   countries: {
