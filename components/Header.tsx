@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { SITE_NAME, navLinks } from '../data/content';
-import { THAILAND_FLAG } from '../data/assets';
 import { Logo } from './Logo';
 
 interface HeaderProps {
@@ -16,7 +15,6 @@ export const Header: React.FC<HeaderProps> = ({ onApply }) => {
       <header className="container mx-auto p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="order-1 mr-auto flex items-center gap-4">
-            <span className="text-4xl leading-none">{THAILAND_FLAG}</span>
             <Logo inverted className="h-8" showText={false} />
             <span className="sr-only font-bold">{SITE_NAME}</span>
           </div>

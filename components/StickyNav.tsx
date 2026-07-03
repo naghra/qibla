@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { SITE_NAME, navLinks } from '../data/content';
-import { THAILAND_FLAG } from '../data/assets';
 import { PrimaryButton } from './ui';
 import { useScroll } from '../hooks/useScroll';
 
@@ -21,7 +20,6 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply }) => {
       <div className="fixed top-0 right-0 left-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
         <div className="container mx-auto flex items-center justify-between gap-4 p-4">
           <a href="#" className="flex items-center gap-3" onClick={() => window.scrollTo({ top: 0 })}>
-            <span className="text-2xl">{THAILAND_FLAG}</span>
             <Logo showText={false} />
           </a>
 

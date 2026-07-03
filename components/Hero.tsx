@@ -2,7 +2,7 @@ import React from 'react';
 import { Header } from './Header';
 import { PrimaryButton } from './ui';
 import { SITE_NAME } from '../data/content';
-import { IMAGES, THAILAND_FLAG } from '../data/assets';
+import { IMAGES } from '../data/assets';
 import { Logo } from './Logo';
 
 interface HeroProps {
@@ -59,8 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
 
           <div className="mx-auto w-full max-w-xl flex-1 space-y-8 p-8 text-center text-white">
             <div className="space-y-4">
-              <div className="relative -right-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <span className="text-5xl">{THAILAND_FLAG}</span>
+              <div className="flex justify-center">
                 <Logo className="h-10" inverted showText={false} />
               </div>
               <h1 className="text-pretty text-2xl font-bold sm:text-3xl lg:text-4xl">

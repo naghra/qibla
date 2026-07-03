@@ -22,10 +22,7 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
             <ArrowRight className="size-4" />
             العودة للرئيسية
           </button>
-          <div className="flex items-center gap-2">
-            <span>{THAILAND_FLAG}</span>
-            <Logo showText={false} />
-          </div>
+          <Logo showText={false} />
           <div className="w-24" />
         </div>
       </header>
