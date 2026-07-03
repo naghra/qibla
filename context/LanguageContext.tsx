@@ -1,34 +1,51 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Lang, Translations } from '../data/i18n/types';
-import { detectLang, getDir, getTranslations } from '../data/i18n';
+import { buildTranslations, getDir } from '../data/i18n';
+import type { DestinationDef, PageScope, ServiceDef } from '../data/destinations';
+import { swapLangInPath } from '../data/destinations';
 
 interface LanguageContextValue {
   lang: Lang;
   dir: 'rtl' | 'ltr';
   t: Translations;
+  pageScope: PageScope;
+  destination?: DestinationDef;
+  service?: ServiceDef;
   setLang: (lang: Lang) => void;
-  toggleLang: () => void;
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLangState] = useState<Lang>(detectLang);
+interface LanguageProviderProps {
+  children: React.ReactNode;
+  lang: Lang;
+  pageScope: PageScope;
+}
 
-  const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    localStorage.setItem('lang', next);
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', next);
-    window.history.replaceState({}, '', url.toString());
-  }, []);
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({
+  children,
+  lang,
+  pageScope,
+}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleLang = useCallback(() => {
-    setLang(lang === 'ar' ? 'en' : 'ar');
-  }, [lang, setLang]);
-
-  const t = getTranslations(lang);
+  const t = useMemo(() => buildTranslations(lang, pageScope), [lang, pageScope]);
   const dir = getDir(lang);
+
+  const destination = pageScope.type !== 'hub' ? pageScope.destination : undefined;
+  const service = pageScope.type === 'service' ? pageScope.service : undefined;
+
+  const setLang = useCallback(
+    (next: Lang) => {
+      if (next === lang) return;
+      localStorage.setItem('lang', next);
+      const newPath = swapLangInPath(location.pathname, next);
+      navigate(newPath + location.search + location.hash, { replace: true });
+    },
+    [lang, location.pathname, location.search, location.hash, navigate]
+  );
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -39,7 +56,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [lang, dir, t.metaTitle, t.metaDescription]);
 
   return (
-    <LanguageContext.Provider value={{ lang, dir, t, setLang, toggleLang }}>
+    <LanguageContext.Provider
+      value={{ lang, dir, t, pageScope, destination, service, setLang }}
+    >
       {children}
     </LanguageContext.Provider>
   );

@@ -4,8 +4,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
 
 export const Footer: React.FC = () => {
-  const { t } = useLanguage();
-  const navLinks = getNavLinks(t);
+  const { t, pageScope } = useLanguage();
+  const navLinks = getNavLinks(t, pageScope.type);
   const { footer: f } = t;
 
   return (

@@ -1,33 +1,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { Logo } from './Logo';
-import { PrimaryButton } from './ui';
-import { useScroll } from '../hooks/useScroll';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
 import { buildPath } from '../data/destinations';
+import { Logo } from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
-interface StickyNavProps {
-  onApply: () => void;
-  hubMode?: boolean;
+interface SiteHeaderProps {
+  variant?: 'light' | 'dark';
 }
 
-export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }) => {
+export const SiteHeader: React.FC<SiteHeaderProps> = ({ variant = 'light' }) => {
   const { t, lang, pageScope } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
-  const scrolled = useScroll();
   const [open, setOpen] = useState(false);
-
-  if (!scrolled) return null;
+  const homePath = buildPath(lang);
+  const isDark = variant === 'dark';
 
   return (
     <>
-      <div className="fixed top-0 inset-x-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
-        <div className="container mx-auto flex items-center justify-between gap-4 p-4">
-          <Link to={buildPath(lang)} className="flex items-center gap-3">
-            <Logo showText={false} />
+      <header className={`container mx-auto p-4 ${isDark ? 'text-white' : ''}`}>
+        <div className="flex items-center justify-between gap-4">
+          <Link to={homePath} className="flex items-center gap-3">
+            <Logo inverted={isDark} className="h-8" showText={false} />
           </Link>
 
           <nav className="hidden items-center gap-6 lg:flex">
@@ -35,7 +31,9 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 transition hover:text-blue-500"
+                className={`text-sm font-medium transition ${
+                  isDark ? 'text-gray-200 hover:text-white' : 'text-gray-600 hover:text-blue-500'
+                }`}
               >
                 {link.label}
               </a>
@@ -43,26 +41,23 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
           </nav>
 
           <div className="flex items-center gap-3">
-            <LanguageSwitcher variant="light" className="hidden sm:inline-flex" />
-            <PrimaryButton onClick={onApply} className="hidden px-4 py-2 text-sm sm:inline-flex">
-              {hubMode ? t.hero.cta : t.nav.applyNow}
-            </PrimaryButton>
+            <LanguageSwitcher variant={isDark ? 'dark' : 'light'} className="hidden sm:inline-flex" />
             <button
               onClick={() => setOpen(true)}
-              className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+              className={`rounded-lg p-2 lg:hidden ${isDark ? 'text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               aria-label={t.nav.menu}
             >
               <Menu className="size-6" />
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {open && (
-        <div className="fixed inset-0 z-[60] bg-white fade-in lg:hidden">
-          <div className="flex min-h-full flex-col p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <span className="font-bold text-gray-900">{t.siteName}</span>
+        <div className="fixed inset-0 z-[90] bg-white fade-in">
+          <div className="flex min-h-full flex-col p-8">
+            <div className="mb-8 flex items-center justify-between">
+              <Logo />
               <div className="flex items-center gap-3">
                 <LanguageSwitcher variant="light" />
                 <button onClick={() => setOpen(false)} className="text-gray-500">
@@ -82,9 +77,6 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
                 </a>
               ))}
             </nav>
-            <PrimaryButton onClick={() => { setOpen(false); onApply(); }} className="mt-6 w-full">
-              {hubMode ? t.hero.cta : t.nav.applyNow}
-            </PrimaryButton>
           </div>
         </div>
       )}

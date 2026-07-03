@@ -53,6 +53,7 @@ export interface Translations {
     applyNow: string;
     menu: string;
     backHome: string;
+    travelDocuments?: string;
   };
   hero: {
     title: string;
