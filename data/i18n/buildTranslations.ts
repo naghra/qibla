@@ -546,7 +546,7 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
         ]
       : [
           { icon: 'clock', title: 'وقت المعالجة', highlight: 'سريع', text: 'يُعالج مستندك بسرعة بعد الإرسال.' },
-          { icon: 'calendar', title: 'الصلاحية', highlight: 'حتى الوصول', text: 'صالح لتواريخ سفرك الم planned.' },
+          { icon: 'calendar', title: 'الصلاحية', highlight: 'حتى الوصول', text: 'صالح لتواريخ سفرك المحددة.' },
           { icon: 'globe', title: 'كيفية التقديم', highlight: '100% عبر الإنترنت', text: `قدّم من أي جهاز قبل رحلتك إلى ${label}.` },
           { icon: 'qr', title: 'عند الوصول', highlight: 'اعرض المستند', text: 'من هاتفك أو بريدك عند الهجرة.' },
         ],

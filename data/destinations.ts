@@ -78,10 +78,10 @@ export const destinations: DestinationDef[] = [
     services: [{
       slug: 'travel-form',
       name: { en: 'Travel Form', ar: 'نموذج السفر' },
-      shortName: { en: 'Belize Travel Form', ar: 'نموذج سفر بلize' },
+      shortName: { en: 'Belize Travel Form', ar: 'نموذج سفر بيليز' },
       description: {
         en: 'Belize Travel Form — complete your mandatory online entry form before arrival.',
-        ar: 'نموذج سفر بلize — أكمل نموذج الدخول الإلكتروني الإلزامي قبل الوصول.',
+        ar: 'نموذج سفر بيليز — أكمل نموذج الدخول الإلكتروني الإلزامي قبل الوصول.',
       },
       priceFrom: 65,
       detailed: false,
@@ -129,10 +129,10 @@ export const destinations: DestinationDef[] = [
     services: [{
       slug: 'eticket',
       name: { en: 'E-Ticket', ar: 'التذكرة الإلكترونية' },
-      shortName: { en: 'Dominican E-Ticket', ar: 'E-Ticket الدominican' },
+      shortName: { en: 'Dominican E-Ticket', ar: 'E-Ticket الدومينيكان' },
       description: {
         en: 'Dominican Republic E-Ticket — mandatory electronic ticket for entry and exit.',
-        ar: 'E-Ticket جمهورية الدominican — التذكرة الإلكترونية الإلزامية للدخول والمغادرة.',
+        ar: 'E-Ticket جمهورية الدومينيكان — التذكرة الإلكترونية الإلزامية للدخول والمغادرة.',
       },
       priceFrom: 65,
       detailed: false,
@@ -175,15 +175,15 @@ export const destinations: DestinationDef[] = [
   {
     slug: 'jamaica',
     countryCode: 'JM',
-    name: { en: 'Jamaica', ar: 'جamaica' },
+    name: { en: 'Jamaica', ar: 'جَمَيكَا' },
     priceFrom: 65,
     services: [{
       slug: 'c5-form',
       name: { en: 'C5 Form', ar: 'نموذج C5' },
-      shortName: { en: 'Jamaica C5 Form', ar: 'نموذج C5 جamaica' },
+      shortName: { en: 'Jamaica C5 Form', ar: 'نموذج C5 جَمَيكَا' },
       description: {
         en: 'Jamaica C5 Form — required customs declaration for all travelers entering Jamaica.',
-        ar: 'نموذج C5 جamaica — إقرار الجمارك المطلوب لجميع المسافرين إلى جamaica.',
+        ar: 'نموذج C5 جَمَيكَا — إقرار الجمارك المطلوب لجميع المسافرين إلى جَمَيكَا.',
       },
       priceFrom: 65,
       detailed: false,
@@ -192,15 +192,15 @@ export const destinations: DestinationDef[] = [
   {
     slug: 'cambodia',
     countryCode: 'KH',
-    name: { en: 'Cambodia', ar: 'كمبodia' },
+    name: { en: 'Cambodia', ar: 'كمبوديا' },
     priceFrom: 65,
     services: [{
       slug: 'e-visa',
       name: { en: 'E-Visa', ar: 'تأشيرة إلكترونية' },
-      shortName: { en: 'Cambodia E-Visa', ar: 'تأشيرة كمبodia الإلكترونية' },
+      shortName: { en: 'Cambodia E-Visa', ar: 'تأشيرة كمبوديا الإلكترونية' },
       description: {
         en: 'Cambodia E-Visa — apply online for your tourist visa before traveling to Cambodia.',
-        ar: 'تأشيرة كمبodia الإلكترونية — قدّم طلب تأشيرة سياحية عبر الإنترنت قبل السفر.',
+        ar: 'تأشيرة كمبوديا الإلكترونية — قدّم طلب تأشيرة سياحية عبر الإنترنت قبل السفر.',
       },
       priceFrom: 65,
       detailed: false,
@@ -294,15 +294,15 @@ export const destinations: DestinationDef[] = [
   {
     slug: 'taiwan',
     countryCode: 'TW',
-    name: { en: 'Taiwan', ar: 'تايwan' },
+    name: { en: 'Taiwan', ar: 'تايوان' },
     priceFrom: 65,
     services: [{
       slug: 'arrival-card',
       name: { en: 'Arrival Card', ar: 'بطاقة الوصول' },
-      shortName: { en: 'Taiwan Arrival Card', ar: 'بطاقة وصول تايwan' },
+      shortName: { en: 'Taiwan Arrival Card', ar: 'بطاقة وصول تايوان' },
       description: {
         en: 'Taiwan Arrival Card — complete your online arrival declaration before landing in Taiwan.',
-        ar: 'بطاقة وصول تايwan — أكمل إقرار الوصول الإلكتروني قبل الهبوط في تايwan.',
+        ar: 'بطاقة وصول تايوان — أكمل إقرار الوصول الإلكتروني قبل الهبوط في تايوان.',
       },
       priceFrom: 65,
       detailed: false,
