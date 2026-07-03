@@ -49,7 +49,7 @@ export const TripDetailsStep: React.FC<TripDetailsStepProps> = ({
   return (
     <div className={`${applySection} w-full`}>
       <div className={applySectionInner}>
-        <div className="space-y-8">
+        <div className="space-y-10">
           <DateDropdownGroup
             label={a.arriveQuestion}
             value={arrival}
