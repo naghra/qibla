@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListChecks, Headphones, Shield, Users, CheckCircle } from 'lucide-react';
 import { features, SITE_NAME } from '../data/content';
-import { PrimaryButton, SectionHeader } from './ui';
+import { Logo } from './Logo';
 
 const iconMap = {
   list: ListChecks,
@@ -29,11 +29,7 @@ export const Features: React.FC<FeaturesProps> = ({ onApply }) => {
           <div className="relative m-1 flex flex-1 flex-col justify-between gap-8 overflow-hidden rounded-4xl bg-blue-500 p-4 text-gray-50 sm:p-8">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <img
-                  src="https://api.dicebear.com/7.x/shapes/svg?seed=travel&backgroundColor=ffffff"
-                  alt=""
-                  className="h-8 w-8 brightness-0 invert"
-                />
+                <Logo inverted className="h-8" />
                 <p className="font-bold">{SITE_NAME}</p>
               </div>
               <h3 className="max-w-md text-pretty text-2xl font-bold">
