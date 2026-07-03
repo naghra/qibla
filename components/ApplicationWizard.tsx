@@ -4,6 +4,7 @@ import { countriesData } from '../data/countries';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { getCountryName } from '../utils/countryName';
+import { saveApplication } from '../services/applicationStore';
 
 const emptyTraveler = (): TravelerData => ({
   firstName: '',
@@ -36,11 +37,12 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
   onComplete,
   variant = 'page',
 }) => {
-  const { t, lang, dir } = useLanguage();
+  const { t, lang, dir, destination, service } = useLanguage();
   const a = t.apply;
   const plans = t.pricing.plans;
 
   const [step, setStep] = useState(0);
+  const [submittedId, setSubmittedId] = useState<string | null>(null);
   const [data, setData] = useState<ApplicationData>({
     travelers: [emptyTraveler()],
     travel: { ...emptyTravel },
@@ -79,10 +81,27 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
     return true;
   };
 
-  const handleSubmit = () => setStep(3);
+  const handleSubmit = () => {
+    if (destination && service) {
+      const record = saveApplication({
+        lang,
+        destinationSlug: destination.slug,
+        destinationName: destination.name[lang],
+        serviceSlug: service.slug,
+        serviceName: service.shortName[lang],
+        planId: data.plan,
+        planName: selectedPlan.name,
+        totalAmount: total,
+        data,
+      });
+      setSubmittedId(record.id);
+    }
+    setStep(3);
+  };
 
   const handleDone = () => {
     setStep(0);
+    setSubmittedId(null);
     setData({ travelers: [emptyTraveler()], travel: { ...emptyTravel }, plan: initialPlan });
     onComplete?.();
   };
@@ -381,6 +400,11 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
               <CheckCircle className="size-10 text-green-600" />
             </div>
             <h3 className="mb-3 text-2xl font-bold text-gray-900">{a.successTitle}</h3>
+            {submittedId && (
+              <p className="mb-4 rounded-xl bg-gray-50 px-4 py-2 font-mono text-sm text-gray-700" dir="ltr">
+                {lang === 'en' ? 'Reference' : 'رقم الطلب'}: {submittedId}
+              </p>
+            )}
             <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0].firstName)}</p>
             <p className="mb-6 font-bold text-blue-500" dir="ltr">{data.travelers[0].email}</p>
             <p className="text-sm text-gray-500">
