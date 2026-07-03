@@ -2,6 +2,9 @@ export interface TravelerData {
   firstName: string;
   lastName: string;
   passportNumber: string;
+  passportCountry?: string;
+  passportIssueDate?: string;
+  passportExpiryDate?: string;
   nationality: string;
   dateOfBirth: string;
   gender: string;

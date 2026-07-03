@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
+import { YourInfoStep } from './YourInfoStep';
+import { travelerDateParts } from './TravelerInfoCard';
 import { getDialPrefix } from './PhoneCountrySelect';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -12,17 +14,25 @@ import {
   defaultDateParts,
 } from '../../utils/dateParts';
 
-const emptyTraveler = (): TravelerData => ({
-  firstName: '',
-  lastName: '',
-  passportNumber: '',
-  nationality: '',
-  dateOfBirth: '',
-  gender: '',
-  email: '',
-  phone: '',
-  phoneCountry: 'FR',
-});
+const defaultCountry = (lang: string) => (lang === 'ar' ? 'EG' : 'NL');
+
+const emptyTraveler = (lang: string): TravelerData => {
+  const country = defaultCountry(lang);
+  return {
+    firstName: '',
+    lastName: '',
+    passportNumber: '',
+    passportCountry: country,
+    passportIssueDate: '',
+    passportExpiryDate: '',
+    nationality: country,
+    dateOfBirth: '',
+    gender: '',
+    email: '',
+    phone: '',
+    phoneCountry: lang === 'ar' ? 'EG' : 'FR',
+  };
+};
 
 const emptyTravel: TravelDetails = {
   arrivalDate: '',
@@ -33,6 +43,10 @@ const emptyTravel: TravelDetails = {
   accommodationCity: '',
 };
 
+function initDateParts(travelers: TravelerData[], field: 'dateOfBirth' | 'passportIssueDate' | 'passportExpiryDate'): DateParts[] {
+  return travelers.map((t) => travelerDateParts(t, field));
+}
+
 interface TdacApplicationWizardProps {
   initialPlan?: PlanId;
   onComplete?: () => void;
@@ -42,7 +56,7 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   initialPlan = 'standard',
   onComplete,
 }) => {
-  const { t, lang, destination, service } = useLanguage();
+  const { t, lang, dir, destination, service } = useLanguage();
   const a = t.apply;
   const plans = t.pricing.plans;
 
@@ -54,14 +68,21 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   const [phoneCountry, setPhoneCountry] = useState(lang === 'ar' ? 'EG' : 'FR');
   const [phone, setPhone] = useState('');
 
-  const [data, setData] = useState<ApplicationData>({
-    travelers: [emptyTraveler()],
+  const [data, setData] = useState<ApplicationData>(() => ({
+    travelers: [emptyTraveler(lang)],
     travel: { ...emptyTravel },
     plan: initialPlan,
-  });
+  }));
+
+  const [dobParts, setDobParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'dateOfBirth'));
+  const [issueParts, setIssueParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'passportIssueDate'));
+  const [expiryParts, setExpiryParts] = useState<DateParts[]>(() => initDateParts([emptyTraveler(lang)], 'passportExpiryDate'));
 
   const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const total = (selectedPlan.price + selectedPlan.priorityFee) * data.travelers.length;
+
+  const PrevChevron = dir === 'rtl' ? ChevronRight : ChevronLeft;
+  const NextChevron = dir === 'rtl' ? ChevronLeft : ChevronRight;
 
   const syncTripToData = (): ApplicationData => {
     const fullPhone = phone.trim() ? `${getDialPrefix(phoneCountry)} ${phone.trim()}` : '';
@@ -80,6 +101,28 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
     return { ...data, travel, travelers };
   };
 
+  const updateTraveler = (index: number, field: keyof TravelerData, value: string) => {
+    const travelers = [...data.travelers];
+    travelers[index] = { ...travelers[index], [field]: value };
+    setData({ ...data, travelers });
+  };
+
+  const addTraveler = () => {
+    const next = emptyTraveler(lang);
+    setData({ ...data, travelers: [...data.travelers, next] });
+    setDobParts((p) => [...p, travelerDateParts(next, 'dateOfBirth')]);
+    setIssueParts((p) => [...p, travelerDateParts(next, 'passportIssueDate')]);
+    setExpiryParts((p) => [...p, travelerDateParts(next, 'passportExpiryDate')]);
+  };
+
+  const removeTraveler = (index: number) => {
+    if (data.travelers.length <= 1) return;
+    setData({ ...data, travelers: data.travelers.filter((_, i) => i !== index) });
+    setDobParts((p) => p.filter((_, i) => i !== index));
+    setIssueParts((p) => p.filter((_, i) => i !== index));
+    setExpiryParts((p) => p.filter((_, i) => i !== index));
+  };
+
   const canProceed = () => {
     if (step === 0) {
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -91,11 +134,31 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
         phone.trim().length >= 4
       );
     }
+    if (step === 1) {
+      return data.travelers.every(
+        (tr) =>
+          tr.firstName.trim() &&
+          tr.lastName.trim() &&
+          tr.gender &&
+          tr.passportCountry &&
+          tr.nationality &&
+          tr.passportNumber.trim() &&
+          tr.dateOfBirth &&
+          tr.passportIssueDate &&
+          tr.passportExpiryDate
+      );
+    }
     return true;
   };
 
   const handleContinue = () => {
-    const synced = syncTripToData();
+    let synced = syncTripToData();
+    if (step === 1) synced = { ...data, travelers: data.travelers.map((tr, i) => ({
+      ...tr,
+      dateOfBirth: datePartsToIso(dobParts[i] ?? travelerDateParts(tr, 'dateOfBirth')),
+      passportIssueDate: datePartsToIso(issueParts[i] ?? travelerDateParts(tr, 'passportIssueDate')),
+      passportExpiryDate: datePartsToIso(expiryParts[i] ?? travelerDateParts(tr, 'passportExpiryDate')),
+    })) };
     setData(synced);
 
     if (step === 2) {
@@ -117,7 +180,13 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
       return;
     }
 
+    if (step === 0) setData(synced);
     setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    if (step === 1) setData(syncTripToData());
+    setStep(step - 1);
   };
 
   const handleDone = () => {
@@ -127,11 +196,19 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
     setPhone('');
     setArrival(defaultDateParts(7));
     setDeparture(defaultDateParts(14));
-    setData({ travelers: [emptyTraveler()], travel: { ...emptyTravel }, plan: initialPlan });
+    const fresh = emptyTraveler(lang);
+    setData({ travelers: [fresh], travel: { ...emptyTravel }, plan: initialPlan });
+    setDobParts(initDateParts([fresh], 'dateOfBirth'));
+    setIssueParts(initDateParts([fresh], 'passportIssueDate'));
+    setExpiryParts(initDateParts([fresh], 'passportExpiryDate'));
     onComplete?.();
   };
 
   const formSteps = a.formSteps;
+  const primaryBtnClass =
+    step === 0
+      ? 'bg-gray-900 hover:bg-gray-800'
+      : 'bg-blue-600 hover:bg-blue-700';
 
   if (step === 3) {
     return (
@@ -145,7 +222,7 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
             {lang === 'en' ? 'Reference' : 'رقم الطلب'}: {submittedId}
           </p>
         )}
-        <p className="mb-2 text-gray-600">{a.successThanks('')}</p>
+        <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0]?.firstName ?? '')}</p>
         <p className="mb-6 font-bold text-blue-600" dir="ltr">{email}</p>
         <button
           type="button"
@@ -180,16 +257,41 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
       )}
 
       {step === 1 && (
-        <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-12 text-center">
-          <p className="text-sm font-medium text-gray-700">{a.stepPlaceholderTitle}</p>
-          <p className="mt-2 text-xs text-gray-500">{a.stepPlaceholderSubtitle}</p>
-        </div>
+        <YourInfoStep
+          a={a}
+          lang={lang}
+          travelers={data.travelers}
+          onUpdateTraveler={updateTraveler}
+          onAddTraveler={addTraveler}
+          onRemoveTraveler={removeTraveler}
+          dobParts={dobParts}
+          issueParts={issueParts}
+          expiryParts={expiryParts}
+          onDobChange={(i, parts) => {
+            const next = [...dobParts];
+            next[i] = parts;
+            setDobParts(next);
+            updateTraveler(i, 'dateOfBirth', datePartsToIso(parts));
+          }}
+          onIssueChange={(i, parts) => {
+            const next = [...issueParts];
+            next[i] = parts;
+            setIssueParts(next);
+            updateTraveler(i, 'passportIssueDate', datePartsToIso(parts));
+          }}
+          onExpiryChange={(i, parts) => {
+            const next = [...expiryParts];
+            next[i] = parts;
+            setExpiryParts(next);
+            updateTraveler(i, 'passportExpiryDate', datePartsToIso(parts));
+          }}
+        />
       )}
 
       {step === 2 && (
         <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-12 text-center">
-          <p className="text-sm font-medium text-gray-700">{a.stepPlaceholderTitle}</p>
-          <p className="mt-2 text-xs text-gray-500">{a.stepPlaceholderSubtitle}</p>
+          <p className="text-sm font-medium text-gray-700">{a.resumePlaceholderTitle}</p>
+          <p className="mt-2 text-xs text-gray-500">{a.resumePlaceholderSubtitle}</p>
         </div>
       )}
 
@@ -198,17 +300,19 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
           type="button"
           onClick={handleContinue}
           disabled={!canProceed()}
-          className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+          className={`flex w-full items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${primaryBtnClass}`}
         >
           {step === 2 ? a.submit : a.saveAndContinue}
+          {step < 2 && <NextChevron className="size-4" />}
         </button>
         {step > 0 && (
           <button
             type="button"
-            onClick={() => setStep(step - 1)}
-            className="w-full rounded-lg border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            onClick={handleBack}
+            className="flex w-full items-center justify-center gap-1 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
           >
-            {a.prev}
+            <PrevChevron className="size-4" />
+            {a.previousStep}
           </button>
         )}
       </div>

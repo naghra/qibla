@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check } from 'lucide-react';
 
 interface ApplyStepperProps {
   steps: string[];
@@ -19,14 +20,12 @@ export const ApplyStepper: React.FC<ApplyStepperProps> = ({ steps, current }) =>
               )}
               <div
                 className={`flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition ${
-                  active
+                  active || done
                     ? 'bg-gray-900 text-white'
-                    : done
-                      ? 'bg-gray-900 text-white'
-                      : 'border-2 border-gray-200 bg-white text-gray-400'
+                    : 'border-2 border-gray-200 bg-white text-gray-400'
                 }`}
               >
-                {index + 1}
+                {done ? <Check className="size-4" strokeWidth={3} /> : index + 1}
               </div>
               {index < steps.length - 1 && (
                 <div className={`h-px flex-1 ${done ? 'bg-gray-900' : 'bg-gray-200'}`} />
