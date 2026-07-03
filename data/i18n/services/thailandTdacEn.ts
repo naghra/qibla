@@ -15,10 +15,12 @@ export const thailandTdacEn: Translations = {
   },
   hero: {
     title: 'Stress-free Thailand Digital Arrival Card (TDAC) application',
-    subtitle: 'Complete your Thailand TDAC online before departure and receive your QR code for fast immigration clearance.',
-    trustItems: ['Rated on Trustpilot', 'Secure Process', '24/7 Support', 'Real-time validation'],
-    cta: 'Apply now online',
-    disclaimer: 'is an independent private company — not affiliated with any government. You can also apply via the',
+    badgeLine1: 'Thailand',
+    badgeLine2: 'Digital Arrival Card (TDAC)',
+    subtitle: 'Smart, fast, and reliable Thailand Digital Arrival Card application service.',
+    trustItems: ['Expert Review', '24/7 Support', 'Rated on Trustpilot', 'Secure Process'],
+    cta: 'Apply for your TDAC',
+    disclaimer: 'is an independent private company — not affiliated with, or operated by any government. You can also apply directly on the',
     officialSite: 'official government website',
   },
   about: {
@@ -32,7 +34,7 @@ export const thailandTdacEn: Translations = {
   },
   stats: [
     { value: '~5m', label: 'Processing Time' },
-    { value: '99.9%', label: 'Approval rate*' },
+    { value: 'Up to 99.9%', label: 'Approval rate*' },
     { value: '30d', label: 'Valid for' },
     { value: '24/7', label: 'Assistance' },
   ],

@@ -354,7 +354,11 @@ function buildHub(lang: Lang): Translations {
     },
     hero: {
       title: lang === 'en' ? 'Stress-free travel documents' : 'مستندات سفر بدون تعقيد',
-      subtitle: '',
+      titleLine1: lang === 'en' ? 'Stress-free' : 'بدون تعقيد',
+      titleLine2: lang === 'en' ? 'Travel Documents' : 'مستندات السفر',
+      subtitle: lang === 'en'
+        ? 'Online application assistance for travel documents worldwide.'
+        : 'مساعدة في تقديم مستندات السفر عبر الإنترنت حول العالم.',
       trustItems: lang === 'en' ? ['Rated on Trustpilot', 'Secure Process', '24/7 Support', 'Real-time validation'] : ['تقييم على Trustpilot', 'معالجة آمنة', 'دعم 24/7', 'تحقق فوري'],
       cta: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
       disclaimer: lang === 'en' ? 'is an independent private company — not affiliated with, or operated by any government. You can also apply directly on the' : 'شركة خاصة مستقلة — غير تابعة أو مُشغّلة من أي جهة حكومية. يمكنك أيضاً التقديم مباشرة عبر',
@@ -436,6 +440,7 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
   const hub = buildHub(lang);
   const sections = buildGenericSections(lang, label, dest.services[0]?.shortName[lang] ?? label);
   const docCount = dest.services.length;
+  const primaryDoc = dest.services[0]?.shortName[lang] ?? label;
   return {
     ...hub,
     metaTitle: lang === 'en' ? `Stress-free ${label} travel documents — Travel Smart Travel Fast` : `مستندات سفر ${label} — سفر ذكي سفر سريع`,
@@ -447,9 +452,11 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     },
     hero: {
       title: lang === 'en' ? `Travel documents for ${label}` : `مستندات السفر إلى ${label}`,
+      badgeLine1: label,
+      badgeLine2: lang === 'en' ? 'Travel Documents' : 'مستندات السفر',
       subtitle: lang === 'en'
-        ? `We provide all the essential travel documents for ${label}, ensuring a seamless and stress-free travel experience.`
-        : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة وبدون تعقيد.`,
+        ? `Apply for ${label} travel documents — ${primaryDoc}. Smart, fast and reliable.`
+        : `قدّم مستندات سفر ${label} — ${primaryDoc}. ذكي وسريع وموثوق.`,
       trustItems: hub.hero.trustItems,
       cta: lang === 'en' ? 'Apply now' : 'قدّم الآن',
       disclaimer: hub.hero.disclaimer,
@@ -457,7 +464,9 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     },
     about: {
       title: lang === 'en' ? `Travel documents for ${label}` : `مستندات السفر إلى ${label}`,
-      subtitle: lang === 'en' ? `Select the ${label} travel document you need and apply online today.` : `اختر مستند السفر المطلوب إلى ${label} وقدّم عبر الإنترنت اليوم.`,
+      subtitle: lang === 'en'
+        ? `We provide all the essential travel documents for ${label}, ensuring a seamless and stress-free travel experience.`
+        : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة وبدون تعقيد.`,
       glanceTitle: '',
       glanceSubtitle: '',
       requirementsTitle: '',
@@ -468,7 +477,7 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
       ? [
           { value: '2+', label: 'Years of Experience' },
           { value: 'Up to 99.9%', label: 'Approval rate*' },
-          { value: `${docCount}+`, label: `${label} Documents` },
+          { value: `${docCount}`, label: `${label} Documents` },
           { value: '24/7', label: 'Assistance' },
         ]
       : [
@@ -540,9 +549,15 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     },
     hero: {
       title: lang === 'en' ? `Stress-free ${doc} application` : `تقديم ${doc} بدون تعقيد`,
-      subtitle: service.description[lang],
-      trustItems: country.hero.trustItems,
-      cta: lang === 'en' ? 'Apply now online' : 'قدّم الآن عبر الإنترنت',
+      badgeLine1: label,
+      badgeLine2: doc,
+      subtitle: lang === 'en'
+        ? `Smart, fast, and reliable ${doc} application service.`
+        : `خدمة تقديم ${doc} ذكية وسريعة وموثوقة.`,
+      trustItems: lang === 'en'
+        ? ['Expert Review', '24/7 Support', 'Rated on Trustpilot', 'Secure Process']
+        : ['مراجعة خبيرة', 'دعم 24/7', 'تقييم على Trustpilot', 'معالجة آمنة'],
+      cta: lang === 'en' ? `Apply for your ${doc}` : `قدّم ${doc}`,
       disclaimer: country.hero.disclaimer,
       officialSite: country.hero.officialSite,
     },

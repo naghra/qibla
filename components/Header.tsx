@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
+import { buildPath } from '../data/destinations';
 import { Logo } from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -11,7 +13,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
-  const { t, pageScope } = useLanguage();
+  const { t, lang, pageScope } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
   const [open, setOpen] = useState(false);
 
@@ -19,24 +21,27 @@ export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
     <>
       <header className="container mx-auto p-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="order-1 ms-auto flex items-center gap-4">
-            <Logo inverted className="h-8" showText={false} />
-            <span className="sr-only font-bold">{t.siteName}</span>
-          </div>
+          <Link to={buildPath(lang)} className="order-1 flex items-center gap-3">
+            <Logo inverted className="h-8" showText />
+          </Link>
 
-          <nav className="hidden items-center gap-6 lg:flex">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-200 transition hover:text-white"
-              >
-                {link.label}
-              </a>
-            ))}
+          <nav className="order-2 hidden flex-1 items-center justify-center gap-6 lg:flex">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-200 transition hover:text-white"
+                >
+                  <Icon className="size-4 shrink-0 opacity-80" aria-hidden />
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
-          <div className="order-3 flex items-center gap-3 me-auto lg:me-0">
+          <div className="order-3 flex items-center gap-3">
             <LanguageSwitcher className="hidden sm:inline-flex" />
             <button
               onClick={() => setOpen(true)}
@@ -62,16 +67,20 @@ export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
               </div>
             </div>
             <nav className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-2xl px-4 py-3 font-medium text-gray-700 hover:bg-blue-50"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium text-gray-700 hover:bg-blue-50"
+                  >
+                    <Icon className="size-5 text-blue-500" aria-hidden />
+                    {link.label}
+                  </a>
+                );
+              })}
             </nav>
             <button
               onClick={() => { setOpen(false); onApply(); }}

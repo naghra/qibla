@@ -57,6 +57,14 @@ export interface Translations {
   };
   hero: {
     title: string;
+    /** Hub: first line of two-line headline */
+    titleLine1?: string;
+    /** Hub: second line of two-line headline */
+    titleLine2?: string;
+    /** Country/service: badge top line (country name) */
+    badgeLine1?: string;
+    /** Country/service: badge main line */
+    badgeLine2?: string;
     subtitle: string;
     trustItems: string[];
     cta: string;
