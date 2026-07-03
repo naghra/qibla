@@ -2,6 +2,7 @@ import React from 'react';
 import { ListChecks, Headphones, Shield, Users, CheckCircle } from 'lucide-react';
 import { features, SITE_NAME } from '../data/content';
 import { Logo } from './Logo';
+import { PrimaryButton, SectionHeader } from './ui';
 
 const iconMap = {
   list: ListChecks,
