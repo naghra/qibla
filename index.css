@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-quicksand: Quicksand, 'IBM Plex Sans', sans-serif;
+  --radius-4xl: 2rem;
+}
