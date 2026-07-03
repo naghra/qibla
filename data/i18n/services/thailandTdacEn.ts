@@ -71,7 +71,7 @@ export const thailandTdacEn: Translations = {
   },
   pricing: {
     sectionTitle: 'Thailand TDAC pricing plans',
-    sectionSubtitle: 'Choose the processing speed that fits your schedule. Service fee from $65.00 per traveler.',
+    sectionSubtitle: 'Choose the processing speed that best fits your travel schedule. Apply online for your Thailand TDAC from $65.00 service fee per traveler.',
     serviceFee: 'service fee',
     perTraveler: 'service fee / traveler',
     oneTimePriority: 'one-time priority fee',
@@ -79,9 +79,9 @@ export const thailandTdacEn: Translations = {
       `$${base}/traveler + $${priority} one-time priority fee`,
     applyNow: 'Apply now',
     plans: [
-      { id: 'standard', name: 'Standard', time: '~8 hours', price: 65, priorityFee: 0, description: 'Standard processing with expert review and full support throughout your application.', features: ['Expert review', '24/7 Support', 'Partial refund before processing'], popular: false },
-      { id: 'fast', name: 'Fast', time: '2 hours', price: 65, priorityFee: 20, description: 'Priority processing — your documents ready in just 2 hours.', features: ['Priority processing', '24/7 Support', 'Partial refund before processing'], popular: true },
-      { id: 'ultra', name: 'Ultra Fast', time: '15 minutes', price: 65, priorityFee: 25, description: 'Urgent processing for last-minute travelers.', features: ['Ultra-fast processing', '24/7 Support', 'Partial refund before processing'], popular: false },
+      { id: 'standard', name: 'Standard', time: '~8 hours', price: 65, priorityFee: 0, description: 'Apply online for your Thailand TDAC with standard processing. Includes expert document review, real-time validation, and full support throughout your application.', features: ['Expert review', '24/7 Support', 'Partial refund before processing'], popular: false },
+      { id: 'fast', name: 'Fast', time: '2 hours', price: 65, priorityFee: 20, description: 'Get your Thailand TDAC approved faster with priority processing. Expedited expert review so your travel documents are ready in just 2 hours.', features: ['Priority processing', '24/7 Support', 'Partial refund before processing'], popular: true },
+      { id: 'ultra', name: 'Ultra Fast', time: '15 minutes', price: 65, priorityFee: 25, description: 'Urgent Thailand TDAC processing for last-minute travelers. Our fastest tier gets your travel documents reviewed and ready in just 15 minutes.', features: ['Ultra-fast processing', '24/7 Support', 'Partial refund before processing'], popular: false },
     ],
   },
   countries: {

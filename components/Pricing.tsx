@@ -9,11 +9,12 @@ interface PricingProps {
 }
 
 export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
-  const { t } = useLanguage();
+  const { t, lang, service } = useLanguage();
   const { pricing: p } = t;
+  const planLabel = service?.shortName[lang] ?? '';
 
   return (
-    <section className="container mx-auto space-y-12 px-4 py-24">
+    <section id="pricing" className="container mx-auto space-y-12 px-4 py-24">
       <SectionHeader title={p.sectionTitle} subtitle={p.sectionSubtitle} />
 
       <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -30,7 +31,7 @@ export const Pricing: React.FC<PricingProps> = ({ onApply }) => {
               <div className="mt-4 space-y-1">
                 <p className="text-xs font-medium uppercase text-blue-500">{plan.time}</p>
                 <h3 className="text-lg font-bold text-gray-900">
-                  {plan.name} — TDAC
+                  {planLabel ? `${plan.name} — ${planLabel}` : plan.name}
                 </h3>
               </div>
 
