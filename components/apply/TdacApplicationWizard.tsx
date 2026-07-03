@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { CheckCircle, ChevronLeft, ChevronRight, Plane } from 'lucide-react';
 import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
 import { YourInfoStep } from './YourInfoStep';
+import { ResumeStep } from './ResumeStep';
 import { travelerDateParts } from './TravelerInfoCard';
 import { getDialPrefix } from './PhoneCountrySelect';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
+import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
   datePartsToIso,
@@ -80,6 +82,14 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
 
   const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const total = (selectedPlan.price + selectedPlan.priorityFee) * data.travelers.length;
+  const estimatedAt = computeEstimatedProcessing(data.plan, lang);
+  const destinationLabel = destination?.name[lang] ?? (lang === 'ar' ? 'تايلاند' : 'Thailand');
+
+  useEffect(() => {
+    if (step === 2 && data.plan === 'standard') {
+      setData((d) => ({ ...d, plan: 'fast' }));
+    }
+  }, [step, data.plan]);
 
   const PrevChevron = dir === 'rtl' ? ChevronRight : ChevronLeft;
   const NextChevron = dir === 'rtl' ? ChevronLeft : ChevronRight;
@@ -162,6 +172,8 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
     setData(synced);
 
     if (step === 2) {
+      const plan = plans.find((p) => p.id === synced.plan)!;
+      const amount = (plan.price + plan.priorityFee) * synced.travelers.length;
       if (destination && service) {
         const record = saveApplication({
           lang,
@@ -170,8 +182,8 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
           serviceSlug: service.slug,
           serviceName: service.shortName[lang],
           planId: synced.plan,
-          planName: selectedPlan.name,
-          totalAmount: total,
+          planName: plan.name,
+          totalAmount: amount,
           data: synced,
         });
         setSubmittedId(record.id);
@@ -289,10 +301,16 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
       )}
 
       {step === 2 && (
-        <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-12 text-center">
-          <p className="text-sm font-medium text-gray-700">{a.resumePlaceholderTitle}</p>
-          <p className="mt-2 text-xs text-gray-500">{a.resumePlaceholderSubtitle}</p>
-        </div>
+        <ResumeStep
+          a={a}
+          plans={plans}
+          selectedPlanId={data.plan}
+          onPlanChange={(id) => setData({ ...data, plan: id })}
+          travelerCount={data.travelers.length}
+          total={total}
+          estimatedAt={estimatedAt}
+          destinationName={destinationLabel}
+        />
       )}
 
       <div className="mt-8 space-y-3">
@@ -302,8 +320,17 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
           disabled={!canProceed()}
           className={`flex w-full items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${primaryBtnClass}`}
         >
-          {step === 2 ? a.submit : a.saveAndContinue}
-          {step < 2 && <NextChevron className="size-4" />}
+          {step === 2 ? (
+            <>
+              {a.submit}
+              <Plane className="size-4" />
+            </>
+          ) : (
+            <>
+              {a.saveAndContinue}
+              <NextChevron className="size-4" />
+            </>
+          )}
         </button>
         {step > 0 && (
           <button

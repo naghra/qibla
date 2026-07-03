@@ -195,6 +195,14 @@ export interface Translations {
     removeTraveler: string;
     resumePlaceholderTitle: string;
     resumePlaceholderSubtitle: string;
+    totalTravelers: (n: number) => string;
+    getInTime: (time: string) => string;
+    fastest: string;
+    estimatedProcessingAt: string;
+    essentialsFor: (destination: string) => string;
+    esimTitle: (destination: string) => string;
+    esimDescription: string;
+    esimComingSoon: string;
     stepPlaceholderTitle: string;
     stepPlaceholderSubtitle: string;
     traveler: (n: number) => string;
