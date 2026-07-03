@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, CheckCircle, User, Plane, Home, CreditCard, Plus, Trash2 } from 'lucide-react';
-import { pricingPlans, countries } from '../data/content';
+import { pricingPlans } from '../data/content';
+import { countries } from '../data/countries';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../types';
 
 const emptyTraveler = (): TravelerData => ({

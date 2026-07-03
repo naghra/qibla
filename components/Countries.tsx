@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import { countries } from '../data/content';
+import { countriesData, countryFlag } from '../data/countries';
 import { SectionHeader } from './ui';
 
 export const Countries: React.FC = () => {
   const [search, setSearch] = useState('');
   const [showAll, setShowAll] = useState(false);
 
-  const filtered = countries.filter((c) => c.includes(search));
+  const filtered = countriesData.filter((c) => c.name.includes(search));
   const displayed = showAll ? filtered : filtered.slice(0, 20);
 
   return (
@@ -31,11 +31,21 @@ export const Countries: React.FC = () => {
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayed.map((country) => (
           <li
-            key={country}
-            className="flex items-center justify-between rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm"
+            key={country.code}
+            className="flex items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm transition hover:border-blue-100 hover:shadow-sm"
           >
-            <span className="font-medium text-gray-800">{country}</span>
-            <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold text-red-600">مطلوب</span>
+            <div className="flex min-w-0 items-center gap-3">
+              <span
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-50 text-xl leading-none"
+                aria-hidden
+              >
+                {countryFlag(country.code)}
+              </span>
+              <span className="truncate font-medium text-gray-800">{country.name}</span>
+            </div>
+            <span className="shrink-0 rounded-full bg-red-50 px-2 py-0.5 text-xs font-bold text-red-600">
+              مطلوب
+            </span>
           </li>
         ))}
       </ul>
