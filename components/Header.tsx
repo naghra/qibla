@@ -10,8 +10,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onApply }) => {
-  const { t } = useLanguage();
-  const navLinks = getNavLinks(t);
+  const { t, pageScope } = useLanguage();
+  const navLinks = getNavLinks(t, pageScope.type);
   const [open, setOpen] = useState(false);
 
   return (
