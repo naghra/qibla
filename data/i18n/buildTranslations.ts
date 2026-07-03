@@ -40,12 +40,14 @@ const sharedTestimonials = {
     sectionSubtitle: 'Real experiences from travelers who trusted us with their travel document applications.',
     footerNote: 'Trusted by travelers worldwide',
     items: [
-      { quote: 'Quick and stress-free. Delivered ahead of schedule on a tight deadline.', name: 'Michael R.', role: 'Business Traveler' },
-      { quote: 'Applied for my entire family in one session. Saved us hours.', name: 'Sarah K.', role: 'Family Vacation' },
-      { quote: 'Step-by-step guidance made everything crystal clear.', name: 'David M.', role: 'First-time Traveler' },
-      { quote: 'Smooth process every time. Documents arrived faster than expected.', name: 'Emily W.', role: 'Digital Nomad' },
-      { quote: 'Expedited processing was a lifesaver for our honeymoon.', name: 'James T.', role: 'Honeymoon Trip' },
-      { quote: 'Got a response within 10 minutes at midnight. Exceptional support!', name: 'Priya S.', role: 'Solo Traveler' },
+      { quote: 'Quick and stress-free. I needed my travel documents processed on a tight deadline, and Travel Smart Travel Fast delivered ahead of schedule. Their real-time tracking kept me informed every step of the way.', name: 'Michael R.', role: 'Business Traveler' },
+      { quote: 'Applied for my entire family in one session. The group application feature saved us hours compared to doing it individually. Support team answered all our questions within minutes.', name: 'Sarah K.', role: 'Family Vacation' },
+      { quote: 'As a first-time international traveler, I was nervous about the paperwork. The step-by-step guidance made everything crystal clear. I had my approved documents within days.', name: 'David M.', role: 'First-time Traveler' },
+      { quote: "I've used Travel Smart Travel Fast for three different countries now. Each time the process was smooth and the documents arrived faster than expected. It's my go-to service for every trip.", name: 'Emily W.', role: 'Digital Nomad' },
+      { quote: 'We needed travel documents for our honeymoon on short notice. The expedited processing was a lifesaver. Everything was approved within 48 hours. Absolutely fantastic service!', name: 'James T.', role: 'Honeymoon Trip' },
+      { quote: 'The customer support is exceptional. I had a question about my application at midnight and got a response within 10 minutes. That level of dedication is rare and deeply appreciated.', name: 'Priya S.', role: 'Solo Traveler' },
+      { quote: 'From application to approval, everything was transparent and straightforward. No hidden fees, no surprises. Just reliable, efficient service that made my trip planning stress-free.', name: 'Carlos G.', role: 'Adventure Traveler' },
+      { quote: 'I was overwhelmed with visa requirements for my study abroad program. Travel Smart Travel Fast broke it all down into simple steps. I couldn\'t have done it without them.', name: 'Anna L.', role: 'Study Abroad' },
     ],
   },
   ar: {
@@ -66,19 +68,20 @@ const sharedTestimonials = {
 const sharedFaq = {
   en: {
     sectionTitle: 'Frequently Asked Questions',
-    sectionSubtitle: 'Find answers about travel document applications, processing times, costs, and security.',
+    sectionSubtitle: 'Find answers about travel document applications, processing times, costs, and how we keep your information secure throughout the process.',
     contactNote: "Can't find your answer?",
-    contactLink: 'Contact our 24/7 support team',
+    contactLink: 'Contact our 24/7 support team via chat or email.',
     items: [
-      { question: 'Can I apply on the day I travel?', answer: 'Yes. Same-day applications are often approved within minutes. We recommend applying in advance.' },
-      { question: 'What documents do I need?', answer: 'Passport details, flight info, accommodation address, purpose of travel, and a valid email.' },
-      { question: 'What is your approval rate?', answer: 'Up to 99.9% when information is accurate and complete.' },
-      { question: 'How long does processing take?', answer: 'Standard (~8 hours), Fast (2 hours), Ultra Fast (15 minutes) depending on your plan.' },
-      { question: 'What are the fees?', answer: 'From $40–$65 per traveler plus optional priority fees.' },
-      { question: 'How do I track my application?', answer: 'You will receive email updates. Contact support anytime.' },
-      { question: 'How will I receive my document?', answer: 'Approved documents are sent to your email.' },
-      { question: 'Is my personal information secure?', answer: 'Yes. 256-bit encryption and strict privacy controls.' },
-      { question: 'Are you affiliated with any government?', answer: 'No. We are an independent private company.' },
+      { question: 'Can I apply on the day I travel?', answer: 'Yes. Same-day applications are available and often approved within minutes. To reduce last-minute risk, we recommend applying in advance.' },
+      { question: 'What documents do I need to apply for a travel document online?', answer: 'A valid passport and any destination-specific requirements. We guide you step-by-step and flag missing items before you submit.' },
+      { question: 'What is the approval rate for online travel document applications?', answer: 'Clients see approval rates up to 99.9% when all requirements are met.* Approval depends on the issuing authority and the accuracy of your information.' },
+      { question: 'How long does travel document processing take?', answer: 'Timing varies by country and document. Many are issued the same day, some in as little as 1 hour. We show an ETA before you pay.' },
+      { question: 'What are the fees for online travel document application services?', answer: 'Service fees start at $40, plus any applicable government or consular fees.' },
+      { question: 'How do I track my application?', answer: 'Use our online portal anytime. Enter your tracking number to see real-time status and expected delivery.' },
+      { question: 'How will I receive my travel document?', answer: 'By email. You can download, print, or show it on your phone.' },
+      { question: 'Is my personal information secure?', answer: 'Yes. We use advanced encryption and security protocols to protect your personal information throughout the application process.' },
+      { question: 'Is there customer support available if I need help?', answer: 'Yes. We offer 24/7 support via chat and email to assist you throughout the application process.' },
+      { question: 'Are you affiliated with any government?', answer: 'No. We are a private service provider and are not affiliated with any government. We prepare and submit applications on your behalf where permitted.' },
     ],
   },
   ar: {
@@ -341,7 +344,9 @@ function buildHub(lang: Lang): Translations {
   return {
     siteName,
     metaTitle: lang === 'en' ? 'Stress-free travel documents — Travel Smart Travel Fast' : 'مستندات سفر بدون تعقيد — سفر ذكي سفر سريع',
-    metaDescription: lang === 'en' ? 'Apply online for travel documents worldwide — fast processing and 24/7 expert support' : 'قدّم طلبات مستندات السفر عالمياً — معالجة سريعة ودعم خبير 24/7',
+    metaDescription: lang === 'en'
+      ? 'Apply online for arrival cards, eVisas and travel documents with expert document review, real-time validation and 24/7 support.'
+      : 'قدّم طلبات بطاقات الوصول والتأشيرات ومستندات السفر عبر الإنترنت مع مراجعة خبيرة وتحقق فوري ودعم 24/7.',
     nav: {
       howToApply: lang === 'en' ? 'Destinations' : 'الوجهات',
       howItWorks: lang === 'en' ? 'About us' : 'من نحن',
@@ -354,7 +359,11 @@ function buildHub(lang: Lang): Translations {
     },
     hero: {
       title: lang === 'en' ? 'Stress-free travel documents' : 'مستندات سفر بدون تعقيد',
-      subtitle: '',
+      titleLine1: lang === 'en' ? 'Stress-free' : 'بدون تعقيد',
+      titleLine2: lang === 'en' ? 'Travel Documents' : 'مستندات السفر',
+      subtitle: lang === 'en'
+        ? 'Online application assistance for travel documents worldwide.'
+        : 'مساعدة في تقديم مستندات السفر عبر الإنترنت حول العالم.',
       trustItems: lang === 'en' ? ['Rated on Trustpilot', 'Secure Process', '24/7 Support', 'Real-time validation'] : ['تقييم على Trustpilot', 'معالجة آمنة', 'دعم 24/7', 'تحقق فوري'],
       cta: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
       disclaimer: lang === 'en' ? 'is an independent private company — not affiliated with, or operated by any government. You can also apply directly on the' : 'شركة خاصة مستقلة — غير تابعة أو مُشغّلة من أي جهة حكومية. يمكنك أيضاً التقديم مباشرة عبر',
@@ -388,6 +397,9 @@ function buildHub(lang: Lang): Translations {
       sectionSubtitle: lang === 'en'
         ? 'We simplify travel document applications with expert guidance, real-time validation, and 24/7 human support—so you can focus on planning your trip, not paperwork.'
         : 'نبسّط طلبات مستندات السفر بإرشاد خبير وتحقق فوري ودعم بشري 24/7 — لتتفرغ لتخطيط رحلتك.',
+      cardSubtitle: lang === 'en'
+        ? 'Skip confusing government portals. Apply online with guided forms, real-time validation, and expert review—all in one place.'
+        : 'تجاوز المواقع الحكومية المعقدة. قدّم عبر الإنترنت مع نماذج إرشادية وتحقق فوري ومراجعة خبيرة — في مكان واحد.',
     },
     steps: {
       ...sections.steps,
@@ -436,10 +448,14 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
   const hub = buildHub(lang);
   const sections = buildGenericSections(lang, label, dest.services[0]?.shortName[lang] ?? label);
   const docCount = dest.services.length;
+  const primaryDoc = dest.services[0]?.name[lang] ?? label;
+  const docStatValue = lang === 'en' ? `${Math.max(docCount, 2)}+` : `${docCount}+`;
   return {
     ...hub,
     metaTitle: lang === 'en' ? `Stress-free ${label} travel documents — Travel Smart Travel Fast` : `مستندات سفر ${label} — سفر ذكي سفر سريع`,
-    metaDescription: lang === 'en' ? `Apply online for ${label} travel documents — fast processing and 24/7 support` : `قدّم طلبات مستندات سفر ${label} — معالجة سريعة ودعم 24/7`,
+    metaDescription: lang === 'en'
+      ? `Apply online for ${label} travel documents (${primaryDoc}) with expert review, real-time validation and 24/7 support.`
+      : `قدّم مستندات سفر ${label} (${primaryDoc}) — مراجعة خبيرة وتحقق فوري ودعم 24/7.`,
     nav: {
       ...hub.nav,
       howToApply: lang === 'en' ? 'Travel documents' : 'مستندات السفر',
@@ -447,9 +463,11 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     },
     hero: {
       title: lang === 'en' ? `Travel documents for ${label}` : `مستندات السفر إلى ${label}`,
+      badgeLine1: label,
+      badgeLine2: lang === 'en' ? 'Travel Documents' : 'مستندات السفر',
       subtitle: lang === 'en'
-        ? `We provide all the essential travel documents for ${label}, ensuring a seamless and stress-free travel experience.`
-        : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة وبدون تعقيد.`,
+        ? `Apply for ${label} travel documents — ${primaryDoc}. Smart, fast and reliable.`
+        : `قدّم مستندات سفر ${label} — ${primaryDoc}. ذكي وسريع وموثوق.`,
       trustItems: hub.hero.trustItems,
       cta: lang === 'en' ? 'Apply now' : 'قدّم الآن',
       disclaimer: hub.hero.disclaimer,
@@ -457,7 +475,9 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     },
     about: {
       title: lang === 'en' ? `Travel documents for ${label}` : `مستندات السفر إلى ${label}`,
-      subtitle: lang === 'en' ? `Select the ${label} travel document you need and apply online today.` : `اختر مستند السفر المطلوب إلى ${label} وقدّم عبر الإنترنت اليوم.`,
+      subtitle: lang === 'en'
+        ? `We provide all the essential travel documents for ${label}, ensuring a seamless and stress-free travel experience.`
+        : `نوفر جميع مستندات السفر الأساسية إلى ${label} لتجربة سفر سلسة وبدون تعقيد.`,
       glanceTitle: '',
       glanceSubtitle: '',
       requirementsTitle: '',
@@ -468,7 +488,7 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
       ? [
           { value: '2+', label: 'Years of Experience' },
           { value: 'Up to 99.9%', label: 'Approval rate*' },
-          { value: `${docCount}+`, label: `${label} Documents` },
+          { value: docStatValue, label: `${label} Documents` },
           { value: '24/7', label: 'Assistance' },
         ]
       : [
@@ -481,14 +501,33 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
       ...sections.features,
       sectionSubtitle: lang === 'en'
         ? `We simplify ${label} travel document applications with expert guidance, real-time validation, and 24/7 human support—so you can focus on planning your trip, not paperwork.`
-        : `نبسّط طلبات مستندات سفر ${label} بإرشاد خبير وتحقق فوري ودعم بشري 24/7.`,
+        : `نبسّط طلبات مستندات سفر ${label} بإرشاد خبير وتحقق فوري ودعم بشري 24/7 — لتتفرغ لتخطيط رحلتك.`,
       cardTitle: lang === 'en' ? `The smart way to apply for your ${label} travel documents` : `الطريقة الذكية لتقديم مستندات ${label}`,
+      cardSubtitle: lang === 'en'
+        ? 'Skip confusing government portals. Apply online with guided forms, real-time validation, and expert review—all in one place.'
+        : 'تجاوز المواقع الحكومية المعقدة. قدّم عبر الإنترنت مع نماذج إرشادية وتحقق فوري ومراجعة خبيرة — في مكان واحد.',
+      items: lang === 'en'
+        ? [
+            { icon: 'list', title: 'Step-by-step guided process', description: `Clear instructions tailored to your ${label} travel document requirements, visa type, and destination.` },
+            { icon: 'headphones', title: '24/7 expert human support', description: 'Real agents available via live chat and email—around the clock, every day of the year.' },
+            { icon: 'shield', title: 'Bank-level data encryption', description: '256-bit encryption and strict privacy controls safeguard every piece of your information.' },
+            { icon: 'users', title: 'Effortless group applications', description: 'Add travel companions in one streamlined flow with automatic detail prefilling.' },
+            { icon: 'check', title: 'Live validation and review', description: `Instant error detection and a pre-submission review catch mistakes before they delay your ${label} application.` },
+          ]
+        : sections.features.items,
     },
     steps: {
       ...sections.steps,
       sectionSubtitle: lang === 'en'
         ? `Our streamlined process takes you from choosing your ${label} document to receiving approved travel documents—all online, in just minutes.`
         : `عملية مبسّطة من اختيار مستند ${label} إلى استلام المستندات المعتمدة — عبر الإنترنت في دقائق.`,
+      items: lang === 'en'
+        ? [
+            { number: '01', title: 'Select your travel document', description: `Pick the ${label} travel document you need—we show you requirements, fees, and estimated processing time right away.` },
+            { number: '02', title: 'Complete your application online', description: `Fill in the guided form in minutes. Real-time validation catches errors instantly, so nothing holds up your ${label} application.` },
+            { number: '03', title: `Get approved and travel to ${label}`, description: `Our experts review and process everything. Your approved ${label} documents land in your inbox—ready for your trip.` },
+          ]
+        : sections.steps.items,
       ctaTitle: lang === 'en' ? `Start your stress-free ${label} application today` : `ابدأ طلب ${label} بدون تعقيد اليوم`,
       ctaSubtitle: lang === 'en'
         ? `Join travelers worldwide who simplified their ${label} travel document applications with our expert-guided process.`
@@ -498,6 +537,9 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     cta: {
       ...sections.cta,
       title: lang === 'en' ? `Your ${label} travel documents, just a few clicks away` : `مستندات ${label} — بضغطات قليلة`,
+      subtitle: lang === 'en'
+        ? 'Skip confusing government portals. Apply online with expert guidance, real-time validation, and fast processing.'
+        : 'تجاوز المواقع الحكومية. قدّم عبر الإنترنت مع إرشاد خبير وتحقق فوري ومعالجة سريعة.',
       button: lang === 'en' ? 'Start your application' : 'ابدأ طلبك',
     },
     chat: {
@@ -513,7 +555,9 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
     },
     faq: {
       ...sharedFaq[lang],
-      sectionSubtitle: lang === 'en' ? `Find answers about ${label} travel document applications, processing times, and security.` : `إجابات عن طلبات مستندات ${label} وأوقات المعالجة والأمان.`,
+      sectionSubtitle: lang === 'en'
+        ? `Find answers about ${label} travel document applications, processing times, costs, and how we keep your information secure throughout the process.`
+        : `إجابات عن طلبات مستندات ${label} وأوقات المعالجة والرسوم وكيفية حماية معلوماتك.`,
     },
     apply: genericApply(lang, dest, dest.services[0]),
     glanceItems: [],
@@ -540,9 +584,15 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     },
     hero: {
       title: lang === 'en' ? `Stress-free ${doc} application` : `تقديم ${doc} بدون تعقيد`,
-      subtitle: service.description[lang],
-      trustItems: country.hero.trustItems,
-      cta: lang === 'en' ? 'Apply now online' : 'قدّم الآن عبر الإنترنت',
+      badgeLine1: label,
+      badgeLine2: doc,
+      subtitle: lang === 'en'
+        ? `Smart, fast, and reliable ${doc} application service.`
+        : `خدمة تقديم ${doc} ذكية وسريعة وموثوقة.`,
+      trustItems: lang === 'en'
+        ? ['Expert Review', '24/7 Support', 'Rated on Trustpilot', 'Secure Process']
+        : ['مراجعة خبيرة', 'دعم 24/7', 'تقييم على Trustpilot', 'معالجة آمنة'],
+      cta: lang === 'en' ? `Apply for your ${doc}` : `قدّم ${doc}`,
       disclaimer: country.hero.disclaimer,
       officialSite: country.hero.officialSite,
     },

@@ -24,22 +24,27 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
 
   return (
     <>
-      <div className="fixed top-0 inset-x-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
+      <div className="fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/95 shadow-sm backdrop-blur-md fade-in">
         <div className="container mx-auto flex items-center justify-between gap-4 p-4">
-          <Link to={buildPath(lang)} className="flex items-center gap-3">
+          <Link to={buildPath(lang)} className="flex min-w-0 items-center gap-3">
             <Logo showText={false} />
+            <span className="hidden truncate font-bold text-gray-900 sm:inline">{t.siteName}</span>
           </Link>
 
           <nav className="hidden items-center gap-6 lg:flex">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-600 transition hover:text-blue-500"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-blue-500"
+                >
+                  <Icon className="size-4 shrink-0" aria-hidden />
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-3">
@@ -71,16 +76,20 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
               </div>
             </div>
             <nav className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-2xl px-4 py-3 font-medium text-gray-700 hover:bg-blue-50"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 rounded-2xl px-4 py-3 font-medium text-gray-700 hover:bg-blue-50"
+                  >
+                    <Icon className="size-5 text-blue-500" aria-hidden />
+                    {link.label}
+                  </a>
+                );
+              })}
             </nav>
             <PrimaryButton onClick={() => { setOpen(false); onApply(); }} className="mt-6 w-full">
               {hubMode ? t.hero.cta : t.nav.applyNow}

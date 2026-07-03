@@ -50,6 +50,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dir;
+    document.body.style.fontFamily =
+      lang === 'en'
+        ? "Quicksand, 'IBM Plex Sans', sans-serif"
+        : "'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif";
     document.title = t.metaTitle;
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute('content', t.metaDescription);

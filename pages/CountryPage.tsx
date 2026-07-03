@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CountryHero } from '../components/CountryHero';
+import { ServiceCards } from '../components/ServiceCards';
 import { StatsBar } from '../components/Hero';
 import { Features } from '../components/Features';
 import { Steps } from '../components/Steps';
@@ -32,6 +33,7 @@ export const CountryPage: React.FC = () => {
       <StickyNav onApply={goApply} />
       <main>
         <CountryHero onApply={goApply} />
+        <ServiceCards />
         <StatsBar />
         <Features onApply={goService} />
         <Steps onApply={goApply} />
