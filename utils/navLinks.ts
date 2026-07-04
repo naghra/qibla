@@ -1,12 +1,27 @@
 import { MapPin, Star, HelpCircle, Mail, ListOrdered, Info, FileText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import type { Translations } from '../data/i18n/types';
+import type { Lang, Translations } from '../data/i18n/types';
 import type { PageScope } from '../data/destinations';
 
 export interface NavLinkItem {
   href: string;
   label: string;
   icon: LucideIcon;
+}
+
+export function getApplyFormNavLinks(
+  t: Translations,
+  lang: Lang,
+  destinationSlug: string,
+  serviceSlug: string
+): NavLinkItem[] {
+  const base = `/${lang}/${destinationSlug}/${serviceSlug}`;
+  return [
+    { href: `${base}#how-to-apply`, label: t.nav.howToApply, icon: ListOrdered },
+    { href: `${base}#how-it-works`, label: t.nav.howItWorks, icon: Info },
+    { href: `${base}#faq`, label: t.nav.faq, icon: HelpCircle },
+    { href: `${base}#contact`, label: t.nav.contact, icon: Mail },
+  ];
 }
 
 export function getNavLinks(t: Translations, pageType: PageScope['type'] = 'service'): NavLinkItem[] {

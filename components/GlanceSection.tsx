@@ -10,7 +10,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { PrimaryButton, CheckItem } from './ui';
-import { THAILAND_FLAG } from '../data/assets';
+import { countryFlag } from '../data/countries';
 import { useLanguage } from '../context/LanguageContext';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -27,13 +27,14 @@ interface GlanceSectionProps {
 }
 
 export const GlanceSection: React.FC<GlanceSectionProps> = ({ onApply }) => {
-  const { t } = useLanguage();
+  const { t, destination } = useLanguage();
+  const flag = destination?.countryCode ? countryFlag(destination.countryCode) : '';
 
   return (
     <section id="how-to-apply" className="container mx-auto space-y-12 px-4 py-24">
       <div className="space-y-4 text-center">
         <h2 className="text-pretty text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
-          {t.about.title} {THAILAND_FLAG}
+          {t.about.title} {flag && <span aria-hidden>{flag}</span>}
         </h2>
         <p className="mx-auto max-w-2xl text-pretty text-base leading-relaxed text-gray-600 sm:text-xl">
           {t.about.subtitle}

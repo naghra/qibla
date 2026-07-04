@@ -8,7 +8,7 @@ export const adminLabels = {
     password: 'كلمة المرور',
     submit: 'دخول إلى لوحة التحكم',
     error: 'كلمة المرور غير صحيحة',
-    hint: 'الافتراضي: qibla-admin (غيّرها عبر VITE_ADMIN_PASSWORD)',
+    hint: 'غيّر كلمة المرور عبر VITE_ADMIN_PASSWORD في بيئة الإنتاج',
     features: ['تتبع الطلبات', 'تحديث الحالة', 'تصدير البيانات'],
   },
   nav: {
@@ -93,6 +93,7 @@ export const adminLabels = {
     travelDetails: 'تفاصيل السفر',
     orderSummary: 'ملخص الطلب',
     primaryTraveler: 'مسافر',
+    applicant: 'المتقدّم',
     email: 'البريد',
     phone: 'الهاتف',
     passport: 'جواز السفر',

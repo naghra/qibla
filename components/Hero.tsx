@@ -5,6 +5,7 @@ import { HeroShell } from './HeroShell';
 import { HeroBadge } from './HeroBadge';
 import { HeroDisclaimer } from './HeroDisclaimer';
 import { useLanguage } from '../context/LanguageContext';
+import { getOfficialSiteUrl } from '../utils/officialSites';
 
 interface HeroProps {
   onApply: () => void;
@@ -35,7 +36,8 @@ const TrustIcon: React.FC<{ type: string }> = ({ type }) => {
 };
 
 export const Hero: React.FC<HeroProps> = ({ onApply }) => {
-  const { t, destination } = useLanguage();
+  const { t, destination, service } = useLanguage();
+  const officialHref = getOfficialSiteUrl(destination?.slug, service?.slug);
 
   return (
     <HeroShell>
@@ -75,7 +77,7 @@ export const Hero: React.FC<HeroProps> = ({ onApply }) => {
         </div>
       </div>
 
-      <HeroDisclaimer officialHref="https://tdac.immigration.go.th/" />
+      <HeroDisclaimer officialHref={officialHref} />
     </HeroShell>
   );
 };
@@ -97,3 +99,4 @@ export const StatsBar: React.FC = () => {
     </section>
   );
 };
+

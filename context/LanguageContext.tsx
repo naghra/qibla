@@ -4,6 +4,27 @@ import { Lang, Translations } from '../data/i18n/types';
 import { buildTranslations, getDir } from '../data/i18n';
 import type { DestinationDef, PageScope, ServiceDef } from '../data/destinations';
 import { swapLangInPath } from '../data/destinations';
+import { SITE_ORIGIN } from '../utils/siteConfig';
+
+function setMeta(name: string, content: string) {
+  let el = document.querySelector(`meta[name="${name}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute('name', name);
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', content);
+}
+
+function setOg(property: string, content: string) {
+  let el = document.querySelector(`meta[property="${property}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute('property', property);
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', content);
+}
 
 interface LanguageContextValue {
   lang: Lang;
@@ -55,9 +76,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         ? "Quicksand, 'IBM Plex Sans', sans-serif"
         : "'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif";
     document.title = t.metaTitle;
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', t.metaDescription);
-  }, [lang, dir, t.metaTitle, t.metaDescription]);
+    setMeta('description', t.metaDescription);
+    setOg('og:title', t.metaTitle);
+    setOg('og:description', t.metaDescription);
+    setOg('og:type', 'website');
+    setOg('og:url', `${SITE_ORIGIN}${location.pathname}`);
+    setOg('og:locale', lang === 'ar' ? 'ar_SA' : 'en_US');
+    setOg('og:image', `${SITE_ORIGIN}/images/hero.webp`);
+  }, [lang, dir, t.metaTitle, t.metaDescription, location.pathname]);
 
   return (
     <LanguageContext.Provider

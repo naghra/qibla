@@ -74,7 +74,7 @@ export const AdminApplicationsPage: React.FC = () => {
   }, [apps, search, statusFilter, destFilter, sort]);
 
   const pages = totalPages(filtered.length, PER_PAGE);
-  const paged = paginate(filtered, page, PER_PAGE);
+  const paged: StoredApplication[] = paginate(filtered, page, PER_PAGE);
 
   const handleDelete = (id: string) => {
     if (!window.confirm(adminLabels.applications.confirmDelete)) return;

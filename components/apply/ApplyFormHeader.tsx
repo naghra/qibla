@@ -4,12 +4,15 @@ import { X, Globe, AlignLeft } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { buildPath } from '../../data/destinations';
 import { countryFlag } from '../../data/countries';
-import { getNavLinks } from '../../utils/navLinks';
+import { getApplyFormNavLinks, getNavLinks } from '../../utils/navLinks';
 
 export const ApplyFormHeader: React.FC = () => {
-  const { t, lang, setLang, pageScope, destination } = useLanguage();
+  const { t, lang, setLang, destination, service } = useLanguage();
   const [open, setOpen] = useState(false);
-  const navLinks = getNavLinks(t, pageScope.type);
+  const navLinks =
+    destination && service
+      ? getApplyFormNavLinks(t, lang, destination.slug, service.slug)
+      : getNavLinks(t, 'service');
 
   const toggleLang = () => setLang(lang === 'en' ? 'ar' : 'en');
 

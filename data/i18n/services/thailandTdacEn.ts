@@ -1,4 +1,5 @@
 import { Translations } from '../types';
+import { SUPPORT_EMAIL } from '../../../utils/siteConfig';
 
 export const thailandTdacEn: Translations = {
   siteName: 'Travel Smart Travel Fast',
@@ -131,19 +132,20 @@ export const thailandTdacEn: Translations = {
   },
   footer: {
     description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    companyAddressTitle: 'Registered address',
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
-      { label: 'Refund Policy', href: '#' },
-      { label: 'Disclaimer', href: '#' },
+      { label: 'Privacy Policy', path: 'privacy' },
+      { label: 'Terms of Service', path: 'terms' },
+      { label: 'Refund Policy', path: 'refund' },
+      { label: 'Disclaimer', path: 'disclaimer' },
     ],
     paymentMethodsTitle: 'PAYMENT METHODS & SECURITY',
     paymentSslNote: '256-bit SSL encrypted',
     paymentPciNote: 'PCI-DSS compliant checkout',
     copyright: 'All rights reserved.',
-    contact: 'support@travelsmart.example · Live chat 24/7',
+    contact: `${SUPPORT_EMAIL} · Live chat 24/7`,
     disclaimer: 'Disclaimer: Private assistance service — not the official Thai government website.',
   },
   chat: {
@@ -236,7 +238,7 @@ export const thailandTdacEn: Translations = {
     plan: 'Plan',
     feePerTraveler: 'Fee per traveler',
     total: 'Total',
-    termsNote: 'By continuing, you agree to our terms. Demo form — no real payment processed.',
+    termsNote: 'By continuing, you agree to our Terms of Service and Privacy Policy.',
     successTitle: 'Application submitted successfully!',
     successThanks: (name) => `Thank you ${name}! We will send your TDAC to:`,
     successEmail: '',
