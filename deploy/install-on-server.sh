@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # One-shot installer for Contabo VPS — run ON the server as root or with sudo
+# Works alongside other sites (e.g. saqr) on the same server — uses /var/www/qibla + port 3000
+#
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/naghra/qibla/cursor/contabo-deploy-8af4/deploy/install-on-server.sh | sudo bash -s -- \
-#     --domain yourdomain.com \
+#     --domain travelsmarttravelfast.com \
 #     --admin-password 'YourSecurePassword123'
 #
 # Or after cloning:
