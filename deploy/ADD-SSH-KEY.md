@@ -22,35 +22,41 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFUX1vnnR52xysaPMaxaZMevsGrY6/42yq4TuJeLIDri
 
 ---
 
-## Step 2 — Add key in Contabo panel
+## Step 2 — Add key in Contabo panel (for future installs)
 
 1. Open https://new.contabo.com (or https://my.contabo.com)
-2. Go to **VPS** → your server (`vmi3343242`)
-3. Open **Add And Store Public SSH-Key** (or **Secret Management** → **SSH Keys**)
-4. Click **Add SSH Key**
-5. Paste the public key above
-6. Save / confirm
-7. **Important for existing VPS:** storing the key in Contabo only preloads it for **new OS installs**. On a running server (like codform.shop), you must also add it manually via **VNC Console** (Step 3 below) unless you reinstall the OS with the key selected.
+2. Go to **VPS control** → your server (`vmi3343242`)
+3. **Manage** → **Add And Store Public SSH-Key**
+4. Paste the public key from Step 1 and save
 
-> After saving, wait 1–2 minutes. If SSH still fails, use Step 3 (VNC).
+> **Note:** On an **existing running server**, this stores the key in Contabo but does **not** add it to the server automatically. Use Step 2b below.
+
+---
+
+## Step 2b — Enable SSH access (no VNC needed)
+
+If **VNC Console** is not available, use **Reset credentials**:
+
+1. Contabo → **VPS control** → **Manage** (next to your server)
+2. Click **Reset credentials** (or **Password reset**)
+3. Enter a **new root password** (e.g. `QiblaRoot2026!`) — save it
+4. Click **Reset credentials** / **Confirm**
+5. Wait 2–5 minutes (server may reboot briefly)
+6. Reply in chat: **"كلمة المرور الجديدة: YOUR_PASSWORD"**
+
+The agent will SSH in, add the deploy key, and publish the site.
+
+### Alternative: Rescue System
+
+1. **Manage** → **Rescue System**
+2. Set a temporary rescue password → **Start rescue system**
+3. Send the rescue password in chat — agent connects, mounts disk, adds SSH key, reboots to normal
 
 ---
 
 ## Step 3 — Tell the agent to deploy
 
-Reply in chat: **"المفتاح أُضيف — انشر الآن"**
-
-The agent will connect with:
-
-```bash
-ssh -i deploy-keys/qibla-deploy root@185.214.135.141
-```
-
----
-
-## Alternative — add key manually via VNC
-
-If the panel option is not available, in **VNC Console**:
+Reply: **"المفتاح أُضيف — انشر الآن"** or send the new root password after Reset credentials.
 
 ```bash
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
