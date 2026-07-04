@@ -45,8 +45,8 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="container mx-auto mt-10 px-4">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6">
-          <h4 className="mb-4 text-xs font-bold tracking-wider text-gray-900">{f.paymentMethodsTitle}</h4>
+        <div className="space-y-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-gray-900">{f.paymentMethodsTitle}</h4>
           <PaymentMethodBadges />
         </div>
       </div>
