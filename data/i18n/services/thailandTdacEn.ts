@@ -140,6 +140,8 @@ export const thailandTdacEn: Translations = {
       { label: 'Disclaimer', href: '#' },
     ],
     paymentMethodsTitle: 'PAYMENT METHODS & SECURITY',
+    paymentSslNote: '256-bit SSL encrypted',
+    paymentPciNote: 'PCI-DSS compliant checkout',
     copyright: 'All rights reserved.',
     contact: 'support@travelsmart.example · Live chat 24/7',
     disclaimer: 'Disclaimer: Private assistance service — not the official Thai government website.',

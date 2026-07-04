@@ -48,6 +48,10 @@ export const Footer: React.FC = () => {
         <div className="space-y-4">
           <h4 className="text-xs font-bold uppercase tracking-wider text-gray-900">{f.paymentMethodsTitle}</h4>
           <PaymentMethodBadges />
+          <div className="space-y-1 text-sm text-gray-500">
+            <p>{f.paymentSslNote}</p>
+            <p>{f.paymentPciNote}</p>
+          </div>
         </div>
       </div>
 

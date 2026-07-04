@@ -146,6 +146,8 @@ export interface Translations {
     legal: string;
     legalLinks: { label: string; href: string }[];
     paymentMethodsTitle: string;
+    paymentSslNote: string;
+    paymentPciNote: string;
     copyright: string;
     contact: string;
     disclaimer: string;
