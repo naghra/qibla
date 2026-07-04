@@ -139,6 +139,7 @@ export const thailandTdacAr: Translations = {
       { label: 'سياسة الاسترداد', href: '#' },
       { label: 'إخلاء المسؤولية', href: '#' },
     ],
+    paymentMethodsTitle: 'طرق الدفع والأمان',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
     disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة وليست الموقع الرسمي للحكومة التايلاندية.',
