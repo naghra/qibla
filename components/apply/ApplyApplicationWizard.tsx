@@ -72,12 +72,12 @@ function createTravelerBundle(lang: string) {
   };
 }
 
-interface TdacApplicationWizardProps {
+interface ApplyApplicationWizardProps {
   initialPlan?: PlanId;
   onComplete?: () => void;
 }
 
-export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
+export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   initialPlan = 'standard',
   onComplete,
 }) => {
@@ -108,7 +108,8 @@ export const TdacApplicationWizard: React.FC<TdacApplicationWizardProps> = ({
   const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const total = (selectedPlan.price + selectedPlan.priorityFee) * data.travelers.length;
   const estimatedAt = computeEstimatedProcessing(data.plan, lang);
-  const destinationLabel = destination?.name[lang] ?? (lang === 'ar' ? 'تايلاند' : 'Thailand');
+  const destinationLabel =
+    destination?.name[lang] ?? service?.shortName[lang] ?? (lang === 'ar' ? 'وجهتك' : 'your destination');
 
   useEffect(() => {
     if (step === 2 && data.plan === 'standard') {
