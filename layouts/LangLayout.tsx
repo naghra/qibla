@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Outlet, Navigate, useParams } from 'react-router-dom';
 import { LanguageProvider } from '../context/LanguageContext';
-import { detectLang, langFromPath } from '../data/i18n';
+import { langFromPath, DEFAULT_LANG } from '../data/i18n';
 import type { Lang } from '../data/i18n/types';
 import { getDestination, getService, type PageScope } from '../data/destinations';
 
@@ -31,7 +31,7 @@ export const LangLayout: React.FC = () => {
   );
 
   if (!validLang) {
-    return <Navigate to={`/${detectLang()}`} replace />;
+    return <Navigate to={`/${DEFAULT_LANG}`} replace />;
   }
 
   if (scope === 'invalid') {
