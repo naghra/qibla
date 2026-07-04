@@ -93,6 +93,7 @@ export const adminLabels = {
     travelDetails: 'تفاصيل السفر',
     orderSummary: 'ملخص الطلب',
     primaryTraveler: 'مسافر',
+    applicant: 'المتقدّم',
     email: 'البريد',
     phone: 'الهاتف',
     passport: 'جواز السفر',
