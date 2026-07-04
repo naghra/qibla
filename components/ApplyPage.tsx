@@ -1,6 +1,6 @@
 import React from 'react';
 import { ApplicationWizard } from './ApplicationWizard';
-import { TdacApplicationWizard } from './apply/TdacApplicationWizard';
+import { ApplyApplicationWizard } from './apply/ApplyApplicationWizard';
 import { ApplyFormHeader } from './apply/ApplyFormHeader';
 import { ChatWidget } from './ChatWidget';
 import { PlanId } from '../types';
@@ -15,9 +15,7 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
   const { t, lang, destination, service } = useLanguage();
   const { apply: a } = t;
 
-  const isTdac = destination?.slug === 'thailand' && service?.slug === 'tdac';
-
-  if (isTdac) {
+  if (destination && service) {
     return (
       <div
         data-apply-form
@@ -33,7 +31,7 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
               {a.applyOnlineNow}
             </h1>
 
-            <TdacApplicationWizard initialPlan={initialPlan} onComplete={onBack} />
+            <ApplyApplicationWizard initialPlan={initialPlan} onComplete={onBack} />
           </div>
         </main>
 

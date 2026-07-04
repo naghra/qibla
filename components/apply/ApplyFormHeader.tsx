@@ -7,7 +7,7 @@ import { countryFlag } from '../../data/countries';
 import { getNavLinks } from '../../utils/navLinks';
 
 export const ApplyFormHeader: React.FC = () => {
-  const { t, lang, setLang, pageScope } = useLanguage();
+  const { t, lang, setLang, pageScope, destination } = useLanguage();
   const [open, setOpen] = useState(false);
   const navLinks = getNavLinks(t, pageScope.type);
 
@@ -33,7 +33,7 @@ export const ApplyFormHeader: React.FC = () => {
             className="apply-logo-link relative order-2 flex -ms-4 items-center justify-center gap-2 overflow-hidden text-gray-800 transition active:scale-95 sm:ms-0"
           >
             <span className="relative -ms-8 text-2xl leading-none sm:ms-0" aria-hidden>
-              {countryFlag('TH')}
+              {countryFlag(destination?.countryCode ?? 'UN')}
             </span>
             <img
               src="/images/logo.webp"
