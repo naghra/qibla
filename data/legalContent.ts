@@ -1,4 +1,5 @@
 import type { Lang } from './i18n/types';
+import { COMPANY_ADDRESS, SUPPORT_EMAIL } from '../utils/siteConfig';
 
 export type LegalPageKind = 'privacy' | 'terms' | 'refund' | 'disclaimer';
 
@@ -12,12 +13,14 @@ export const legalPages: Record<LegalPageKind, LegalPageContent> = {
     title: { en: 'Privacy Policy', ar: 'سياسة الخصوصية' },
     paragraphs: {
       en: [
+        `Travel Smart Travel Fast is operated from ${COMPANY_ADDRESS.formatted}. For privacy inquiries, contact us at ${SUPPORT_EMAIL}.`,
         'Travel Smart Travel Fast collects the information you provide in your application (passport details, contact information, and travel dates) to process your travel document request.',
         'We use industry-standard 256-bit encryption and do not sell your personal data to third parties.',
         'Application data is stored securely and retained only as long as needed to fulfill your request and meet legal obligations.',
         'You may contact us to request access, correction, or deletion of your data where applicable.',
       ],
       ar: [
+        `تُدار Travel Smart Travel Fast من ${COMPANY_ADDRESS.formatted}. لاستفسارات الخصوصية، تواصل معنا على ${SUPPORT_EMAIL}.`,
         'يجمع Travel Smart Travel Fast المعلومات التي تقدّمها في طلبك (تفاصيل جواز السفر، بيانات الاتصال، وتواريخ السفر) لمعالجة طلب مستند السفر.',
         'نستخدم تشفيراً بمعيار 256-bit ولا نبيع بياناتك الشخصية لأطراف ثالثة.',
         'تُخزَّن بيانات الطلب بشكل آمن وتحتفظ بها فقط للمدة اللازمة لتنفيذ طلبك والالتزامات القانونية.',
@@ -29,13 +32,13 @@ export const legalPages: Record<LegalPageKind, LegalPageContent> = {
     title: { en: 'Terms of Service', ar: 'شروط الخدمة' },
     paragraphs: {
       en: [
-        'Travel Smart Travel Fast is an independent private assistance service. We are not affiliated with, endorsed by, or operated by any government agency.',
+        `Travel Smart Travel Fast is an independent private assistance service registered at ${COMPANY_ADDRESS.formatted}. We are not affiliated with, endorsed by, or operated by any government agency.`,
         'By submitting an application, you confirm that the information provided is accurate and authorize us to process your request on your behalf.',
         'Service fees cover document review, application support, and processing assistance. Government or consular fees may apply separately where required.',
         'Processing times are estimates and may vary based on destination requirements and the accuracy of your submission.',
       ],
       ar: [
-        'Travel Smart Travel Fast خدمة مساعدة خاصة مستقلة. نحن غير تابعين أو معتمدين أو مُشغّلين من أي جهة حكومية.',
+        `Travel Smart Travel Fast خدمة مساعدة خاصة مستقلة مسجّلة في ${COMPANY_ADDRESS.formatted}. نحن غير تابعين أو معتمدين أو مُشغّلين من أي جهة حكومية.`,
         'بإرسال الطلب، تؤكد صحة المعلومات وتفوّضنا بمعالجة طلبك نيابةً عنك.',
         'رسوم الخدمة تشمل مراجعة المستندات ودعم الطلب والمساعدة في المعالجة. قد تُطبَّق رسوم حكومية أو قنصلية بشكل منفصل عند الحاجة.',
         'أوقات المعالجة تقديرية وقد تختلف حسب متطلبات الوجهة ودقة البيانات المقدّمة.',

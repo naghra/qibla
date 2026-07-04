@@ -132,6 +132,7 @@ export const thailandTdacEn: Translations = {
   },
   footer: {
     description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    companyAddressTitle: 'Registered address',
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [

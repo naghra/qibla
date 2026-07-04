@@ -7,6 +7,7 @@ import { SUPPORT_EMAIL } from '../../utils/siteConfig';
 const sharedFooter = {
   en: {
     description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    companyAddressTitle: 'Registered address',
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
@@ -24,6 +25,7 @@ const sharedFooter = {
   },
   ar: {
     description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    companyAddressTitle: 'عنوان الشركة',
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [

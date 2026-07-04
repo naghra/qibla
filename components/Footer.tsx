@@ -4,7 +4,7 @@ import { Logo } from './Logo';
 import { PaymentMethodBadges } from './PaymentMethodBadges';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
-import { SUPPORT_EMAIL } from '../utils/siteConfig';
+import { COMPANY_ADDRESS, SUPPORT_EMAIL } from '../utils/siteConfig';
 
 export const Footer: React.FC = () => {
   const { t, lang, pageScope } = useLanguage();
@@ -17,6 +17,14 @@ export const Footer: React.FC = () => {
         <div className="space-y-4 md:col-span-2">
           <Logo />
           <p className="max-w-md text-sm leading-relaxed text-gray-600">{f.description}</p>
+          <div className="text-sm text-gray-600">
+            <p className="mb-1 font-semibold text-gray-800">{f.companyAddressTitle}</p>
+            <address className="not-italic leading-relaxed" dir="ltr">
+              {COMPANY_ADDRESS.line1}
+              <br />
+              {COMPANY_ADDRESS.line2}, {COMPANY_ADDRESS.postcode}
+            </address>
+          </div>
         </div>
 
         <div>

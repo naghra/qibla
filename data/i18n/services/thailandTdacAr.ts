@@ -132,6 +132,7 @@ export const thailandTdacAr: Translations = {
   },
   footer: {
     description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    companyAddressTitle: 'عنوان الشركة',
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
