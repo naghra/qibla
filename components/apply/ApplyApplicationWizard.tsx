@@ -16,6 +16,7 @@ import {
   datePartsToIso,
   defaultDateParts,
 } from '../../utils/dateParts';
+import { useAutoPhoneCountry } from '../../hooks/useAutoPhoneCountry';
 
 const defaultCountry = (lang: string) => (lang === 'ar' ? 'EG' : 'NL');
 
@@ -90,7 +91,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   const [arrival, setArrival] = useState<DateParts>(() => defaultDateParts(7));
   const [departure, setDeparture] = useState<DateParts>(() => defaultDateParts(14));
   const [email, setEmail] = useState('');
-  const [phoneCountry, setPhoneCountry] = useState(lang === 'ar' ? 'EG' : 'FR');
+  const { phoneCountry, setPhoneCountry, resetPhoneCountry } = useAutoPhoneCountry(lang);
   const [phone, setPhone] = useState('');
 
   const initialBundle = createTravelerBundle(lang);
@@ -232,6 +233,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
     setSubmittedId(null);
     setEmail('');
     setPhone('');
+    resetPhoneCountry();
     setArrival(defaultDateParts(7));
     setDeparture(defaultDateParts(14));
     const fresh = createTravelerBundle(lang);
