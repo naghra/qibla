@@ -118,6 +118,10 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
     }
   }, [step, data.plan]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [step]);
+
   const PrevChevron = dir === 'rtl' ? ChevronRight : ChevronLeft;
   const NextChevron = dir === 'rtl' ? ChevronLeft : ChevronRight;
 
