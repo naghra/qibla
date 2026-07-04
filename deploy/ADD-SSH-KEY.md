@@ -30,9 +30,9 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFUX1vnnR52xysaPMaxaZMevsGrY6/42yq4TuJeLIDri
 4. Click **Add SSH Key**
 5. Paste the public key above
 6. Save / confirm
-7. If prompted, **assign the key to this VPS** (or reinstall/apply key to server)
+7. **Important for existing VPS:** storing the key in Contabo only preloads it for **new OS installs**. On a running server (like codform.shop), you must also add it manually via **VNC Console** (Step 3 below) unless you reinstall the OS with the key selected.
 
-> After saving, wait 1–2 minutes for Contabo to apply the key to the server.
+> After saving, wait 1–2 minutes. If SSH still fails, use Step 3 (VNC).
 
 ---
 
