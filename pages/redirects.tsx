@@ -1,11 +1,11 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { detectLang } from '../data/i18n';
+import { detectLang, DEFAULT_LANG } from '../data/i18n';
 
 export const RootRedirect: React.FC = () => {
   const location = useLocation();
   const lang = detectLang(location.pathname, location.search);
-  return <Navigate to={`/${lang}`} replace />;
+  return <Navigate to={`/${lang || DEFAULT_LANG}`} replace />;
 };
 
 export const LegacyApplyRedirect: React.FC = () => {

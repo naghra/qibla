@@ -15,6 +15,8 @@ export function getTranslations(lang: Lang, scope?: PageScope): Translations {
   return getBuiltTranslations(lang);
 }
 
+export const DEFAULT_LANG: Lang = 'en';
+
 export function getDir(lang: Lang): 'rtl' | 'ltr' {
   return lang === 'ar' ? 'rtl' : 'ltr';
 }
@@ -26,14 +28,11 @@ export function detectLang(pathname = typeof window !== 'undefined' ? window.loc
     if (queryLang === 'en' || queryLang === 'ar') return queryLang;
     const stored = localStorage.getItem('lang');
     if (stored === 'en' || stored === 'ar') return stored;
-    const browser = navigator.language?.toLowerCase() ?? '';
-    if (browser.startsWith('ar')) return 'ar';
-    if (browser) return 'en';
   }
   const path = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
   if (path.startsWith('/en') || path.includes('/en/')) return 'en';
   if (path.startsWith('/ar') || path.includes('/ar/')) return 'ar';
-  return 'en';
+  return DEFAULT_LANG;
 }
 
 export function langFromPath(pathname: string): Lang | null {
