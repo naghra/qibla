@@ -239,6 +239,7 @@ export function downloadCsv(filename: string, content: string): void {
 
 /** Seed demo data when store is empty (admin preview). */
 export function seedDemoApplicationsIfEmpty(): void {
+  if (import.meta.env.PROD) return;
   if (readAll().length > 0) return;
 
   const demos: ApplicationInput[] = [
@@ -281,11 +282,11 @@ export function seedDemoApplicationsIfEmpty(): void {
       destinationName: 'Thailand',
       serviceSlug: 'tdac',
       serviceName: 'Thailand Digital Arrival Card',
-      planId: 'express',
-      planName: 'Express',
+      planId: 'fast',
+      planName: 'Fast',
       totalAmount: 89,
       data: {
-        plan: 'express',
+        plan: 'fast',
         travelers: [
           {
             firstName: 'Sarah',

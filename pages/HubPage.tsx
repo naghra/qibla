@@ -9,14 +9,7 @@ import { CTA } from '../components/CTA';
 import { Footer } from '../components/Footer';
 import { StickyNav } from '../components/StickyNav';
 import { ChatWidget } from '../components/ChatWidget';
-import { useLanguage } from '../context/LanguageContext';
-import { buildPath } from '../data/destinations';
-import { useNavigate } from 'react-router-dom';
-
 export const HubPage: React.FC = () => {
-  const { lang } = useLanguage();
-  const navigate = useNavigate();
-
   const scrollToDestinations = () => {
     document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -28,7 +21,7 @@ export const HubPage: React.FC = () => {
         <HubHero onBrowse={scrollToDestinations} />
         <StatsBar />
         <Features onApply={scrollToDestinations} />
-        <Steps onApply={() => navigate(buildPath(lang, 'thailand', 'tdac'))} />
+        <Steps onApply={scrollToDestinations} />
         <Testimonials />
         <FAQ />
         <CTA onApply={scrollToDestinations} />

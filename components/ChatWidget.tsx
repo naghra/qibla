@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MessageCircle, Plane, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { SUPPORT_EMAIL } from '../utils/siteConfig';
 
 interface ChatWidgetProps {
   variant?: 'chat' | 'plane';
@@ -40,7 +41,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ variant = 'chat' }) => {
           <div className="space-y-4 p-5">
             <p className="text-sm leading-relaxed text-gray-600">{c.greeting}</p>
             <a
-              href="mailto:support@travelsmart.example"
+              href={`mailto:${SUPPORT_EMAIL}`}
               className="block w-full rounded-xl bg-blue-500 py-3 text-center text-sm font-bold text-white"
             >
               {c.emailButton}

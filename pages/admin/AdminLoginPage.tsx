@@ -90,7 +90,9 @@ export const AdminLoginPage: React.FC = () => {
             </button>
           </form>
 
-          <p className="mt-4 text-center text-xs text-gray-400 lg:text-start">{adminLabels.login.hint}</p>
+          <p className="mt-4 text-center text-xs text-gray-400 lg:text-start">
+            {import.meta.env.DEV ? 'Development: default password is qibla-admin' : adminLabels.login.hint}
+          </p>
         </div>
       </div>
     </div>

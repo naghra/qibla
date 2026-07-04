@@ -113,12 +113,6 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
     destination?.name[lang] ?? service?.shortName[lang] ?? (lang === 'ar' ? 'وجهتك' : 'your destination');
 
   useEffect(() => {
-    if (step === 2 && data.plan === 'standard') {
-      setData((d) => ({ ...d, plan: 'fast' }));
-    }
-  }, [step, data.plan]);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [step]);
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { Lang } from '../../data/i18n/types';
@@ -8,7 +8,6 @@ import { CountrySelect } from './CountrySelect';
 import { GenderRadioGroup } from './GenderRadioGroup';
 import {
   applyCard,
-  applyDashedBox,
   applyDividerText,
   applyFieldGroup,
   applyFieldShell,
@@ -52,7 +51,6 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
   onRemove,
 }) => {
   const [open, setOpen] = useState(true);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const title = isPrimary
     ? `${a.traveler(index + 1)}: ${a.travelerYourself}`
@@ -67,13 +65,7 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
 
       {open && (
         <div className={`${applySectionInner} p-4 sm:p-5`}>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" />
-
-          <button type="button" onClick={() => fileRef.current?.click()} className={applyDashedBox}>
-            {a.autofillPassport}
-          </button>
-
-          <div className="relative flex items-center">
+          <div className="relative flex items-center pb-2">
             <div className="h-px flex-1 bg-gray-200" />
             <span className={applyDividerText}>{a.orFillManually}</span>
             <div className="h-px flex-1 bg-gray-200" />

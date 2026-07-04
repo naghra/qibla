@@ -14,6 +14,7 @@ import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminApplicationsPage } from './pages/admin/AdminApplicationsPage';
 import { AdminApplicationDetailPage } from './pages/admin/AdminApplicationDetailPage';
 import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
+import { LegalPage } from './pages/LegalPage';
 
 const App: React.FC = () => {
   return (
@@ -38,6 +39,10 @@ const App: React.FC = () => {
           <Route path="/thailand/tdac/*" element={<Navigate to="/en/thailand/tdac" replace />} />
           <Route path="/:lang" element={<LangLayout />}>
             <Route index element={<HubPage />} />
+            <Route path="privacy" element={<LegalPage kind="privacy" />} />
+            <Route path="terms" element={<LegalPage kind="terms" />} />
+            <Route path="refund" element={<LegalPage kind="refund" />} />
+            <Route path="disclaimer" element={<LegalPage kind="disclaimer" />} />
             <Route path=":country" element={<CountryPage />} />
             <Route path=":country/:service" element={<ServiceLandingPage />} />
             <Route path=":country/:service/apply" element={<ApplyRoutePage />} />

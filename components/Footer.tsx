@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { PaymentMethodBadges } from './PaymentMethodBadges';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
+import { SUPPORT_EMAIL } from '../utils/siteConfig';
 
 export const Footer: React.FC = () => {
-  const { t, pageScope } = useLanguage();
+  const { t, lang, pageScope } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
   const { footer: f } = t;
 
@@ -34,10 +36,13 @@ export const Footer: React.FC = () => {
           <h4 className="mb-4 font-bold text-gray-900">{f.legal}</h4>
           <ul className="space-y-2">
             {f.legalLinks.map((link) => (
-              <li key={link.label}>
-                <a href={link.href} className="text-sm text-gray-600 transition hover:text-blue-500">
+              <li key={link.path}>
+                <Link
+                  to={`/${lang}/${link.path}`}
+                  className="text-sm text-gray-600 transition hover:text-blue-500"
+                >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -58,7 +63,13 @@ export const Footer: React.FC = () => {
       <div className="container mx-auto mt-10 border-t border-gray-200 px-4 pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-xs text-gray-500 sm:flex-row">
           <p>© {new Date().getFullYear()} {t.siteName}. {f.copyright}</p>
-          <p>{f.contact}</p>
+          <p>
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-blue-600" dir="ltr">
+              {SUPPORT_EMAIL}
+            </a>
+            {' · '}
+            {lang === 'en' ? 'Live chat 24/7' : 'دردشة مباشرة 24/7'}
+          </p>
         </div>
         <p className="mt-4 text-center text-xs text-gray-400">{f.disclaimer}</p>
       </div>

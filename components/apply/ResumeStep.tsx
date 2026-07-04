@@ -34,7 +34,6 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
   destinationName,
 }) => {
   const [esimOpen, setEsimOpen] = useState(false);
-  const speedPlans = plans.filter((p) => p.id === 'fast' || p.id === 'ultra');
 
   return (
     <div className={`${applySection} w-full`}>
@@ -47,9 +46,11 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
         </div>
 
         <div className="space-y-3">
-          {speedPlans.map((plan) => {
+          {plans.map((plan) => {
             const selected = selectedPlanId === plan.id;
             const isUltra = plan.id === 'ultra';
+            const isStandard = plan.id === 'standard';
+            const displayFee = isStandard ? plan.price : plan.priorityFee;
             return (
               <label
                 key={plan.id}
@@ -71,7 +72,8 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
                       <p className="mt-0.5 text-sm text-gray-500">{a.getInTime(plan.time)}</p>
                     </div>
                     <span className="shrink-0 text-base font-semibold text-gray-950" dir="ltr">
-                      ${plan.priorityFee.toFixed(2)}
+                      ${displayFee.toFixed(2)}
+                      {isStandard && <span className="text-xs font-normal text-gray-500"> / traveler</span>}
                     </span>
                   </div>
                   {isUltra && (
@@ -122,7 +124,6 @@ export const ResumeStep: React.FC<ResumeStepProps> = ({
           {esimOpen && (
             <div className="border-t border-gray-200 px-4 pb-4 pt-3">
               <p className="text-sm text-gray-500">{a.esimDescription}</p>
-              <p className="mt-2 text-xs text-gray-400">{a.esimComingSoon}</p>
             </div>
           )}
         </div>

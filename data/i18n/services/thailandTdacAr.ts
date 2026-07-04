@@ -1,4 +1,5 @@
 import { Translations } from '../types';
+import { SUPPORT_EMAIL } from '../../../utils/siteConfig';
 
 export const thailandTdacAr: Translations = {
   siteName: 'سفر ذكي سفر سريع',
@@ -134,16 +135,16 @@ export const thailandTdacAr: Translations = {
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
-      { label: 'سياسة الخصوصية', href: '#' },
-      { label: 'شروط الخدمة', href: '#' },
-      { label: 'سياسة الاسترداد', href: '#' },
-      { label: 'إخلاء المسؤولية', href: '#' },
+      { label: 'سياسة الخصوصية', path: 'privacy' },
+      { label: 'شروط الخدمة', path: 'terms' },
+      { label: 'سياسة الاسترداد', path: 'refund' },
+      { label: 'إخلاء المسؤولية', path: 'disclaimer' },
     ],
     paymentMethodsTitle: 'طرق الدفع والأمان',
     paymentSslNote: 'تشفير SSL 256-bit',
     paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
-    contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
+    contact: `${SUPPORT_EMAIL} · دردشة مباشرة 24/7`,
     disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة وليست الموقع الرسمي للحكومة التايلاندية.',
   },
   chat: {
@@ -161,7 +162,7 @@ export const thailandTdacAr: Translations = {
     formTitle: 'طلب بطاقة TDAC',
     stepOf: (step, total, label) => `الخطوة ${step} من ${total} — ${label}`,
     steps: ['المسافرون', 'تفاصيل السفر', 'المراجعة والدفع', 'تم الإرسال'],
-    formSteps: ['تفاصيل الرحلة', 'معلوماتك', 'السيرة'],
+    formSteps: ['تفاصيل الرحلة', 'معلوماتك', 'مراجعة الطلب'],
     arriveQuestion: 'متى تصل إلى تايلاند؟',
     departQuestion: 'متى تغادر من تايلاند؟',
     year: 'السنة',
@@ -236,7 +237,7 @@ export const thailandTdacAr: Translations = {
     plan: 'الخطة',
     feePerTraveler: 'رسوم لكل مسافر',
     total: 'الإجمالي',
-    termsNote: 'بالمتابعة، أنت توافق على شروط الخدمة. نموذج تجريبي — لا دفع حقيقي.',
+    termsNote: 'بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية.',
     successTitle: 'تم إرسال طلبك بنجاح!',
     successThanks: (name) => `شكراً ${name}! سنرسل بطاقة TDAC إلى:`,
     successEmail: '',
