@@ -139,6 +139,7 @@ export const thailandTdacEn: Translations = {
       { label: 'Refund Policy', href: '#' },
       { label: 'Disclaimer', href: '#' },
     ],
+    paymentMethodsTitle: 'PAYMENT METHODS & SECURITY',
     copyright: 'All rights reserved.',
     contact: 'support@travelsmart.example · Live chat 24/7',
     disclaimer: 'Disclaimer: Private assistance service — not the official Thai government website.',

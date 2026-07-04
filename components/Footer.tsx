@@ -1,5 +1,6 @@
 import React from 'react';
 import { Logo } from './Logo';
+import { PaymentMethodBadges } from './PaymentMethodBadges';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
 
@@ -40,6 +41,13 @@ export const Footer: React.FC = () => {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div className="container mx-auto mt-10 px-4">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6">
+          <h4 className="mb-4 text-xs font-bold tracking-wider text-gray-900">{f.paymentMethodsTitle}</h4>
+          <PaymentMethodBadges />
         </div>
       </div>
 
