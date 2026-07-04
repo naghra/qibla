@@ -140,6 +140,8 @@ export const thailandTdacAr: Translations = {
       { label: 'إخلاء المسؤولية', href: '#' },
     ],
     paymentMethodsTitle: 'طرق الدفع والأمان',
+    paymentSslNote: 'تشفير SSL 256-bit',
+    paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
     disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة وليست الموقع الرسمي للحكومة التايلاندية.',
