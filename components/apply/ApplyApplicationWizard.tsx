@@ -206,7 +206,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       const plan = plans.find((p) => p.id === synced.plan)!;
       const amount = (plan.price + plan.priorityFee) * synced.travelers.length;
       if (destination && service) {
-        const record = saveApplication({
+        void saveApplication({
           lang,
           destinationSlug: destination.slug,
           destinationName: destination.name[lang],
@@ -216,8 +216,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
           planName: plan.name,
           totalAmount: amount,
           data: synced,
-        });
-        setSubmittedId(record.id);
+        }).then((record) => setSubmittedId(record.id));
       }
       setStep(3);
       return;

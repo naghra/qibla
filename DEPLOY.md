@@ -17,6 +17,8 @@ chmod +x deploy/deploy-thailand.sh
 | دومين ثانوي (تحويل) | https://ksashort.shop → dacgateway.com |
 | المسار | `/var/www/qibla` |
 | البناء | `npm run build` → `dist/` |
+| قاعدة البيانات | PostgreSQL `dacgateway` على المنفذ **5433** |
+| API | Node على `127.0.0.1:3000` → nginx `/api/` |
 
 ---
 

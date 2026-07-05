@@ -83,7 +83,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
 
   const handleSubmit = () => {
     if (destination && service) {
-      const record = saveApplication({
+      void saveApplication({
         lang,
         destinationSlug: destination.slug,
         destinationName: destination.name[lang],
@@ -93,8 +93,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
         planName: selectedPlan.name,
         totalAmount: total,
         data,
-      });
-      setSubmittedId(record.id);
+      }).then((record) => setSubmittedId(record.id));
     }
     setStep(3);
   };

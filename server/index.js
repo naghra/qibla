@@ -3,6 +3,8 @@ import { readFile, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { initDatabase } from './db.js';
+import { handleApplicationsApi } from './applications.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../dist');
@@ -83,7 +85,12 @@ async function serveSpa(req, res) {
 
 async function handleRequest(req, res) {
   try {
-    const urlPath = req.url || '/';
+    const urlPath = req.url?.split('?')[0] || '/';
+
+    if (urlPath.startsWith('/api/applications')) {
+      const handled = await handleApplicationsApi(req, res, urlPath);
+      if (handled) return;
+    }
 
     if (urlPath === '/api/geo' || urlPath.startsWith('/api/geo?')) {
       if (req.method !== 'GET' && req.method !== 'HEAD') {
@@ -129,7 +136,18 @@ const server = createServer((req, res) => {
   void handleRequest(req, res);
 });
 
-server.listen(PORT, HOST, () => {
-  console.log(`Server running at http://${HOST}:${PORT}`);
-  console.log(`Serving static files from ${DIST_DIR}`);
-});
+async function start() {
+  try {
+    await initDatabase();
+  } catch (err) {
+    console.error('Database init failed:', err.message);
+    console.error('Server will start but /api/applications will not work until DB is configured.');
+  }
+
+  server.listen(PORT, HOST, () => {
+    console.log(`Server running at http://${HOST}:${PORT}`);
+    console.log(`Serving static files from ${DIST_DIR}`);
+  });
+}
+
+void start();
