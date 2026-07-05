@@ -15,11 +15,13 @@ import { AdminApplicationsPage } from './pages/admin/AdminApplicationsPage';
 import { AdminApplicationDetailPage } from './pages/admin/AdminApplicationDetailPage';
 import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
 import { LegalPageRoute } from './pages/LegalPageRoute';
+import { ScrollToTop } from './components/ScrollToTop';
 
 const App: React.FC = () => {
   return (
     <AdminAuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Admin panel — must be before /:lang */}
           <Route path="/admin/login" element={<AdminGuestRoute />}>
