@@ -1,4 +1,5 @@
 import { Translations } from '../types';
+import { siteDefinition } from '../siteDefinition';
 
 export const thailandTdacEn: Translations = {
   siteName: 'DacGateway',
@@ -130,7 +131,7 @@ export const thailandTdacEn: Translations = {
     button: 'Get your Thailand TDAC',
   },
   footer: {
-    description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    description: siteDefinition.en,
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
@@ -144,7 +145,7 @@ export const thailandTdacEn: Translations = {
     paymentPciNote: 'PCI-DSS compliant checkout',
     copyright: 'All rights reserved.',
     contact: 'support@travelsmart.example · Live chat 24/7',
-    disclaimer: 'Disclaimer: Private assistance service — not the official Thai government website.',
+    disclaimer: '',
   },
   chat: {
     title: '24/7 Support',

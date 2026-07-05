@@ -1,4 +1,5 @@
 import { Translations } from '../types';
+import { siteDefinition } from '../siteDefinition';
 
 export const thailandTdacAr: Translations = {
   siteName: 'DacGateway',
@@ -130,7 +131,7 @@ export const thailandTdacAr: Translations = {
     button: 'احصل على بطاقة TDAC',
   },
   footer: {
-    description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    description: siteDefinition.ar,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
@@ -144,7 +145,7 @@ export const thailandTdacAr: Translations = {
     paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
-    disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة وليست الموقع الرسمي للحكومة التايلاندية.',
+    disclaimer: '',
   },
   chat: {
     title: 'دعم 24/7',

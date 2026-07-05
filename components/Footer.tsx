@@ -14,7 +14,6 @@ export const Footer: React.FC = () => {
       <div className="container mx-auto grid gap-10 px-4 md:grid-cols-4">
         <div className="space-y-4 md:col-span-2">
           <Logo />
-          <p className="max-w-md text-sm leading-relaxed text-gray-600">{f.description}</p>
         </div>
 
         <div>
@@ -55,12 +54,22 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
+      {f.description && (
+        <div className="container mx-auto mt-10 px-4">
+          <div className="rounded-2xl border border-gray-200 bg-white px-5 py-5 md:px-6 md:py-6">
+            <p className="text-sm leading-relaxed text-gray-600">{f.description}</p>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto mt-10 border-t border-gray-200 px-4 pt-8">
         <div className="flex flex-col items-center justify-between gap-4 text-center text-xs text-gray-500 sm:flex-row">
           <p>© {new Date().getFullYear()} {t.siteName}. {f.copyright}</p>
           <p>{f.contact}</p>
         </div>
-        <p className="mt-4 text-center text-xs text-gray-400">{f.disclaimer}</p>
+        {f.disclaimer && (
+          <p className="mt-4 text-center text-xs text-gray-400">{f.disclaimer}</p>
+        )}
       </div>
     </footer>
   );

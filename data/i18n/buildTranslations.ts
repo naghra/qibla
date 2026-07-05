@@ -1,11 +1,12 @@
 import type { Lang, Translations } from './types';
 import type { DestinationDef, PageScope, ServiceDef } from '../destinations';
+import { siteDefinition } from './siteDefinition';
 import { thailandTdacEn } from './services/thailandTdacEn';
 import { thailandTdacAr } from './services/thailandTdacAr';
 
 const sharedFooter = {
   en: {
-    description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    description: siteDefinition.en,
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
@@ -19,10 +20,10 @@ const sharedFooter = {
     paymentPciNote: 'PCI-DSS compliant checkout',
     copyright: 'All rights reserved.',
     contact: 'support@travelsmart.example · Live chat 24/7',
-    disclaimer: 'Disclaimer: Private assistance service — not an official government website.',
+    disclaimer: '',
   },
   ar: {
-    description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    description: siteDefinition.ar,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
@@ -36,7 +37,7 @@ const sharedFooter = {
     paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
-    disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة — ليست الموقع الرسمي للحكومة.',
+    disclaimer: '',
   },
 };
 
