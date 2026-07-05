@@ -11,21 +11,24 @@
 | المستخدم | `root` |
 | مجلد النشر | `/var/www/qibla` |
 | الملف الوحيد | `qibla-finder/index.html` |
-| الدومين | دومين خاص (مثال: `qibla.your-domain.com`) — **ليس** `codform.shop` |
+| الدومين | **`ksashort.shop`** (الجذر + www) |
 
 ## 2. DNS — قبل النشر
 
-```
-النوع: A
-الاسم: qibla
-القيمة: 185.214.135.141
-TTL: 300
-```
+في لوحة الدومين (Namecheap أو غيره) أضف:
+
+| النوع | Host | القيمة | TTL |
+|-------|------|--------|-----|
+| A | `@` | `185.214.135.141` | 300 |
+| A | `www` | `185.214.135.141` | 300 |
 
 ```bash
-dig +short qibla.your-domain.com
-# يجب: 185.214.135.141
+chmod +x deploy/verify-dns.sh
+./deploy/verify-dns.sh ksashort.shop
+# يجب أن يظهر: OK ksashort.shop -> 185.214.135.141
 ```
+
+> **ملاحظة:** حالياً `ksashort.shop` مُعدّ على السيرفر لكنه يعرض CodForm. بعد النشر سيُعرض تطبيق القبلة من `/var/www/qibla`.
 
 ## 3. مفتاح SSH
 
@@ -46,7 +49,7 @@ ssh -i ~/.ssh/qibla_deploy_ed25519 root@185.214.135.141 "echo OK"
 
 ```bash
 cp deploy/.env.example deploy/.env
-# عدّل QIBLA_DOMAIN و VPS_HOST و SSH_KEY
+# القيم الافتراضية جاهزة لـ ksashort.shop — عدّل CERTBOT_EMAIL إن لزم
 ```
 
 ## 5. النشر
@@ -118,7 +121,26 @@ Logs:     /var/log/nginx/error.log
 
 **لا تشارك** مفاتيح SSH أو كلمات مرور root في المستودع.
 
+## 11. ربط ksashort.shop (بدون SSH — عبر VNC)
+
+إذا فشل SSH، افتح **Contabo VNC Console** والصق:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/naghra/qibla/cursor/ksashort-domain-8af4/deploy/setup-ksashort-vnc.sh | bash
+```
+
+أو انسخ `deploy/setup-ksashort-vnc.sh` يدوياً وشغّله على السيرفر. السكربت يقوم بـ:
+- إضافة مفتاح النشر في `authorized_keys`
+- نسخ تطبيق القبلة إلى `/var/www/qibla`
+- إعداد nginx لـ `ksashort.shop`
+- إزالة الدومين من إعداد CodForm
+- طلب شهادة SSL
+
 ## الحالة الحالية
 
-التطبيق **منشور** على: https://qibla.codform.shop  
-بعد النشر على دومين مستقل، أزل `qibla.conf` من nginx كما في القسم 7.
+| الدومين | الحالة |
+|---------|--------|
+| https://qibla.codform.shop | يعمل — تطبيق القبلة |
+| https://ksashort.shop | **DNS غير مربوط** + nginx يعرض CodForm مؤقتاً |
+
+بعد إعداد DNS وتشغيل `./deploy/deploy.sh` أو `setup-ksashort-vnc.sh`، سيُعرض القبلة على `ksashort.shop`.
