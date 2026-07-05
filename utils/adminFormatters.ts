@@ -25,16 +25,29 @@ export function displayValue(value: string | undefined | null, fallback = 'غي�
   return v ? v : fallback;
 }
 
+function pad2(n: number): string {
+  return String(n).padStart(2, '0');
+}
+
+/** Parse ISO/date strings without shifting date-only values across timezones. */
+function parseAdminDate(iso: string): Date {
+  const trimmed = iso.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return new Date(`${trimmed}T12:00:00`);
+  }
+  return new Date(trimmed);
+}
+
+/** Admin dates: DD/MM/YYYY (Latin digits, numeric month). */
 export function formatAdminDate(iso: string | undefined, withTime = false): string {
   if (!iso?.trim()) return 'غير متوفر';
-  const d = new Date(iso.includes('T') ? iso : `${iso}T12:00:00`);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('ar-u-nu-latn', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    ...(withTime ? { hour: '2-digit', minute: '2-digit', hour12: false } : {}),
-  });
+  const d = parseAdminDate(iso);
+  if (Number.isNaN(d.getTime())) return iso.trim();
+
+  const datePart = `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+  if (!withTime) return datePart;
+
+  return `${datePart} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 }
 
 export function formatGender(value: string | undefined): string {

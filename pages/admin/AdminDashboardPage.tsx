@@ -27,6 +27,7 @@ import {
   seedDemoApplicationsIfEmpty,
 } from '../../services/applicationStore';
 import type { ApplicationStatus, StoredApplication } from '../../types/admin';
+import { formatAdminDate } from '../../utils/adminFormatters';
 
 export const AdminDashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,14 +52,7 @@ export const AdminDashboardPage: React.FC = () => {
     })();
   }, []);
 
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString('ar-u-nu-latn', {
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
+  const formatDate = (iso: string) => formatAdminDate(iso, true);
 
   const handleExport = () => {
     void getApplications().then((apps) => {

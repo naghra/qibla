@@ -18,6 +18,7 @@ import {
   updateApplicationStatus,
 } from '../../services/applicationStore';
 import type { ApplicationSortField, ApplicationStatus, StoredApplication } from '../../types/admin';
+import { formatAdminDate } from '../../utils/adminFormatters';
 
 const PER_PAGE = 10;
 
@@ -117,8 +118,7 @@ export const AdminApplicationsPage: React.FC = () => {
     }
   };
 
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString('ar-u-nu-latn', { day: 'numeric', month: 'short', year: 'numeric' });
+  const formatDate = (iso: string) => formatAdminDate(iso);
 
   return (
     <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
