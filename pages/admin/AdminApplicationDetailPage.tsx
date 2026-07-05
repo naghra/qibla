@@ -29,8 +29,10 @@ import {
   countryLabel,
   displayValue,
   formatAdminDate,
+  formatApplicationAsText,
   formatCurrency,
   formatGender,
+  formatPhoneDisplay,
   formatPurpose,
   travelerInitials,
 } from '../../utils/adminFormatters';
@@ -45,6 +47,7 @@ export const AdminApplicationDetailPage: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -112,21 +115,29 @@ export const AdminApplicationDetailPage: React.FC = () => {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const renderTravelerFields = (traveler: TravelerData, lang: 'ar' | 'en') => (
+  const copyAll = async () => {
+    await navigator.clipboard.writeText(formatApplicationAsText(app));
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 2500);
+  };
+
+  const renderTravelerFields = (traveler: TravelerData, lang: 'ar' | 'en') => {
+    const phone = formatPhoneDisplay(traveler.phone, traveler.phoneCountry, lang);
+    return (
     <DetailGrid>
-      <DetailField label={adminLabels.detail.applicant} value={displayValue(`${traveler.firstName} ${traveler.lastName}`.trim())} />
-      <DetailField label={adminLabels.detail.email} value={displayValue(traveler.email)} mono />
-      <DetailField label={adminLabels.detail.phone} value={displayValue(traveler.phone)} mono />
-      <DetailField label={adminLabels.detail.phoneCountry} value={countryLabel(traveler.phoneCountry, lang)} />
+      <DetailField label={adminLabels.detail.applicant} value={displayValue(`${traveler.firstName} ${traveler.lastName}`.trim())} copyText={displayValue(`${traveler.firstName} ${traveler.lastName}`.trim())} />
+      <DetailField label={adminLabels.detail.email} value={displayValue(traveler.email)} mono copyText={traveler.email} />
+      <DetailField label={adminLabels.detail.phone} value={phone} mono copyText={phone !== 'غير متوفر' ? phone : undefined} />
       <DetailField label={adminLabels.detail.dateOfBirth} value={formatAdminDate(traveler.dateOfBirth)} mono />
       <DetailField label={adminLabels.detail.gender} value={formatGender(traveler.gender)} />
       <DetailField label={adminLabels.detail.nationality} value={countryLabel(traveler.nationality, lang)} />
-      <DetailField label={adminLabels.detail.passport} value={displayValue(traveler.passportNumber)} mono />
+      <DetailField label={adminLabels.detail.passport} value={displayValue(traveler.passportNumber)} mono copyText={traveler.passportNumber} />
       <DetailField label={adminLabels.detail.passportCountry} value={countryLabel(traveler.passportCountry, lang)} />
       <DetailField label={adminLabels.detail.passportIssue} value={formatAdminDate(traveler.passportIssueDate)} mono />
       <DetailField label={adminLabels.detail.passportExpiry} value={formatAdminDate(traveler.passportExpiryDate)} mono />
     </DetailGrid>
-  );
+    );
+  };
 
   return (
     <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
@@ -211,6 +222,10 @@ export const AdminApplicationDetailPage: React.FC = () => {
               {adminLabels.detail.call}
             </a>
           )}
+          <button type="button" onClick={copyAll} className="action-btn action-btn--ghost">
+            {copiedAll ? <Check className="size-4 text-emerald-300" /> : <Copy className="size-4" />}
+            {copiedAll ? adminLabels.detail.copiedAll : adminLabels.detail.copyAll}
+          </button>
           <button type="button" onClick={() => window.print()} className="action-btn action-btn--ghost">
             <Printer className="size-4" />
             {adminLabels.detail.print}
@@ -241,7 +256,6 @@ export const AdminApplicationDetailPage: React.FC = () => {
                 value={displayValue(
                   [travel.accommodationAddress, travel.accommodationCity].filter(Boolean).join('، ') || undefined
                 )}
-                fullWidth
               />
             </DetailGrid>
           </DetailSection>

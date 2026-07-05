@@ -115,6 +115,8 @@ export const adminLabels = {
     quickReject: 'رفض',
     quickProcess: 'بدء المعالجة',
     copyId: 'نسخ رقم الطلب',
+    copyAll: 'نسخ جميع المعلومات',
+    copiedAll: 'تم نسخ جميع المعلومات',
     sendEmail: 'إرسال بريد',
     call: 'اتصال',
     print: 'طباعة',
