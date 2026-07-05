@@ -43,7 +43,6 @@ export async function initDatabase() {
       CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
       CREATE INDEX IF NOT EXISTS idx_applications_created_at ON applications(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_applications_destination ON applications(destination_slug);
-      CREATE INDEX IF NOT EXISTS idx_applications_stripe_session ON applications(stripe_checkout_session_id);
 
       CREATE TABLE IF NOT EXISTS site_settings (
         key TEXT PRIMARY KEY,
@@ -57,6 +56,7 @@ export async function initDatabase() {
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS stripe_checkout_session_id TEXT;
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS stripe_payment_intent_id TEXT;
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ;
+      CREATE INDEX IF NOT EXISTS idx_applications_stripe_session ON applications(stripe_checkout_session_id);
     `);
 
     console.log('Database schema ready');
