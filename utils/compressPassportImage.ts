@@ -1,5 +1,5 @@
-const MAX_DIMENSION = 2000;
-const JPEG_QUALITY = 0.88;
+const MAX_DIMENSION = 2800;
+const JPEG_QUALITY = 0.93;
 
 function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -33,8 +33,8 @@ export async function compressPassportImage(file: File): Promise<File> {
     throw new Error('unsupported_format');
   }
 
-  // Skip tiny files already under ~400 KB
-  if (file.size < 400_000 && /^image\/(jpeg|jpg|png|webp)$/i.test(file.type)) {
+  // Keep original quality for smaller photos
+  if (file.size < 900_000 && /^image\/(jpeg|jpg|png|webp)$/i.test(file.type)) {
     return file;
   }
 
@@ -50,6 +50,8 @@ export async function compressPassportImage(file: File): Promise<File> {
     const ctx = canvas.getContext('2d');
     if (!ctx) return file;
 
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(img, 0, 0, width, height);
     const blob = await canvasToBlob(canvas, 'image/jpeg', JPEG_QUALITY);
     return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });

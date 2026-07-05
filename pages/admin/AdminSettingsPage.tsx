@@ -157,6 +157,7 @@ export const AdminSettingsPage: React.FC = () => {
                   </option>
                 ))}
               </select>
+              <p className="mt-1.5 text-xs text-gray-500">{s.modelHint}</p>
             </div>
           </div>
 

@@ -179,6 +179,7 @@ export const adminLabels = {
     apiKeyPlaceholderUpdate: 'أدخل مفتاحاً جديداً للاستبدال (اتركه فارغاً للإبقاء على الحالي)',
     apiKeyHint: 'يُخزَّن على السيرفر فقط ولا يظهر للزوار. احصل على المفتاح من platform.openai.com',
     modelLabel: 'نموذج Vision',
+    modelHint: 'استخدم gpt-4o للحصول على أعلى دقة في قراءة الجواز',
     save: 'حفظ الإعدادات',
     saving: 'جاري الحفظ…',
     saved: 'تم الحفظ',

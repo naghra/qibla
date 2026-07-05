@@ -1,4 +1,4 @@
-import { ISO3_TO_ISO2, NAME_TO_ISO2 } from './passportCountries.js';
+import { mergePassportData, normalizeCountryCode, normalizeName, normalizePassportNumber, parseTd3Mrz } from './passportMrz.js';
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg']);
@@ -10,18 +10,22 @@ const PASSPORT_SCHEMA = {
     type: 'object',
     additionalProperties: false,
     properties: {
-      firstName: { type: 'string', description: 'Given name(s) as printed on passport' },
-      lastName: { type: 'string', description: 'Surname / family name' },
+      mrzLine1: { type: 'string', description: 'First MRZ line exactly 44 chars (P<...) or empty' },
+      mrzLine2: { type: 'string', description: 'Second MRZ line exactly 44 chars or empty' },
+      firstName: { type: 'string', description: 'Given name(s) in Latin as on passport' },
+      lastName: { type: 'string', description: 'Surname in Latin' },
       passportNumber: { type: 'string', description: 'Passport document number' },
-      nationality: { type: 'string', description: 'ISO 3166-1 alpha-2 nationality code' },
-      passportCountry: { type: 'string', description: 'ISO 3166-1 alpha-2 issuing country code' },
+      nationality: { type: 'string', description: 'ISO 3166-1 alpha-2 or alpha-3 nationality code' },
+      passportCountry: { type: 'string', description: 'ISO issuing country code' },
       dateOfBirth: { type: 'string', description: 'YYYY-MM-DD' },
-      passportIssueDate: { type: 'string', description: 'YYYY-MM-DD or empty if unknown' },
+      passportIssueDate: { type: 'string', description: 'YYYY-MM-DD or empty string' },
       passportExpiryDate: { type: 'string', description: 'YYYY-MM-DD' },
       gender: { type: 'string', enum: ['male', 'female', 'other'] },
       confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
     },
     required: [
+      'mrzLine1',
+      'mrzLine2',
       'firstName',
       'lastName',
       'passportNumber',
@@ -36,18 +40,28 @@ const PASSPORT_SCHEMA = {
   },
 };
 
-const SYSTEM_PROMPT = `You are an expert passport data extraction system used for travel document applications.
-Extract fields exactly as printed on the passport biodata page (the page with the photo).
-Rules:
-- Read the visual zone AND the MRZ machine-readable zone at the bottom; prefer MRZ when legible.
-- Return ISO 3166-1 alpha-2 codes for nationality and passportCountry (e.g. EG, US, GB, FR, SA).
-- Names: use Latin characters as printed; split given names into firstName and surname into lastName.
-- Dates: convert to YYYY-MM-DD regardless of how they appear on the passport.
-- Gender: map M/male/masculin → male, F/female/féminin → female; otherwise other.
-- passportIssueDate: use issue date if visible; if only expiry is clear, leave passportIssueDate as empty string.
-- passportNumber: no spaces; preserve letters and digits exactly.
-- If a field is unreadable, use your best reading and set confidence to medium or low.
-- Never invent data not supported by the image.`;
+const SYSTEM_PROMPT = `You extract passport biodata for official travel forms. Accuracy is critical.
+
+STEP 1 — MRZ (highest priority):
+- Locate the TWO machine-readable lines at the bottom (monospace, 44 characters each).
+- Copy them EXACTLY into mrzLine1 and mrzLine2: uppercase A-Z, digits, and < fillers only.
+- Do NOT guess MRZ characters. If a character is unclear, use <.
+- TD3 line 1 format: P<COUNTRY<SURNAME<<GIVEN<NAMES...
+- TD3 line 2 format: PASSNO<CHECK<NATIONALITY<DOB<CHECK<SEX<EXPIRY<CHECK...
+
+STEP 2 — Visual zone (supports MRZ):
+- Cross-check name, dates, passport number, nationality from the printed fields.
+- Names: Latin characters as printed. firstName = given names, lastName = surname.
+- nationality & passportCountry: ISO 3166-1 alpha-2 (EG, SA, US, GB, FR, DE, NL…).
+- Dates: convert to YYYY-MM-DD.
+- Gender: M/male → male, F/female → female.
+- passportIssueDate: from issue field if visible, else empty string "".
+- passportNumber: no spaces.
+
+Set confidence:
+- high: MRZ lines are clear AND match visual zone
+- medium: MRZ partial or minor visual mismatch
+- low: mostly guessing`;
 
 function readJsonBody(req, maxBytes = MAX_IMAGE_BYTES + 512_000) {
   return new Promise((resolve, reject) => {
@@ -79,17 +93,6 @@ function sendJson(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
-function normalizeCountryCode(value) {
-  if (!value || typeof value !== 'string') return '';
-  const raw = value.trim();
-  const upper = raw.toUpperCase();
-  if (/^[A-Z]{2}$/.test(upper)) return upper;
-  if (/^[A-Z]{3}$/.test(upper) && ISO3_TO_ISO2[upper]) return ISO3_TO_ISO2[upper];
-  const named = NAME_TO_ISO2[raw.toLowerCase()];
-  if (named) return named;
-  return '';
-}
-
 function normalizeGender(value) {
   const v = String(value ?? '').trim().toLowerCase();
   if (v === 'male' || v === 'm') return 'male';
@@ -100,6 +103,7 @@ function normalizeGender(value) {
 function normalizeDate(value) {
   if (!value || typeof value !== 'string') return '';
   const trimmed = value.trim();
+  if (!trimmed) return '';
   if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
 
   const dmy = trimmed.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
@@ -117,18 +121,7 @@ function normalizeDate(value) {
   return '';
 }
 
-function normalizePassportNumber(value) {
-  return String(value ?? '').replace(/\s+/g, '').toUpperCase();
-}
-
-function normalizeName(value) {
-  return String(value ?? '')
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[^\p{L}\p{M}\s'-]/gu, '');
-}
-
-function mapExtracted(raw) {
+function mapVisionFields(raw) {
   return {
     firstName: normalizeName(raw.firstName),
     lastName: normalizeName(raw.lastName),
@@ -141,6 +134,16 @@ function mapExtracted(raw) {
     gender: normalizeGender(raw.gender),
     confidence: raw.confidence === 'high' || raw.confidence === 'medium' ? raw.confidence : 'low',
   };
+}
+
+function extractPassportData(raw) {
+  const vision = mapVisionFields(raw);
+  const mrz = parseTd3Mrz(raw.mrzLine1, raw.mrzLine2);
+  const merged = mergePassportData(vision, mrz);
+  if (!merged.passportCountry && merged.nationality) {
+    merged.passportCountry = merged.nationality;
+  }
+  return merged;
 }
 
 function hasUsefulData(data) {
@@ -165,7 +168,12 @@ function validateResult(data) {
   return missing;
 }
 
-async function callOpenAiVision(base64, mimeType) {
+function needsRetry(data) {
+  const missing = validateResult(data);
+  return missing.length >= 3;
+}
+
+async function callOpenAiVision(base64, mimeType, { retry = false } = {}) {
   const { getOpenAiCredentials } = await import('./settings.js');
   const { apiKey, visionModel } = await getOpenAiCredentials();
   if (!apiKey) {
@@ -174,7 +182,13 @@ async function callOpenAiVision(base64, mimeType) {
     throw err;
   }
 
-  const model = visionModel || 'gpt-4o';
+  // gpt-4o is significantly better for document OCR; upgrade mini automatically
+  let model = visionModel || 'gpt-4o';
+  if (model.includes('mini')) model = 'gpt-4o';
+
+  const userText = retry
+    ? 'Retry: focus ONLY on the MRZ lines at the bottom. Transcribe mrzLine1 and mrzLine2 exactly (44 chars each). Then fill all other fields from MRZ + visual zone.'
+    : 'Extract passport biodata. Transcribe both MRZ lines exactly first, then fill all fields.';
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -185,7 +199,7 @@ async function callOpenAiVision(base64, mimeType) {
     body: JSON.stringify({
       model,
       temperature: 0,
-      max_tokens: 800,
+      max_tokens: 1200,
       response_format: {
         type: 'json_schema',
         json_schema: PASSPORT_SCHEMA,
@@ -195,10 +209,7 @@ async function callOpenAiVision(base64, mimeType) {
         {
           role: 'user',
           content: [
-            {
-              type: 'text',
-              text: 'Extract all passport biodata fields from this image for a travel application form.',
-            },
+            { type: 'text', text: userText },
             {
               type: 'image_url',
               image_url: {
@@ -210,12 +221,12 @@ async function callOpenAiVision(base64, mimeType) {
         },
       ],
     }),
-    signal: AbortSignal.timeout(60000),
+    signal: AbortSignal.timeout(90000),
   });
 
   if (!res.ok) {
     const errText = await res.text().catch(() => '');
-    console.error('OpenAI vision error:', res.status, errText.slice(0, 300));
+    console.error('OpenAI vision error:', res.status, errText.slice(0, 400));
     const err = new Error('openai_request_failed');
     err.code = 'openai_request_failed';
     err.status = res.status;
@@ -224,10 +235,7 @@ async function callOpenAiVision(base64, mimeType) {
 
   const payload = await res.json();
   const content = payload.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error('openai_empty_response');
-  }
-
+  if (!content) throw new Error('openai_empty_response');
   return JSON.parse(content);
 }
 
@@ -255,13 +263,19 @@ export async function handlePassportScanApi(req, res, urlPath) {
       return true;
     }
 
-    const raw = await callOpenAiVision(base64, mimeType);
-    const data = mapExtracted(raw);
-    const missing = validateResult(data);
+    let raw = await callOpenAiVision(base64, mimeType);
+    let data = extractPassportData(raw);
 
-    if (!data.passportCountry && data.nationality) {
-      data.passportCountry = data.nationality;
+    if (needsRetry(data)) {
+      try {
+        raw = await callOpenAiVision(base64, mimeType, { retry: true });
+        data = extractPassportData(raw);
+      } catch (retryErr) {
+        console.warn('Passport scan retry failed:', retryErr.message);
+      }
     }
+
+    const missing = validateResult(data);
 
     if (!hasUsefulData(data)) {
       sendJson(res, 422, { error: 'extraction_incomplete', missing, data });
