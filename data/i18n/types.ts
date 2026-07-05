@@ -265,6 +265,9 @@ export interface Translations {
     passportScanTooLarge: string;
     passportScanInvalidType: string;
     passportScanPartial: string;
+    passportScanOpenAiError: string;
+    passportScanNotConfigured: string;
+    passportScanHeic: string;
   };
   glanceItems: GlanceItem[];
   requirements: string[];

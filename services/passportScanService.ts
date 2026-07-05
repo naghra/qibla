@@ -1,3 +1,5 @@
+import { compressPassportImage, validatePassportFile } from '../utils/compressPassportImage';
+
 export interface PassportScanData {
   firstName: string;
   lastName: string;
@@ -32,25 +34,13 @@ export class PassportScanError extends Error {
   }
 }
 
-const MAX_FILE_BYTES = 5 * 1024 * 1024;
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
-
 function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }> {
   return new Promise((resolve, reject) => {
-    if (!ALLOWED_TYPES.has(file.type)) {
-      reject(new PassportScanError('Invalid image type', 400, 'invalid_image_type'));
-      return;
-    }
-    if (file.size > MAX_FILE_BYTES) {
-      reject(new PassportScanError('Image too large', 400, 'image_too_large'));
-      return;
-    }
-
     const reader = new FileReader();
     reader.onload = () => {
       const result = String(reader.result ?? '');
       const base64 = result.replace(/^data:[^;]+;base64,/, '');
-      resolve({ base64, mimeType: file.type });
+      resolve({ base64, mimeType: file.type || 'image/jpeg' });
     };
     reader.onerror = () => reject(new PassportScanError('Read failed', 400, 'read_failed'));
     reader.readAsDataURL(file);
@@ -58,7 +48,13 @@ function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }>
 }
 
 export async function scanPassportImage(file: File): Promise<PassportScanResponse> {
-  const { base64, mimeType } = await fileToBase64(file);
+  const check = validatePassportFile(file);
+  if (check.ok === false) {
+    throw new PassportScanError(check.code, 400, check.code);
+  }
+
+  const compressed = await compressPassportImage(file);
+  const { base64, mimeType } = await fileToBase64(compressed);
 
   const res = await fetch('/api/passport/scan', {
     method: 'POST',
@@ -76,7 +72,7 @@ export async function scanPassportImage(file: File): Promise<PassportScanRespons
     throw new PassportScanError(
       payload.error || 'Scan failed',
       res.status,
-      payload.error || 'scan_failed',
+      payload.error || (res.status === 413 ? 'payload_too_large' : res.status === 502 ? 'openai_request_failed' : 'scan_failed'),
       { missing: payload.missing, partial: payload.data }
     );
   }

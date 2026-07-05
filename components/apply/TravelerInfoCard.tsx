@@ -99,6 +99,22 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
             setScanMessage({ tone: 'warn', text: a.passportScanPartial });
             return;
           }
+          if (err.code === 'openai_request_failed') {
+            setScanMessage({ tone: 'error', text: a.passportScanOpenAiError });
+            return;
+          }
+          if (err.code === 'openai_not_configured') {
+            setScanMessage({ tone: 'error', text: a.passportScanNotConfigured });
+            return;
+          }
+          if (err.code === 'payload_too_large') {
+            setScanMessage({ tone: 'error', text: a.passportScanTooLarge });
+            return;
+          }
+          if (err.code === 'heic_not_supported') {
+            setScanMessage({ tone: 'error', text: a.passportScanHeic });
+            return;
+          }
         }
         setScanMessage({ tone: 'error', text: a.passportScanError });
       })

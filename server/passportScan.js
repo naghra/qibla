@@ -1,3 +1,5 @@
+import { ISO3_TO_ISO2, NAME_TO_ISO2 } from './passportCountries.js';
+
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg']);
 
@@ -79,8 +81,12 @@ function sendJson(res, status, data) {
 
 function normalizeCountryCode(value) {
   if (!value || typeof value !== 'string') return '';
-  const code = value.trim().toUpperCase();
-  if (/^[A-Z]{2}$/.test(code)) return code;
+  const raw = value.trim();
+  const upper = raw.toUpperCase();
+  if (/^[A-Z]{2}$/.test(upper)) return upper;
+  if (/^[A-Z]{3}$/.test(upper) && ISO3_TO_ISO2[upper]) return ISO3_TO_ISO2[upper];
+  const named = NAME_TO_ISO2[raw.toLowerCase()];
+  if (named) return named;
   return '';
 }
 
@@ -135,6 +141,17 @@ function mapExtracted(raw) {
     gender: normalizeGender(raw.gender),
     confidence: raw.confidence === 'high' || raw.confidence === 'medium' ? raw.confidence : 'low',
   };
+}
+
+function hasUsefulData(data) {
+  return Boolean(
+    data.firstName ||
+      data.lastName ||
+      data.passportNumber ||
+      data.dateOfBirth ||
+      data.passportExpiryDate ||
+      data.nationality
+  );
 }
 
 function validateResult(data) {
@@ -242,13 +259,13 @@ export async function handlePassportScanApi(req, res, urlPath) {
     const data = mapExtracted(raw);
     const missing = validateResult(data);
 
-    if (missing.length > 0 && data.confidence === 'low') {
-      sendJson(res, 422, { error: 'extraction_incomplete', missing, data });
-      return true;
-    }
-
     if (!data.passportCountry && data.nationality) {
       data.passportCountry = data.nationality;
+    }
+
+    if (!hasUsefulData(data)) {
+      sendJson(res, 422, { error: 'extraction_incomplete', missing, data });
+      return true;
     }
 
     sendJson(res, 200, { data, missing });

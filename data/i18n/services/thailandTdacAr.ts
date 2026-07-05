@@ -260,6 +260,9 @@ export const thailandTdacAr: Translations = {
     passportScanTooLarge: 'الصورة كبيرة جداً. استخدم صورة أقل من 5 ميجابايت.',
     passportScanInvalidType: 'ارفع صورة بصيغة JPG أو PNG أو WebP.',
     passportScanPartial: 'لم تُقرأ بعض الحقول. راجعها وأكملها يدوياً.',
+    passportScanOpenAiError: 'خطأ في خدمة الذكاء الاصطناعي. تحقق من مفتاح OpenAI في الإعدادات أو حاول مجدداً.',
+    passportScanNotConfigured: 'قراءة الجواز غير مفعّلة. أضف مفتاح OpenAI من لوحة التحكم → الإعدادات.',
+    passportScanHeic: 'صور HEIC غير مدعومة. غيّر إعداد الكاميرا إلى JPEG أو حوّل الصورة.',
   },
   glanceItems: [
     { icon: 'clock', title: 'وقت المعالجة', highlight: 'فوري', text: 'تُنشأ بطاقتك ورمز QR مباشرة بعد الإرسال.' },

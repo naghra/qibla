@@ -225,6 +225,9 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
       passportScanTooLarge: 'Image is too large. Please use a photo under 5 MB.',
       passportScanInvalidType: 'Please upload a JPG, PNG, or WebP photo.',
       passportScanPartial: 'Some fields could not be read. Please check and complete manually.',
+      passportScanOpenAiError: 'AI service error. Check your OpenAI key in admin settings or try again.',
+      passportScanNotConfigured: 'Passport scan is not configured. Add your OpenAI key in admin settings.',
+      passportScanHeic: 'HEIC photos are not supported. Change iPhone camera to «Most Compatible» (JPEG) or convert the photo.',
     };
   }
   return {
@@ -330,6 +333,9 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     passportScanTooLarge: 'الصورة كبيرة جداً. استخدم صورة أقل من 5 ميجابايت.',
     passportScanInvalidType: 'ارفع صورة بصيغة JPG أو PNG أو WebP.',
     passportScanPartial: 'لم تُقرأ بعض الحقول. راجعها وأكملها يدوياً.',
+    passportScanOpenAiError: 'خطأ في خدمة الذكاء الاصطناعي. تحقق من مفتاح OpenAI في الإعدادات أو حاول مجدداً.',
+    passportScanNotConfigured: 'قراءة الجواز غير مفعّلة. أضف مفتاح OpenAI من لوحة التحكم → الإعدادات.',
+    passportScanHeic: 'صور HEIC غير مدعومة. غيّر إعداد الكاميرا إلى JPEG أو حوّل الصورة.',
   };
 }
 

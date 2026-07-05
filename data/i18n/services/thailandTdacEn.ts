@@ -260,6 +260,9 @@ export const thailandTdacEn: Translations = {
     passportScanTooLarge: 'Image is too large. Please use a photo under 5 MB.',
     passportScanInvalidType: 'Please upload a JPG, PNG, or WebP photo.',
     passportScanPartial: 'Some fields could not be read. Please check and complete manually.',
+    passportScanOpenAiError: 'AI service error. Check your OpenAI key in admin settings or try again.',
+    passportScanNotConfigured: 'Passport scan is not configured. Add your OpenAI key in admin settings.',
+    passportScanHeic: 'HEIC photos are not supported. Change iPhone camera to «Most Compatible» (JPEG) or convert the photo.',
   },
   glanceItems: [
     { icon: 'clock', title: 'Processing time', highlight: 'Instant', text: 'Your TDAC and QR code are generated immediately after submission.' },
