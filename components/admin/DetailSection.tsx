@@ -1,5 +1,6 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { adminCard, adminIconBox } from './adminStyles';
 
 interface DetailSectionProps {
   title: string;
@@ -16,19 +17,17 @@ export const DetailSection: React.FC<DetailSectionProps> = ({
   className = '',
   action,
 }) => (
-  <section
-    className={`overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm ${className}`}
-  >
-    <div className="flex items-center justify-between gap-2 border-b border-gray-100 bg-gray-50/80 px-4 py-3 sm:px-5">
+  <section className={`${adminCard} overflow-hidden p-0 ${className}`}>
+    <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-gradient-to-l from-slate-50/80 to-white px-4 py-3 sm:px-5">
       <div className="flex min-w-0 items-center gap-2.5">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm ring-1 ring-gray-100">
+        <div className={adminIconBox('indigo')}>
           <Icon className="size-4" />
         </div>
-        <h2 className="truncate text-sm font-bold text-gray-900 sm:text-base">{title}</h2>
+        <h2 className="truncate text-sm font-bold text-slate-900 sm:text-base">{title}</h2>
       </div>
       {action}
     </div>
-    <div className="divide-y divide-gray-100 px-4 sm:px-5">{children}</div>
+    <div className="divide-y divide-slate-100 px-4 sm:px-5">{children}</div>
   </section>
 );
 
@@ -57,12 +56,12 @@ export const DetailField: React.FC<DetailFieldProps> = ({
 
   return (
     <div className="grid grid-cols-[minmax(5.5rem,32%)_1fr] items-start gap-x-4 gap-y-1 py-3.5 sm:items-center">
-      <dt className="text-xs font-medium text-gray-500 sm:text-sm">{label}</dt>
+      <dt className="text-xs font-medium text-slate-500 sm:text-sm">{label}</dt>
       <dd className="flex min-w-0 items-center gap-2">
         <span
-          className={`break-all text-sm font-semibold text-gray-900 ${
+          className={`break-all text-sm font-semibold text-slate-900 ${
             mono ? 'font-mono text-[13px] font-medium tracking-tight' : ''
-          } ${empty ? 'font-normal text-gray-400' : ''}`}
+          } ${empty ? 'font-normal text-slate-400' : ''}`}
           dir={mono ? 'ltr' : undefined}
         >
           {value}
@@ -71,7 +70,7 @@ export const DetailField: React.FC<DetailFieldProps> = ({
           <button
             type="button"
             onClick={handleCopy}
-            className="shrink-0 rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-blue-600"
+            className="shrink-0 rounded-lg p-1.5 text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600"
             title="نسخ"
           >
             {copied ? (

@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Trash2, Eye, Download, FileText, CheckSquare } from 'lucide-react';
 import { ApplicationListCard } from '../../components/admin/ApplicationListCard';
+import { AdminLoading } from '../../components/admin/AdminLoading';
 import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
+import { adminBtnPrimary, adminBtnSecondary, adminCard, adminInput } from '../../components/admin/adminStyles';
 import { EmptyState } from '../../components/admin/EmptyState';
 import { Pagination, paginate, totalPages } from '../../components/admin/Pagination';
 import { QuickStatusSelect } from '../../components/admin/QuickStatusSelect';
@@ -121,9 +123,9 @@ export const AdminApplicationsPage: React.FC = () => {
   const formatDate = (iso: string) => formatAdminDate(iso);
 
   return (
-    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
+    <div className="w-full max-w-full p-4 sm:p-6 lg:p-8">
       {loading ? (
-        <div className="py-12 text-center text-gray-500">جاري التحميل...</div>
+        <AdminLoading />
       ) : (
         <>
       <AdminPageHeader
@@ -131,11 +133,7 @@ export const AdminApplicationsPage: React.FC = () => {
         subtitle={adminLabels.applications.subtitle}
         icon={FileText}
         actions={
-          <button
-            type="button"
-            onClick={handleExport}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto"
-          >
+          <button type="button" onClick={handleExport} className={`${adminBtnSecondary} w-full sm:w-auto`}>
             <Download className="size-4" />
             {adminLabels.applications.exportFiltered}
           </button>
@@ -153,7 +151,7 @@ export const AdminApplicationsPage: React.FC = () => {
               setPage(1);
             }}
             placeholder={adminLabels.applications.search}
-            className="w-full rounded-xl border border-gray-200 bg-white py-2.5 ps-10 pe-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className={`${adminInput} ps-10`}
           />
         </div>
 
@@ -164,7 +162,7 @@ export const AdminApplicationsPage: React.FC = () => {
               setStatusFilter(e.target.value as ApplicationStatus | 'all');
               setPage(1);
             }}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
+            className={adminInput}
           >
             <option value="all">{adminLabels.applications.filterAll}</option>
             {(Object.keys(adminLabels.status) as ApplicationStatus[]).map((s) => (
@@ -174,7 +172,7 @@ export const AdminApplicationsPage: React.FC = () => {
           <select
             value={destFilter}
             onChange={(e) => { setDestFilter(e.target.value); setPage(1); }}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
+            className={adminInput}
           >
             <option value="all">{adminLabels.applications.filterDestination}</option>
             {destinations.map((d) => (
@@ -184,7 +182,7 @@ export const AdminApplicationsPage: React.FC = () => {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as ApplicationSortField)}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
+            className={adminInput}
           >
             <option value="date">{adminLabels.applications.sortDate}</option>
             <option value="amount">{adminLabels.applications.sortAmount}</option>
@@ -201,14 +199,10 @@ export const AdminApplicationsPage: React.FC = () => {
       </div>
 
       {selected.size > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-blue-100 bg-blue-50 p-3">
-          <CheckSquare className="size-4 text-blue-600" />
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-indigo-100 bg-gradient-to-l from-indigo-50 to-violet-50 p-3 ring-1 ring-indigo-100/60">
+          <CheckSquare className="size-4 text-indigo-600" />
           <QuickStatusSelect value={bulkStatus} onChange={setBulkStatus} size="sm" />
-          <button
-            type="button"
-            onClick={handleBulkApply}
-            className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700"
-          >
+          <button type="button" onClick={handleBulkApply} className={adminBtnPrimary}>
             {adminLabels.applications.bulkApply}
           </button>
         </div>
@@ -247,11 +241,11 @@ export const AdminApplicationsPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="admin-table-wrap mb-4 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          <div className={`admin-table-wrap mb-4 overflow-hidden ${adminCard} p-0`}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50 text-start text-gray-500">
+                  <tr className="border-b border-slate-100 bg-slate-50/80 text-start text-slate-500">
                     <th className="px-4 py-3">
                       <input
                         type="checkbox"

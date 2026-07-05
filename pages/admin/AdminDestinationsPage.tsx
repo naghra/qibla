@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Globe, ExternalLink, Search } from 'lucide-react';
 import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
 import { StatCard } from '../../components/admin/StatCard';
+import { adminCard, adminInput } from '../../components/admin/adminStyles';
 import { adminLabels } from '../../data/adminLabels';
 import { destinations } from '../../data/destinations';
 
@@ -27,7 +28,7 @@ export const AdminDestinationsPage: React.FC = () => {
   }, [search]);
 
   return (
-    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
+    <div className="w-full max-w-full p-4 sm:p-6 lg:p-8">
       <AdminPageHeader
         title={adminLabels.destinations.title}
         subtitle={adminLabels.destinations.subtitle}
@@ -46,17 +47,14 @@ export const AdminDestinationsPage: React.FC = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={adminLabels.destinations.search}
-          className="w-full rounded-xl border border-gray-200 bg-white py-2.5 ps-10 pe-4 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          className={`${adminInput} ps-10`}
         />
       </div>
 
       <div className="admin-cards-wrap space-y-3">
         {filtered.map((dest) =>
           dest.services.map((service) => (
-            <article
-              key={`${dest.slug}-${service.slug}`}
-              className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
-            >
+            <article key={`${dest.slug}-${service.slug}`} className={`${adminCard} admin-card-hover`}>
               <div className="mb-2 flex items-start justify-between gap-2">
                 <div>
                   <p className="font-bold text-gray-900">{dest.name.ar}</p>
@@ -66,7 +64,7 @@ export const AdminDestinationsPage: React.FC = () => {
                   {dest.countryCode}
                 </span>
               </div>
-              <p className="mb-3 text-sm font-medium text-blue-600">{service.shortName.ar}</p>
+              <p className="mb-3 text-sm font-semibold text-indigo-600">{service.shortName.ar}</p>
               <dl className="mb-3 grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <dt className="text-gray-400">{adminLabels.destinations.slug}</dt>
@@ -81,7 +79,7 @@ export const AdminDestinationsPage: React.FC = () => {
                 href={`/en/${dest.slug}/${service.slug}/`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-lg bg-blue-50 py-2 text-sm font-medium text-blue-700"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-l from-indigo-50 to-violet-50 py-2.5 text-sm font-semibold text-indigo-700 ring-1 ring-indigo-100/60 transition hover:from-indigo-100 hover:to-violet-100"
               >
                 <ExternalLink className="size-4" />
                 {adminLabels.destinations.viewSite}
@@ -91,11 +89,11 @@ export const AdminDestinationsPage: React.FC = () => {
         )}
       </div>
 
-      <div className="admin-table-wrap overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+      <div className={`admin-table-wrap overflow-hidden ${adminCard} p-0`}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-start text-gray-500">
+              <tr className="border-b border-slate-100 bg-slate-50/80 text-start text-slate-500">
                 <th className="px-4 py-3 font-medium">{adminLabels.destinations.country}</th>
                 <th className="px-4 py-3 font-medium">{adminLabels.destinations.code}</th>
                 <th className="px-4 py-3 font-medium">{adminLabels.destinations.services}</th>
@@ -109,7 +107,7 @@ export const AdminDestinationsPage: React.FC = () => {
                 dest.services.map((service, idx) => (
                   <tr
                     key={`${dest.slug}-${service.slug}`}
-                    className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50"
+                    className="admin-table-row border-b border-slate-50 transition last:border-0"
                   >
                     {idx === 0 ? (
                       <>
@@ -137,7 +135,7 @@ export const AdminDestinationsPage: React.FC = () => {
                         href={`/en/${dest.slug}/${service.slug}/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-blue-600 hover:underline"
+                        className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
                       >
                         <ExternalLink className="size-3.5" />
                         {adminLabels.destinations.viewSite}

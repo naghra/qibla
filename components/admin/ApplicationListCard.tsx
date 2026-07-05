@@ -37,7 +37,11 @@ export const ApplicationListCard: React.FC<ApplicationListCardProps> = ({
   };
 
   return (
-    <article className={`w-full max-w-full rounded-xl border bg-white p-4 shadow-sm transition ${selected ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100'}`}>
+    <article
+      className={`admin-card w-full max-w-full rounded-xl border bg-white/90 p-4 shadow-sm backdrop-blur-sm transition ${
+        selected ? 'border-indigo-300 ring-2 ring-indigo-100' : 'border-slate-100/80 hover:border-indigo-100 hover:shadow-md'
+      }`}
+    >
       <div className="mb-3 flex items-start gap-3">
         {selectable && (
           <input
