@@ -14,6 +14,7 @@ import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminApplicationsPage } from './pages/admin/AdminApplicationsPage';
 import { AdminApplicationDetailPage } from './pages/admin/AdminApplicationDetailPage';
 import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
+import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { LegalPageRoute } from './pages/LegalPageRoute';
 import { SuccessPreviewPage } from './pages/SuccessPreviewPage';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               <Route path="applications" element={<AdminApplicationsPage />} />
               <Route path="applications/:id" element={<AdminApplicationDetailPage />} />
               <Route path="destinations" element={<AdminDestinationsPage />} />
+              <Route path="settings" element={<AdminSettingsPage />} />
             </Route>
           </Route>
 

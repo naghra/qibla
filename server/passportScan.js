@@ -149,14 +149,15 @@ function validateResult(data) {
 }
 
 async function callOpenAiVision(base64, mimeType) {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const { getOpenAiCredentials } = await import('./settings.js');
+  const { apiKey, visionModel } = await getOpenAiCredentials();
   if (!apiKey) {
     const err = new Error('openai_not_configured');
     err.code = 'openai_not_configured';
     throw err;
   }
 
-  const model = process.env.OPENAI_VISION_MODEL?.trim() || 'gpt-4o';
+  const model = visionModel || 'gpt-4o';
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',

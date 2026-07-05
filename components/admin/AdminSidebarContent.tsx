@@ -7,6 +7,7 @@ import {
   LogOut,
   ExternalLink,
   X,
+  Settings,
 } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { adminLabels } from '../../data/adminLabels';
@@ -16,6 +17,7 @@ const navItems = [
   { to: '/admin', end: true, label: adminLabels.nav.dashboard, icon: LayoutDashboard },
   { to: '/admin/applications', end: false, label: adminLabels.nav.applications, icon: FileText, showBadge: true },
   { to: '/admin/destinations', end: false, label: adminLabels.nav.destinations, icon: Globe },
+  { to: '/admin/settings', end: false, label: adminLabels.nav.settings, icon: Settings },
 ];
 
 interface AdminSidebarContentProps {

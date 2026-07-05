@@ -7,6 +7,7 @@ import { initDatabase } from './db.js';
 import { handleApplicationsApi } from './applications.js';
 import { handlePaymentsApi, handleStripeWebhook, readRawBody } from './payments.js';
 import { handlePassportScanApi } from './passportScan.js';
+import { handleAdminSettingsApi } from './settings.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../dist');
@@ -102,6 +103,11 @@ async function handleRequest(req, res) {
 
     if (urlPath.startsWith('/api/passport')) {
       const handled = await handlePassportScanApi(req, res, urlPath);
+      if (handled) return;
+    }
+
+    if (urlPath.startsWith('/api/admin')) {
+      const handled = await handleAdminSettingsApi(req, res, urlPath);
       if (handled) return;
     }
 

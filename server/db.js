@@ -44,6 +44,12 @@ export async function initDatabase() {
       CREATE INDEX IF NOT EXISTS idx_applications_created_at ON applications(created_at DESC);
       CREATE INDEX IF NOT EXISTS idx_applications_destination ON applications(destination_slug);
       CREATE INDEX IF NOT EXISTS idx_applications_stripe_session ON applications(stripe_checkout_session_id);
+
+      CREATE TABLE IF NOT EXISTS site_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
     `);
 
     await client.query(`
@@ -203,4 +209,21 @@ export async function updateApplicationStatus(id, status, adminNotes) {
 export async function deleteApplicationById(id) {
   const { rowCount } = await getPool().query('DELETE FROM applications WHERE id = $1', [id]);
   return rowCount > 0;
+}
+
+export async function getSiteSetting(key) {
+  const { rows } = await getPool().query('SELECT value FROM site_settings WHERE key = $1', [key]);
+  return rows[0]?.value ?? null;
+}
+
+export async function setSiteSetting(key, value) {
+  await getPool().query(
+    `INSERT INTO site_settings (key, value, updated_at) VALUES ($1, $2, NOW())
+     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,
+    [key, value]
+  );
+}
+
+export async function deleteSiteSetting(key) {
+  await getPool().query('DELETE FROM site_settings WHERE key = $1', [key]);
 }

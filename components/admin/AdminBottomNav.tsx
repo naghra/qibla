@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, FileText, Globe } from 'lucide-react';
+import { LayoutDashboard, FileText, Globe, Settings } from 'lucide-react';
 import { adminLabels } from '../../data/adminLabels';
 import { usePendingCount } from '../../hooks/usePendingCount';
 
@@ -8,6 +8,7 @@ const items = [
   { to: '/admin', end: true, label: adminLabels.nav.dashboard, icon: LayoutDashboard },
   { to: '/admin/applications', end: false, label: adminLabels.nav.applications, icon: FileText, badge: true },
   { to: '/admin/destinations', end: false, label: adminLabels.nav.destinations, icon: Globe },
+  { to: '/admin/settings', end: false, label: adminLabels.nav.settings, icon: Settings },
 ];
 
 export const AdminBottomNav: React.FC = () => {
