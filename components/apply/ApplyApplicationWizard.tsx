@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, ChevronLeft, ChevronRight, Plane } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, Loader2, Plane } from 'lucide-react';
 import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
 import { YourInfoStep } from './YourInfoStep';
 import { ResumeStep } from './ResumeStep';
+import { ApplySuccessScreen } from './ApplySuccessScreen';
 import { getDialPrefix } from './PhoneCountrySelect';
 import { travelerDateParts } from './TravelerInfoCard';
 import { applyBtnPrevious, applyBtnPrimary } from './applyStyles';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
+import { CheckoutError, createCheckoutSession, verifyCheckoutSession } from '../../services/paymentService';
 import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
@@ -76,18 +79,25 @@ function createTravelerBundle(lang: string) {
 interface ApplyApplicationWizardProps {
   initialPlan?: PlanId;
   onComplete?: () => void;
+  onSubmitted?: (submitted: boolean) => void;
 }
 
 export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   initialPlan = 'standard',
   onComplete,
+  onSubmitted,
 }) => {
   const { t, lang, dir, destination, service } = useLanguage();
   const a = t.apply;
   const plans = t.pricing.plans;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [step, setStep] = useState(0);
   const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [paymentCancelled, setPaymentCancelled] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [arrival, setArrival] = useState<DateParts>(() => defaultDateParts(7));
   const [departure, setDeparture] = useState<DateParts>(() => defaultDateParts(14));
   const [email, setEmail] = useState('');
@@ -121,6 +131,41 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [step]);
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (sessionId) {
+      setVerifying(true);
+      setPaymentError(null);
+      void verifyCheckoutSession(sessionId)
+        .then((result) => {
+          if (result.paid && result.application) {
+            const primary = result.application.data.travelers[0];
+            setSubmittedId(result.application.id);
+            if (primary?.email) setEmail(primary.email);
+            setStep(3);
+            onSubmitted?.(true);
+          } else {
+            setPaymentError(a.paymentPending);
+          }
+        })
+        .catch(() => setPaymentError(a.paymentError))
+        .finally(() => {
+          setVerifying(false);
+          const next = new URLSearchParams(searchParams);
+          next.delete('session_id');
+          setSearchParams(next, { replace: true });
+        });
+      return;
+    }
+
+    if (searchParams.get('payment_cancelled') === '1') {
+      setPaymentCancelled(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete('payment_cancelled');
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams, a.paymentError, a.paymentPending, onSubmitted]);
 
   const PrevChevron = dir === 'rtl' ? ChevronRight : ChevronLeft;
   const NextChevron = dir === 'rtl' ? ChevronLeft : ChevronRight;
@@ -203,23 +248,47 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
     setData(synced);
 
     if (step === 2) {
+      if (!destination || !service) return;
+
       const plan = plans.find((p) => p.id === synced.plan)!;
       const amount = (plan.price + plan.priorityFee) * synced.travelers.length;
-      if (destination && service) {
-        const record = saveApplication({
-          lang,
-          destinationSlug: destination.slug,
-          destinationName: destination.name[lang],
-          serviceSlug: service.slug,
-          serviceName: service.shortName[lang],
-          planId: synced.plan,
-          planName: plan.name,
-          totalAmount: amount,
-          data: synced,
-        });
-        setSubmittedId(record.id);
-      }
-      setStep(3);
+      const input = {
+        lang,
+        destinationSlug: destination.slug,
+        destinationName: destination.name[lang],
+        serviceSlug: service.slug,
+        serviceName: service.shortName[lang],
+        planId: synced.plan,
+        planName: plan.name,
+        totalAmount: amount,
+        data: synced,
+      };
+
+      setSubmitting(true);
+      setPaymentError(null);
+      setPaymentCancelled(false);
+
+      void createCheckoutSession(input)
+        .then((session) => {
+          window.location.href = session.url;
+        })
+        .catch(async (err: unknown) => {
+          const isStripeMissing =
+            err instanceof CheckoutError &&
+            err.status === 503 &&
+            err.code === 'stripe_not_configured';
+
+          if (isStripeMissing && !import.meta.env.PROD) {
+            const record = await saveApplication(input);
+            setSubmittedId(record.id);
+            onSubmitted?.(true);
+            setStep(3);
+            return;
+          }
+
+          setPaymentError(err instanceof Error ? err.message : a.paymentError);
+        })
+        .finally(() => setSubmitting(false));
       return;
     }
 
@@ -233,6 +302,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   };
 
   const handleDone = () => {
+    onSubmitted?.(false);
     setStep(0);
     setSubmittedId(null);
     setEmail('');
@@ -250,33 +320,47 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
 
   const formSteps = a.formSteps;
 
+  if (verifying) {
+    return (
+      <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 py-16 text-center">
+        <Loader2 className="size-10 animate-spin text-blue-500" />
+        <p className="text-sm font-medium text-gray-600">{a.paymentVerifying}</p>
+      </div>
+    );
+  }
+
   if (step === 3) {
     return (
-      <div className="fade-in py-10 text-center">
-        <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle className="size-10 text-green-600" />
-        </div>
-        <h3 className="mb-3 text-2xl font-bold text-gray-900">{a.successTitle}</h3>
-        {submittedId && (
-          <p className="mb-4 rounded-lg bg-gray-50 px-4 py-2 font-mono text-sm text-gray-700" dir="ltr">
-            {lang === 'en' ? 'Reference' : 'رقم الطلب'}: {submittedId}
-          </p>
-        )}
-        <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0]?.firstName ?? '')}</p>
-        <p className="mb-6 font-bold text-blue-600" dir="ltr">{email}</p>
-        <button
-          type="button"
-          onClick={handleDone}
-          className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold text-white hover:bg-gray-800"
-        >
-          {a.backToHome}
-        </button>
-      </div>
+      <ApplySuccessScreen
+        submittedId={submittedId}
+        applicantName={`${data.travelers[0]?.firstName ?? ''} ${data.travelers[0]?.lastName ?? ''}`.trim()}
+        email={email}
+        destinationName={destination?.name[lang] ?? destinationLabel}
+        serviceName={service?.shortName[lang] ?? destinationLabel}
+        planName={selectedPlan.name}
+        travelerCount={data.travelers.length}
+        total={total}
+        estimatedAt={estimatedAt}
+        onDone={handleDone}
+      />
     );
   }
 
   return (
     <div data-apply-form-inner className="mb-0 flex flex-col items-start gap-8">
+      {(paymentCancelled || paymentError) && (
+        <div
+          className={`w-full rounded-2xl border px-4 py-3 text-sm ${
+            paymentError
+              ? 'border-red-200 bg-red-50 text-red-800'
+              : 'border-amber-200 bg-amber-50 text-amber-900'
+          }`}
+          role="alert"
+        >
+          {paymentError ?? a.paymentCancelled}
+        </div>
+      )}
+
       <div className="w-full">
         <ApplyStepper steps={formSteps} current={step} />
       </div>
@@ -348,14 +432,21 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
         <button
           type="button"
           onClick={handleContinue}
-          disabled={!canProceed()}
+          disabled={!canProceed() || submitting}
           className={applyBtnPrimary}
         >
           {step === 2 ? (
-            <>
-              {a.submit}
-              <Plane className="size-5" />
-            </>
+            submitting ? (
+              <>
+                <Loader2 className="size-5 animate-spin" />
+                {a.paymentProcessing}
+              </>
+            ) : (
+              <>
+                {a.submit}
+                <Plane className="size-5" />
+              </>
+            )
           ) : (
             <>
               {a.saveAndContinue}

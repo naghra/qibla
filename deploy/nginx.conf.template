@@ -1,0 +1,22 @@
+# Qibla static site — independent from codform.shop
+# Installed to: /etc/nginx/sites-available/qibla-standalone.conf
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __QIBLA_DOMAIN__ www.__QIBLA_DOMAIN__;
+
+    root /var/www/qibla;
+    index index.html;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+}

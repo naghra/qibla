@@ -142,9 +142,12 @@ export interface Translations {
   };
   footer: {
     description: string;
+    companyInfoTitle: string;
+    companyName: string;
+    companyAddress: string;
     quickLinks: string;
     legal: string;
-    legalLinks: { label: string; href: string }[];
+    legalLinks: { label: string; slug: string }[];
     paymentMethodsTitle: string;
     paymentSslNote: string;
     paymentPciNote: string;
@@ -251,6 +254,11 @@ export interface Translations {
     next: string;
     submit: string;
     backToHome: string;
+    paymentProcessing: string;
+    paymentVerifying: string;
+    paymentCancelled: string;
+    paymentError: string;
+    paymentPending: string;
   };
   glanceItems: GlanceItem[];
   requirements: string[];

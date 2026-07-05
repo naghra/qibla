@@ -111,6 +111,7 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
             yearLabel={a.year}
             monthLabel={a.month}
             dayLabel={a.day}
+            yearRange="birth"
           />
 
           <GenderRadioGroup
@@ -164,6 +165,7 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
             yearLabel={a.year}
             monthLabel={a.month}
             dayLabel={a.day}
+            yearRange="passportIssue"
           />
 
           <DateDropdownGroup
@@ -177,6 +179,7 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
             yearLabel={a.year}
             monthLabel={a.month}
             dayLabel={a.day}
+            yearRange="passportExpiry"
           />
 
           {!isPrimary && onRemove && (

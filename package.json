@@ -5,15 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "build": "vite build && node scripts/postbuild.mjs",
+    "preview": "vite preview --host 0.0.0.0",
+    "start": "node server/index.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
     "lucide-react": "^0.556.0",
+    "pg": "^8.16.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^6.30.4",
+    "stripe": "^22.3.0",
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {

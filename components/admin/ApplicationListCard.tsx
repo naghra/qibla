@@ -107,6 +107,12 @@ export const ApplicationListCard: React.FC<ApplicationListCardProps> = ({
           <dd className="font-bold text-gray-900" dir="ltr">${app.totalAmount}</dd>
         </div>
         <div>
+          <dt className="text-gray-400">{adminLabels.payment.status}</dt>
+          <dd className={`font-medium ${app.paymentStatus === 'paid' ? 'text-emerald-700' : 'text-amber-700'}`}>
+            {app.paymentStatus === 'paid' ? adminLabels.payment.paid : adminLabels.payment.unpaid}
+          </dd>
+        </div>
+        <div>
           <dt className="text-gray-400">{adminLabels.applications.date}</dt>
           <dd className="text-gray-600">{formatDate(app.createdAt)}</dd>
         </div>
