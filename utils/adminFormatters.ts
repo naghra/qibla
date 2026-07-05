@@ -29,11 +29,11 @@ export function formatAdminDate(iso: string | undefined, withTime = false): stri
   if (!iso?.trim()) return 'غير متوفر';
   const d = new Date(iso.includes('T') ? iso : `${iso}T12:00:00`);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('ar-EG', {
+  return d.toLocaleString('ar-u-nu-latn', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    ...(withTime ? { hour: '2-digit', minute: '2-digit' } : {}),
+    ...(withTime ? { hour: '2-digit', minute: '2-digit', hour12: false } : {}),
   });
 }
 

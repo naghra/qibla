@@ -296,7 +296,7 @@ export const AdminApplicationDetailPage: React.FC = () => {
             </div>
           </DetailSection>
 
-          <DetailSection title={adminLabels.detail.status} icon={Calendar} className="lg:sticky lg:top-24">
+          <DetailSection title={adminLabels.detail.status} icon={Calendar}>
             <label className="mb-1.5 block text-xs font-medium text-gray-500">{adminLabels.applications.status}</label>
             <select
               value={status}

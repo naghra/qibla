@@ -118,7 +118,7 @@ export const AdminApplicationsPage: React.FC = () => {
   };
 
   const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(iso).toLocaleString('ar-u-nu-latn', { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
     <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
