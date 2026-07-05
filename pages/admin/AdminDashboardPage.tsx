@@ -27,33 +27,42 @@ import {
   seedDemoApplicationsIfEmpty,
 } from '../../services/applicationStore';
 import type { ApplicationStatus, StoredApplication } from '../../types/admin';
+import { formatAdminDate } from '../../utils/adminFormatters';
 
 export const AdminDashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState(getDashboardStats());
+  const [stats, setStats] = useState<Awaited<ReturnType<typeof getDashboardStats>> | null>(null);
   const [recent, setRecent] = useState<StoredApplication[]>([]);
-  const [daily, setDaily] = useState(getDailyCounts());
-  const [destinations, setDestinations] = useState(getTopDestinations());
+  const [daily, setDaily] = useState<Awaited<ReturnType<typeof getDailyCounts>>>([]);
+  const [destinations, setDestinations] = useState<Awaited<ReturnType<typeof getTopDestinations>>>([]);
 
   useEffect(() => {
-    seedDemoApplicationsIfEmpty();
-    setStats(getDashboardStats());
-    setRecent(getApplications().slice(0, 6));
-    setDaily(getDailyCounts());
-    setDestinations(getTopDestinations());
+    void (async () => {
+      await seedDemoApplicationsIfEmpty();
+      const [s, apps, d, dest] = await Promise.all([
+        getDashboardStats(),
+        getApplications(),
+        getDailyCounts(),
+        getTopDestinations(),
+      ]);
+      setStats(s);
+      setRecent(apps.slice(0, 6));
+      setDaily(d);
+      setDestinations(dest);
+    })();
   }, []);
 
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString('ar-EG', {
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const formatDate = (iso: string) => formatAdminDate(iso, true);
 
   const handleExport = () => {
-    downloadCsv(`qibla-applications-${Date.now()}.csv`, exportApplicationsCsv(getApplications()));
+    void getApplications().then((apps) => {
+      downloadCsv(`qibla-applications-${Date.now()}.csv`, exportApplicationsCsv(apps));
+    });
   };
+
+  if (!stats) {
+    return <div className="p-8 text-center text-gray-500">جاري التحميل...</div>;
+  }
 
   const statusData: Record<ApplicationStatus, number> = {
     pending: stats.pending,

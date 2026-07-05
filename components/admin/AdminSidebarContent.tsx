@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { adminLabels } from '../../data/adminLabels';
-import { getPendingCount } from '../../services/applicationStore';
+import { usePendingCount } from '../../hooks/usePendingCount';
 
 const navItems = [
   { to: '/admin', end: true, label: adminLabels.nav.dashboard, icon: LayoutDashboard },
@@ -33,7 +33,7 @@ export const AdminSidebarContent: React.FC<AdminSidebarContentProps> = ({
 }) => {
   const { logout } = useAdminAuth();
   const navigate = useNavigate();
-  const pending = getPendingCount();
+  const pending = usePendingCount();
   const dark = variant === 'dark';
 
   const handleNav = () => onNavigate?.();

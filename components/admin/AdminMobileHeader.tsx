@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { adminLabels } from '../../data/adminLabels';
-import { getPendingCount } from '../../services/applicationStore';
+import { usePendingCount } from '../../hooks/usePendingCount';
 
 interface AdminMobileHeaderProps {
   onMenuClick: () => void;
@@ -14,7 +14,7 @@ export const AdminMobileHeader: React.FC<AdminMobileHeaderProps> = ({
   title,
 }) => {
   const navigate = useNavigate();
-  const pending = getPendingCount();
+  const pending = usePendingCount();
 
   return (
     <header className="admin-mobile-bar sticky top-0 z-30 flex items-center gap-2 border-b border-gray-200 bg-white px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 md:hidden">
