@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ApplicationWizard } from './ApplicationWizard';
 import { ApplyApplicationWizard } from './apply/ApplyApplicationWizard';
 import { ApplyFormHeader } from './apply/ApplyFormHeader';
@@ -14,6 +14,7 @@ interface ApplyPageProps {
 export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => {
   const { t, lang, destination, service } = useLanguage();
   const { apply: a } = t;
+  const [submitted, setSubmitted] = useState(false);
 
   if (destination && service) {
     return (
@@ -26,12 +27,18 @@ export const ApplyPage: React.FC<ApplyPageProps> = ({ initialPlan, onBack }) => 
 
         <main className="w-full">
           <div className="container mx-auto flex-1 space-y-8 px-4 pb-24 pt-4">
-            <h1 className="text-2xl font-bold sm:text-4xl">
-              <strong className="block font-bold text-blue-500">{a.applyHeaderTitle}</strong>
-              {a.applyOnlineNow}
-            </h1>
+            {!submitted && (
+              <h1 className="text-2xl font-bold sm:text-4xl">
+                <strong className="block font-bold text-blue-500">{a.applyHeaderTitle}</strong>
+                {a.applyOnlineNow}
+              </h1>
+            )}
 
-            <ApplyApplicationWizard initialPlan={initialPlan} onComplete={onBack} />
+            <ApplyApplicationWizard
+              initialPlan={initialPlan}
+              onComplete={onBack}
+              onSubmitted={setSubmitted}
+            />
           </div>
         </main>
 

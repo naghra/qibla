@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, ChevronLeft, ChevronRight, Plane } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plane } from 'lucide-react';
 import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
 import { YourInfoStep } from './YourInfoStep';
 import { ResumeStep } from './ResumeStep';
+import { ApplySuccessScreen } from './ApplySuccessScreen';
 import { getDialPrefix } from './PhoneCountrySelect';
 import { travelerDateParts } from './TravelerInfoCard';
 import { applyBtnPrevious, applyBtnPrimary } from './applyStyles';
@@ -76,11 +77,13 @@ function createTravelerBundle(lang: string) {
 interface ApplyApplicationWizardProps {
   initialPlan?: PlanId;
   onComplete?: () => void;
+  onSubmitted?: (submitted: boolean) => void;
 }
 
 export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   initialPlan = 'standard',
   onComplete,
+  onSubmitted,
 }) => {
   const { t, lang, dir, destination, service } = useLanguage();
   const a = t.apply;
@@ -206,7 +209,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       const plan = plans.find((p) => p.id === synced.plan)!;
       const amount = (plan.price + plan.priorityFee) * synced.travelers.length;
       if (destination && service) {
-        const record = saveApplication({
+        void saveApplication({
           lang,
           destinationSlug: destination.slug,
           destinationName: destination.name[lang],
@@ -216,9 +219,9 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
           planName: plan.name,
           totalAmount: amount,
           data: synced,
-        });
-        setSubmittedId(record.id);
+        }).then((record) => setSubmittedId(record.id));
       }
+      onSubmitted?.(true);
       setStep(3);
       return;
     }
@@ -233,6 +236,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   };
 
   const handleDone = () => {
+    onSubmitted?.(false);
     setStep(0);
     setSubmittedId(null);
     setEmail('');
@@ -252,26 +256,18 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
 
   if (step === 3) {
     return (
-      <div className="fade-in py-10 text-center">
-        <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle className="size-10 text-green-600" />
-        </div>
-        <h3 className="mb-3 text-2xl font-bold text-gray-900">{a.successTitle}</h3>
-        {submittedId && (
-          <p className="mb-4 rounded-lg bg-gray-50 px-4 py-2 font-mono text-sm text-gray-700" dir="ltr">
-            {lang === 'en' ? 'Reference' : 'رقم الطلب'}: {submittedId}
-          </p>
-        )}
-        <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0]?.firstName ?? '')}</p>
-        <p className="mb-6 font-bold text-blue-600" dir="ltr">{email}</p>
-        <button
-          type="button"
-          onClick={handleDone}
-          className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold text-white hover:bg-gray-800"
-        >
-          {a.backToHome}
-        </button>
-      </div>
+      <ApplySuccessScreen
+        submittedId={submittedId}
+        applicantName={`${data.travelers[0]?.firstName ?? ''} ${data.travelers[0]?.lastName ?? ''}`.trim()}
+        email={email}
+        destinationName={destination?.name[lang] ?? destinationLabel}
+        serviceName={service?.shortName[lang] ?? destinationLabel}
+        planName={selectedPlan.name}
+        travelerCount={data.travelers.length}
+        total={total}
+        estimatedAt={estimatedAt}
+        onDone={handleDone}
+      />
     );
   }
 
