@@ -1,8 +1,8 @@
 import { Translations } from '../types';
 
 export const thailandTdacAr: Translations = {
-  siteName: 'سفر ذكي سفر سريع',
-  metaTitle: 'بطاقة الوصول الرقمية التايلاندية TDAC — سفر ذكي سفر سريع',
+  siteName: 'DacGateway',
+  metaTitle: 'بطاقة الوصول الرقمية التايلاندية TDAC — DacGateway',
   metaDescription: 'تقديم بطاقة الوصول الرقمية التايلاندية TDAC عبر الإنترنت — معالجة سريعة ودعم خبير على مدار الساعة',
   nav: {
     howToApply: 'كيفية التقديم',

@@ -1,6 +1,6 @@
 /** Arabic labels for admin panel UI */
 export const adminLabels = {
-  siteName: 'Qibla Admin',
+  siteName: 'DacGateway Admin',
   siteTagline: 'إدارة الطلبات والوجهات',
   login: {
     title: 'تسجيل الدخول',
@@ -93,6 +93,7 @@ export const adminLabels = {
     travelDetails: 'تفاصيل السفر',
     orderSummary: 'ملخص الطلب',
     primaryTraveler: 'مسافر',
+    applicant: 'المتقدّم',
     email: 'البريد',
     phone: 'الهاتف',
     passport: 'جواز السفر',
