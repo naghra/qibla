@@ -1,0 +1,15 @@
+[Unit]
+Description=DAC Gateway API (Node + PostgreSQL)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/dacgateway
+EnvironmentFile=/etc/dacgateway.env
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
