@@ -3,7 +3,8 @@ import { Plus } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { Lang } from '../../data/i18n/types';
 import type { TravelerData } from '../../types';
-import { TravelerInfoCard, travelerDateParts, applyPassportData } from './TravelerInfoCard';
+import { TravelerInfoCard, travelerDateParts } from './TravelerInfoCard';
+import type { PassportScanData } from '../../services/passportScanService';
 import { applyBtnAddTraveler, applySection } from './applyStyles';
 import { DateParts, datePartsToIso } from '../../utils/dateParts';
 
@@ -20,6 +21,7 @@ interface YourInfoStepProps {
   onDobChange: (index: number, parts: DateParts) => void;
   onIssueChange: (index: number, parts: DateParts) => void;
   onExpiryChange: (index: number, parts: DateParts) => void;
+  onPassportExtracted: (index: number, data: PassportScanData) => void;
 }
 
 export const YourInfoStep: React.FC<YourInfoStepProps> = ({
@@ -35,6 +37,7 @@ export const YourInfoStep: React.FC<YourInfoStepProps> = ({
   onDobChange,
   onIssueChange,
   onExpiryChange,
+  onPassportExtracted,
 }) => (
   <div className={`${applySection} w-full space-y-4`}>
     {travelers.map((traveler, index) => (
@@ -52,9 +55,7 @@ export const YourInfoStep: React.FC<YourInfoStepProps> = ({
         }}
         onIssueChange={(parts) => onIssueChange(index, parts)}
         onExpiryChange={(parts) => onExpiryChange(index, parts)}
-        onPassportExtracted={(data) =>
-          applyPassportData(data, onUpdateTraveler, onDobChange, onIssueChange, onExpiryChange, index)
-        }
+        onPassportExtracted={(data) => onPassportExtracted(index, data)}
         dob={dobParts[index] ?? travelerDateParts(traveler, 'dateOfBirth')}
         issue={issueParts[index] ?? travelerDateParts(traveler, 'passportIssueDate')}
         expiry={expiryParts[index] ?? travelerDateParts(traveler, 'passportExpiryDate')}

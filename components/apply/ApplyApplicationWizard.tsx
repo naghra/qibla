@@ -7,7 +7,8 @@ import { YourInfoStep } from './YourInfoStep';
 import { ResumeStep } from './ResumeStep';
 import { ApplySuccessScreen } from './ApplySuccessScreen';
 import { getDialPrefix } from './PhoneCountrySelect';
-import { travelerDateParts } from './TravelerInfoCard';
+import { travelerDateParts, passportScanToUpdates } from './TravelerInfoCard';
+import type { PassportScanData } from '../../services/passportScanService';
 import { applyBtnPrevious, applyBtnPrimary } from './applyStyles';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -188,9 +189,43 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   };
 
   const updateTraveler = (index: number, field: keyof TravelerData, value: string) => {
-    const travelers = [...data.travelers];
-    travelers[index] = { ...travelers[index], [field]: value };
-    setData({ ...data, travelers });
+    setData((d) => {
+      const travelers = [...d.travelers];
+      travelers[index] = { ...travelers[index], [field]: value };
+      return { ...d, travelers };
+    });
+  };
+
+  const applyPassportScan = (index: number, scan: PassportScanData) => {
+    const { patch, dob, issue, expiry } = passportScanToUpdates(scan);
+
+    setData((d) => {
+      const travelers = [...d.travelers];
+      travelers[index] = { ...travelers[index], ...patch };
+      return { ...d, travelers };
+    });
+
+    if (dob) {
+      setDobParts((parts) => {
+        const next = [...parts];
+        next[index] = dob;
+        return next;
+      });
+    }
+    if (issue) {
+      setIssueParts((parts) => {
+        const next = [...parts];
+        next[index] = issue;
+        return next;
+      });
+    }
+    if (expiry) {
+      setExpiryParts((parts) => {
+        const next = [...parts];
+        next[index] = expiry;
+        return next;
+      });
+    }
   };
 
   const addTraveler = () => {
@@ -395,23 +430,30 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
           issueParts={issueParts}
           expiryParts={expiryParts}
           onDobChange={(i, parts) => {
-            const next = [...dobParts];
-            next[i] = parts;
-            setDobParts(next);
+            setDobParts((prev) => {
+              const next = [...prev];
+              next[i] = parts;
+              return next;
+            });
             updateTraveler(i, 'dateOfBirth', datePartsToIso(parts));
           }}
           onIssueChange={(i, parts) => {
-            const next = [...issueParts];
-            next[i] = parts;
-            setIssueParts(next);
+            setIssueParts((prev) => {
+              const next = [...prev];
+              next[i] = parts;
+              return next;
+            });
             updateTraveler(i, 'passportIssueDate', datePartsToIso(parts));
           }}
           onExpiryChange={(i, parts) => {
-            const next = [...expiryParts];
-            next[i] = parts;
-            setExpiryParts(next);
+            setExpiryParts((prev) => {
+              const next = [...prev];
+              next[i] = parts;
+              return next;
+            });
             updateTraveler(i, 'passportExpiryDate', datePartsToIso(parts));
           }}
+          onPassportExtracted={applyPassportScan}
         />
       )}
 

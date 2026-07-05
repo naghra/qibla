@@ -304,36 +304,30 @@ export function travelerDateParts(
   return defaultDateParts(365 * 5);
 }
 
-function applyPassportData(
-  data: PassportScanData,
-  onUpdateTraveler: (index: number, field: keyof TravelerData, value: string) => void,
-  onDobChange: (index: number, parts: DateParts) => void,
-  onIssueChange: (index: number, parts: DateParts) => void,
-  onExpiryChange: (index: number, parts: DateParts) => void,
-  index: number
-) {
-  if (data.firstName) onUpdateTraveler(index, 'firstName', data.firstName);
-  if (data.lastName) onUpdateTraveler(index, 'lastName', data.lastName);
-  if (data.passportNumber) onUpdateTraveler(index, 'passportNumber', data.passportNumber);
-  if (data.nationality) onUpdateTraveler(index, 'nationality', data.nationality);
-  if (data.passportCountry) onUpdateTraveler(index, 'passportCountry', data.passportCountry);
-  if (data.gender) onUpdateTraveler(index, 'gender', data.gender);
+export function passportScanToUpdates(data: PassportScanData): {
+  patch: Partial<TravelerData>;
+  dob?: DateParts;
+  issue?: DateParts;
+  expiry?: DateParts;
+} {
+  const patch: Partial<TravelerData> = {};
 
-  if (data.dateOfBirth) {
-    const parts = isoToDateParts(data.dateOfBirth);
-    onDobChange(index, parts);
-    onUpdateTraveler(index, 'dateOfBirth', data.dateOfBirth);
+  if (data.firstName?.trim()) patch.firstName = data.firstName.trim();
+  if (data.lastName?.trim()) patch.lastName = data.lastName.trim();
+  if (data.passportNumber?.trim()) patch.passportNumber = data.passportNumber.trim();
+  if (data.nationality?.trim()) patch.nationality = data.nationality.trim();
+  if (data.passportCountry?.trim()) patch.passportCountry = data.passportCountry.trim();
+  if (data.gender === 'male' || data.gender === 'female' || data.gender === 'other') {
+    patch.gender = data.gender;
   }
-  if (data.passportIssueDate) {
-    const parts = isoToDateParts(data.passportIssueDate);
-    onIssueChange(index, parts);
-    onUpdateTraveler(index, 'passportIssueDate', data.passportIssueDate);
-  }
-  if (data.passportExpiryDate) {
-    const parts = isoToDateParts(data.passportExpiryDate);
-    onExpiryChange(index, parts);
-    onUpdateTraveler(index, 'passportExpiryDate', data.passportExpiryDate);
-  }
+  if (data.dateOfBirth) patch.dateOfBirth = data.dateOfBirth;
+  if (data.passportIssueDate) patch.passportIssueDate = data.passportIssueDate;
+  if (data.passportExpiryDate) patch.passportExpiryDate = data.passportExpiryDate;
+
+  return {
+    patch,
+    dob: data.dateOfBirth ? isoToDateParts(data.dateOfBirth) : undefined,
+    issue: data.passportIssueDate ? isoToDateParts(data.passportIssueDate) : undefined,
+    expiry: data.passportExpiryDate ? isoToDateParts(data.passportExpiryDate) : undefined,
+  };
 }
-
-export { applyPassportData };
