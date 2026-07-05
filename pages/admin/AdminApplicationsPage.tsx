@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Trash2, Eye, Download, FileText, CheckSquare } from 'lucide-react';
 import { ApplicationListCard } from '../../components/admin/ApplicationListCard';
@@ -39,10 +39,8 @@ function sortApps(apps: StoredApplication[], sort: ApplicationSortField): Stored
 
 export const AdminApplicationsPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const [apps, setApps] = useState<StoredApplication[]>(() => {
-    seedDemoApplicationsIfEmpty();
-    return getApplications();
-  });
+  const [apps, setApps] = useState<StoredApplication[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get('q') ?? '');
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'all'>(
     (searchParams.get('status') as ApplicationStatus) || 'all'
@@ -53,7 +51,17 @@ export const AdminApplicationsPage: React.FC = () => {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<ApplicationStatus>('processing');
 
-  const refresh = () => setApps(getApplications());
+  const refresh = () => {
+    void getApplications().then(setApps);
+  };
+
+  useEffect(() => {
+    void (async () => {
+      await seedDemoApplicationsIfEmpty();
+      setApps(await getApplications());
+      setLoading(false);
+    })();
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -74,26 +82,27 @@ export const AdminApplicationsPage: React.FC = () => {
   }, [apps, search, statusFilter, destFilter, sort]);
 
   const pages = totalPages(filtered.length, PER_PAGE);
-  const paged = paginate(filtered, page, PER_PAGE);
+  const paged: StoredApplication[] = paginate(filtered, page, PER_PAGE);
 
   const handleDelete = (id: string) => {
     if (!window.confirm(adminLabels.applications.confirmDelete)) return;
-    deleteApplication(id);
-    selected.delete(id);
-    setSelected(new Set(selected));
-    refresh();
+    void deleteApplication(id).then(() => {
+      selected.delete(id);
+      setSelected(new Set(selected));
+      refresh();
+    });
   };
 
   const handleStatusChange = (id: string, status: ApplicationStatus) => {
-    updateApplicationStatus(id, status);
-    refresh();
+    void updateApplicationStatus(id, status).then(refresh);
   };
 
   const handleBulkApply = () => {
     if (selected.size === 0) return;
-    bulkUpdateStatus([...selected], bulkStatus);
-    setSelected(new Set());
-    refresh();
+    void bulkUpdateStatus([...selected], bulkStatus).then(() => {
+      setSelected(new Set());
+      refresh();
+    });
   };
 
   const handleExport = () => {
@@ -113,6 +122,10 @@ export const AdminApplicationsPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
+      {loading ? (
+        <div className="py-12 text-center text-gray-500">جاري التحميل...</div>
+      ) : (
+        <>
       <AdminPageHeader
         title={adminLabels.applications.title}
         subtitle={adminLabels.applications.subtitle}
@@ -306,6 +319,8 @@ export const AdminApplicationsPage: React.FC = () => {
           </div>
 
           <Pagination page={page} totalPages={pages} onPageChange={setPage} />
+        </>
+      )}
         </>
       )}
     </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, FileText, Globe } from 'lucide-react';
 import { adminLabels } from '../../data/adminLabels';
-import { getPendingCount } from '../../services/applicationStore';
+import { usePendingCount } from '../../hooks/usePendingCount';
 
 const items = [
   { to: '/admin', end: true, label: adminLabels.nav.dashboard, icon: LayoutDashboard },
@@ -11,7 +11,7 @@ const items = [
 ];
 
 export const AdminBottomNav: React.FC = () => {
-  const pending = getPendingCount();
+  const pending = usePendingCount();
 
   return (
     <nav className="admin-bottom-nav fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur md:hidden">

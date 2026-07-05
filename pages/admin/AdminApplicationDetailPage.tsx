@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -15,19 +15,39 @@ import { StatusBadge } from '../../components/admin/StatusBadge';
 import { ActivityTimeline } from '../../components/admin/ActivityTimeline';
 import { adminLabels } from '../../data/adminLabels';
 import { getApplication, updateApplicationStatus } from '../../services/applicationStore';
-import type { ApplicationStatus } from '../../types/admin';
+import type { ApplicationStatus, StoredApplication } from '../../types/admin';
 import { getCountryName } from '../../utils/countryName';
 import { countriesData } from '../../data/countries';
 
 export const AdminApplicationDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const app = id ? getApplication(id) : undefined;
+  const [app, setApp] = useState<StoredApplication | undefined>();
+  const [loading, setLoading] = useState(true);
 
-  const [status, setStatus] = useState<ApplicationStatus>(app?.status ?? 'pending');
-  const [notes, setNotes] = useState(app?.adminNotes ?? '');
+  const [status, setStatus] = useState<ApplicationStatus>('pending');
+  const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    void getApplication(id).then((found) => {
+      setApp(found);
+      if (found) {
+        setStatus(found.status);
+        setNotes(found.adminNotes ?? '');
+      }
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">جاري التحميل...</div>;
+  }
 
   if (!app) {
     return (
@@ -49,16 +69,20 @@ export const AdminApplicationDetailPage: React.FC = () => {
   };
 
   const handleSave = () => {
-    updateApplicationStatus(app.id, status, notes);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    void updateApplicationStatus(app.id, status, notes).then((updated) => {
+      if (updated) setApp(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    });
   };
 
   const quickStatus = (s: ApplicationStatus) => {
     setStatus(s);
-    updateApplicationStatus(app.id, s, notes);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    void updateApplicationStatus(app.id, s, notes).then((updated) => {
+      if (updated) setApp(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    });
   };
 
   const copyId = async () => {
