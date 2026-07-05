@@ -2,11 +2,11 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Download, Search } from 'lucide-react';
 import { adminLabels } from '../../data/adminLabels';
+import { usePendingCount } from '../../hooks/usePendingCount';
 import {
   downloadCsv,
   exportApplicationsCsv,
   getApplications,
-  getPendingCount,
 } from '../../services/applicationStore';
 
 interface AdminTopBarProps {
@@ -16,7 +16,7 @@ interface AdminTopBarProps {
 export const AdminTopBar: React.FC<AdminTopBarProps> = ({ title }) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const pendingCount = useMemo(() => getPendingCount(), []);
+  const pendingCount = usePendingCount();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +29,9 @@ export const AdminTopBar: React.FC<AdminTopBarProps> = ({ title }) => {
   };
 
   const handleExport = () => {
-    const csv = exportApplicationsCsv(getApplications());
-    downloadCsv(`qibla-applications-${Date.now()}.csv`, csv);
+    void getApplications().then((apps) => {
+      downloadCsv(`qibla-applications-${Date.now()}.csv`, exportApplicationsCsv(apps));
+    });
   };
 
   return (

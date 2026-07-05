@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
-import { countriesData, countryFlag } from '../data/countries';
+import { countriesData } from '../data/countries';
+import { CountryFlag } from './CountryFlag';
 import { SectionHeader } from './ui';
 import { useLanguage } from '../context/LanguageContext';
 import { getCountryName } from '../utils/countryName';
@@ -45,10 +46,10 @@ export const Countries: React.FC = () => {
           >
             <div className="flex min-w-0 items-center gap-3">
               <span
-                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-50 text-xl leading-none"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-50"
                 aria-hidden
               >
-                {countryFlag(country.code)}
+                <CountryFlag code={country.code} size={24} />
               </span>
               <span className="truncate font-medium text-gray-800">
                 {getCountryName(country, lang)}

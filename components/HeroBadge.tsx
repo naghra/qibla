@@ -1,5 +1,5 @@
 import React from 'react';
-import { countryFlag } from '../data/countries';
+import { CountryFlag } from './CountryFlag';
 
 interface HeroBadgeProps {
   line1: string;
@@ -10,9 +10,7 @@ interface HeroBadgeProps {
 export const HeroBadge: React.FC<HeroBadgeProps> = ({ line1, line2, countryCode }) => (
   <div className="flex flex-col items-center gap-2 text-center">
     {countryCode && (
-      <span className="text-3xl leading-none" aria-hidden>
-        {countryFlag(countryCode)}
-      </span>
+      <CountryFlag code={countryCode} size={48} />
     )}
     <div className="space-y-0.5">
       <p className="text-sm font-semibold uppercase tracking-wider text-blue-200">{line1}</p>
