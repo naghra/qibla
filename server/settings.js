@@ -5,6 +5,7 @@ const KEYS = {
   openaiApiKey: 'openai_api_key',
   openaiVisionModel: 'openai_vision_model',
   stripeSecretKey: 'stripe_secret_key',
+  stripePublishableKey: 'stripe_publishable_key',
   stripeWebhookSecret: 'stripe_webhook_secret',
 };
 
@@ -61,28 +62,35 @@ export async function getOpenAiCredentials() {
 
 export async function getStripeCredentials() {
   const dbSecret = await getSiteSetting(KEYS.stripeSecretKey);
+  const dbPublishable = await getSiteSetting(KEYS.stripePublishableKey);
   const dbWebhook = await getSiteSetting(KEYS.stripeWebhookSecret);
   const envSecret = process.env.STRIPE_SECRET_KEY?.trim();
+  const envPublishable = process.env.STRIPE_PUBLISHABLE_KEY?.trim();
   const envWebhook = process.env.STRIPE_WEBHOOK_SECRET?.trim();
 
   const secretKey = dbSecret?.trim() || envSecret || '';
+  const publishableKey = dbPublishable?.trim() || envPublishable || '';
   const webhookSecret = dbWebhook?.trim() || envWebhook || '';
   const secretSource = dbSecret?.trim() ? 'database' : envSecret ? 'env' : 'none';
+  const publishableSource = dbPublishable?.trim() ? 'database' : envPublishable ? 'env' : 'none';
   const webhookSource = dbWebhook?.trim() ? 'database' : envWebhook ? 'env' : 'none';
 
-  return { secretKey, webhookSecret, secretSource, webhookSource };
+  return { secretKey, publishableKey, webhookSecret, secretSource, publishableSource, webhookSource };
 }
 
 async function buildAdminSettingsPayload() {
   const dbKey = await getSiteSetting(KEYS.openaiApiKey);
   const dbModel = await getSiteSetting(KEYS.openaiVisionModel);
   const dbStripeSecret = await getSiteSetting(KEYS.stripeSecretKey);
+  const dbStripePublishable = await getSiteSetting(KEYS.stripePublishableKey);
   const dbStripeWebhook = await getSiteSetting(KEYS.stripeWebhookSecret);
   const envKey = process.env.OPENAI_API_KEY?.trim();
   const envStripeSecret = process.env.STRIPE_SECRET_KEY?.trim();
+  const envStripePublishable = process.env.STRIPE_PUBLISHABLE_KEY?.trim();
   const envStripeWebhook = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   const { apiKey, visionModel, source } = await getOpenAiCredentials();
-  const { secretKey, webhookSecret, secretSource, webhookSource } = await getStripeCredentials();
+  const { secretKey, publishableKey, webhookSecret, secretSource, publishableSource, webhookSource } =
+    await getStripeCredentials();
 
   return {
     openai: {
@@ -94,20 +102,26 @@ async function buildAdminSettingsPayload() {
       savedInEnv: Boolean(envKey),
     },
     stripe: {
-      configured: Boolean(secretKey),
+      configured: Boolean(secretKey && publishableKey),
+      secretConfigured: Boolean(secretKey),
+      publishableConfigured: Boolean(publishableKey),
       webhookConfigured: Boolean(webhookSecret),
       secretKeyPreview: secretKey ? maskSecret(secretKey) : null,
+      publishableKeyPreview: publishableKey ? maskSecret(publishableKey) : null,
       webhookSecretPreview: webhookSecret ? maskSecret(webhookSecret) : null,
       mode: stripeMode(secretKey),
       webhookUrl: `${siteOrigin()}/api/stripe/webhook`,
       secretSource,
+      publishableSource,
       webhookSource,
       savedInPanel: {
         secret: Boolean(dbStripeSecret?.trim()),
+        publishable: Boolean(dbStripePublishable?.trim()),
         webhook: Boolean(dbStripeWebhook?.trim()),
       },
       savedInEnv: {
         secret: Boolean(envStripeSecret),
+        publishable: Boolean(envStripePublishable),
         webhook: Boolean(envStripeWebhook),
       },
     },
@@ -145,6 +159,12 @@ export async function handleAdminSettingsApi(req, res, urlPath) {
         await deleteSiteSetting(KEYS.stripeSecretKey);
       } else if (typeof body.stripeSecretKey === 'string' && body.stripeSecretKey.trim()) {
         await setSiteSetting(KEYS.stripeSecretKey, body.stripeSecretKey.trim());
+      }
+
+      if (body.clearStripePublishableKey === true) {
+        await deleteSiteSetting(KEYS.stripePublishableKey);
+      } else if (typeof body.stripePublishableKey === 'string' && body.stripePublishableKey.trim()) {
+        await setSiteSetting(KEYS.stripePublishableKey, body.stripePublishableKey.trim());
       }
 
       if (body.clearStripeWebhookSecret === true) {

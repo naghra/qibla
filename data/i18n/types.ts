@@ -254,6 +254,8 @@ export interface Translations {
     next: string;
     submit: string;
     backToHome: string;
+    paymentCheckoutTitle: string;
+    paymentCheckoutSubtitle: string;
     paymentProcessing: string;
     paymentVerifying: string;
     paymentCancelled: string;

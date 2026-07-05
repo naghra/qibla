@@ -1,7 +1,8 @@
 import type { ApplicationInput, StoredApplication } from '../types/admin';
 
 export interface CheckoutSessionResponse {
-  url: string;
+  clientSecret: string;
+  publishableKey: string;
   sessionId: string;
   applicationId: string;
 }
@@ -40,10 +41,20 @@ export async function createCheckoutSession(
     }),
   });
 
-  const data = (await res.json().catch(() => ({}))) as { error?: string; url?: string; sessionId?: string; applicationId?: string };
+  const data = (await res.json().catch(() => ({}))) as {
+    error?: string;
+    clientSecret?: string;
+    publishableKey?: string;
+    sessionId?: string;
+    applicationId?: string;
+  };
 
   if (!res.ok) {
     throw new CheckoutError(data.error || 'Checkout failed', res.status, data.error);
+  }
+
+  if (!data.clientSecret || !data.publishableKey) {
+    throw new CheckoutError('Invalid checkout session response', res.status);
   }
 
   return data as CheckoutSessionResponse;

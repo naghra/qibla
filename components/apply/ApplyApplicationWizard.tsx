@@ -14,6 +14,8 @@ import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../type
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
 import { CheckoutError, createCheckoutSession, verifyCheckoutSession } from '../../services/paymentService';
+import type { CheckoutSessionResponse } from '../../services/paymentService';
+import { EmbeddedCheckout } from './EmbeddedCheckout';
 import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
@@ -99,6 +101,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   const [verifying, setVerifying] = useState(false);
   const [paymentCancelled, setPaymentCancelled] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [checkoutSession, setCheckoutSession] = useState<CheckoutSessionResponse | null>(null);
   const [arrival, setArrival] = useState<DateParts>(() => defaultDateParts(7));
   const [departure, setDeparture] = useState<DateParts>(() => defaultDateParts(14));
   const [email, setEmail] = useState('');
@@ -302,10 +305,12 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       setSubmitting(true);
       setPaymentError(null);
       setPaymentCancelled(false);
+      setCheckoutSession(null);
 
       void createCheckoutSession(input)
         .then((session) => {
-          window.location.href = session.url;
+          setCheckoutSession(session);
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         })
         .catch(async (err: unknown) => {
           const isStripeMissing =
@@ -332,6 +337,11 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   };
 
   const handleBack = () => {
+    if (step === 2 && checkoutSession) {
+      setCheckoutSession(null);
+      setPaymentError(null);
+      return;
+    }
     if (step === 1) setData(syncTripToData());
     setStep(step - 1);
   };
@@ -458,19 +468,39 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       )}
 
       {step === 2 && (
-        <ResumeStep
-          a={a}
-          plans={plans}
-          selectedPlanId={data.plan}
-          onPlanChange={(id) => setData({ ...data, plan: id })}
-          travelerCount={data.travelers.length}
-          total={total}
-          estimatedAt={estimatedAt}
-          destinationName={destinationLabel}
-        />
+        <>
+          <ResumeStep
+            a={a}
+            plans={plans}
+            selectedPlanId={data.plan}
+            onPlanChange={(id) => {
+              if (!checkoutSession) setData({ ...data, plan: id });
+            }}
+            travelerCount={data.travelers.length}
+            total={total}
+            estimatedAt={estimatedAt}
+            destinationName={destinationLabel}
+          />
+
+          {checkoutSession && (
+            <section className="w-full space-y-3 rounded-2xl border border-gray-200 bg-gray-50/80 p-4 sm:p-5">
+              <div>
+                <h3 className="text-base font-semibold text-gray-950">{a.paymentCheckoutTitle}</h3>
+                <p className="mt-1 text-sm text-gray-600">{a.paymentCheckoutSubtitle}</p>
+              </div>
+              <EmbeddedCheckout
+                publishableKey={checkoutSession.publishableKey}
+                clientSecret={checkoutSession.clientSecret}
+                onError={() => setPaymentError(a.paymentError)}
+              />
+              <p className="text-xs text-gray-500">{a.termsNote}</p>
+            </section>
+          )}
+        </>
       )}
 
       <div className="mx-auto flex w-full flex-col gap-4">
+        {!checkoutSession && (
         <button
           type="button"
           onClick={handleContinue}
@@ -496,10 +526,11 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
             </>
           )}
         </button>
+        )}
         {step > 0 && (
           <button type="button" onClick={handleBack} className={applyBtnPrevious}>
             <PrevChevron className="size-4" />
-            {a.previousStep}
+            {checkoutSession ? a.previousStep : a.previousStep}
           </button>
         )}
       </div>

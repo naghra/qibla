@@ -9,15 +9,19 @@ export interface AdminOpenAiSettings {
 
 export interface AdminStripeSettings {
   configured: boolean;
+  secretConfigured: boolean;
+  publishableConfigured: boolean;
   webhookConfigured: boolean;
   secretKeyPreview: string | null;
+  publishableKeyPreview: string | null;
   webhookSecretPreview: string | null;
   mode: 'live' | 'test' | 'unknown' | null;
   webhookUrl: string;
   secretSource: 'database' | 'env' | 'none';
+  publishableSource: 'database' | 'env' | 'none';
   webhookSource: 'database' | 'env' | 'none';
-  savedInPanel: { secret: boolean; webhook: boolean };
-  savedInEnv: { secret: boolean; webhook: boolean };
+  savedInPanel: { secret: boolean; publishable: boolean; webhook: boolean };
+  savedInEnv: { secret: boolean; publishable: boolean; webhook: boolean };
 }
 
 export interface AdminSettingsResponse {
@@ -30,8 +34,10 @@ export interface AdminSettingsUpdate {
   openaiVisionModel?: string;
   clearOpenaiKey?: boolean;
   stripeSecretKey?: string;
+  stripePublishableKey?: string;
   stripeWebhookSecret?: string;
   clearStripeSecretKey?: boolean;
+  clearStripePublishableKey?: boolean;
   clearStripeWebhookSecret?: boolean;
 }
 

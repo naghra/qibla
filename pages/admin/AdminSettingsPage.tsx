@@ -41,6 +41,7 @@ export const AdminSettingsPage: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [visionModel, setVisionModel] = useState('gpt-4o');
   const [stripeSecretKey, setStripeSecretKey] = useState('');
+  const [stripePublishableKey, setStripePublishableKey] = useState('');
   const [stripeWebhookSecret, setStripeWebhookSecret] = useState('');
 
   useEffect(() => {
@@ -112,8 +113,8 @@ export const AdminSettingsPage: React.FC = () => {
   };
 
   const handleSaveStripe = () => {
-    if (!stripeSecretKey.trim() && !stripeWebhookSecret.trim()) {
-      setStripeError('أدخل Secret Key أو Webhook Secret على الأقل.');
+    if (!stripeSecretKey.trim() && !stripePublishableKey.trim() && !stripeWebhookSecret.trim()) {
+      setStripeError('أدخل Secret Key أو Publishable Key أو Webhook Secret على الأقل.');
       return;
     }
 
@@ -121,8 +122,13 @@ export const AdminSettingsPage: React.FC = () => {
     setStripeError(null);
     setSavedStripe(false);
 
-    const payload: { stripeSecretKey?: string; stripeWebhookSecret?: string } = {};
+    const payload: {
+      stripeSecretKey?: string;
+      stripePublishableKey?: string;
+      stripeWebhookSecret?: string;
+    } = {};
     if (stripeSecretKey.trim()) payload.stripeSecretKey = stripeSecretKey.trim();
+    if (stripePublishableKey.trim()) payload.stripePublishableKey = stripePublishableKey.trim();
     if (stripeWebhookSecret.trim()) payload.stripeWebhookSecret = stripeWebhookSecret.trim();
 
     void saveAdminSettings(payload)
@@ -130,6 +136,7 @@ export const AdminSettingsPage: React.FC = () => {
         setOpenai(data.openai);
         setStripe(data.stripe);
         setStripeSecretKey('');
+        setStripePublishableKey('');
         setStripeWebhookSecret('');
         setSavedStripe(true);
         setTimeout(() => setSavedStripe(false), 2500);
@@ -149,6 +156,22 @@ export const AdminSettingsPage: React.FC = () => {
       .then((data) => {
         setStripe(data.stripe);
         setStripeSecretKey('');
+      })
+      .catch((err) => {
+        if (handleUnauthorized(err)) return;
+        setStripeError(s.saveError);
+      })
+      .finally(() => setSavingStripe(false));
+  };
+
+  const handleClearStripePublishable = () => {
+    if (!window.confirm(s.confirmClearStripePublishable)) return;
+    setSavingStripe(true);
+    setStripeError(null);
+    void saveAdminSettings({ clearStripePublishableKey: true })
+      .then((data) => {
+        setStripe(data.stripe);
+        setStripePublishableKey('');
       })
       .catch((err) => {
         if (handleUnauthorized(err)) return;
@@ -330,7 +353,7 @@ export const AdminSettingsPage: React.FC = () => {
             </div>
           </div>
 
-          {(stripe?.secretKeyPreview || stripe?.webhookSecretPreview) && (
+          {(stripe?.secretKeyPreview || stripe?.publishableKeyPreview || stripe?.webhookSecretPreview) && (
             <div className="mb-4 space-y-3">
               {stripe.secretKeyPreview && (
                 <div className="rounded-xl bg-gray-50 px-4 py-3 ring-1 ring-gray-100">
@@ -340,6 +363,17 @@ export const AdminSettingsPage: React.FC = () => {
                   </p>
                   <p className="mt-2 text-xs text-gray-400">
                     {sourceLabel(stripe.savedInPanel.secret, stripe.savedInEnv.secret, s)}
+                  </p>
+                </div>
+              )}
+              {stripe.publishableKeyPreview && (
+                <div className="rounded-xl bg-gray-50 px-4 py-3 ring-1 ring-gray-100">
+                  <p className="text-xs text-gray-500">{s.stripePublishableLabel}</p>
+                  <p className="mt-1 font-mono text-sm text-gray-800" dir="ltr">
+                    {stripe.publishableKeyPreview}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-400">
+                    {sourceLabel(stripe.savedInPanel.publishable, stripe.savedInEnv.publishable, s)}
                   </p>
                 </div>
               )}
@@ -388,12 +422,33 @@ export const AdminSettingsPage: React.FC = () => {
                 type="password"
                 value={stripeSecretKey}
                 onChange={(e) => setStripeSecretKey(e.target.value)}
-                placeholder={stripe?.configured ? s.stripeSecretPlaceholderUpdate : s.stripeSecretPlaceholder}
+                placeholder={stripe?.secretConfigured ? s.stripeSecretPlaceholderUpdate : s.stripeSecretPlaceholder}
                 className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                 dir="ltr"
                 autoComplete="off"
               />
               <p className="mt-1.5 text-xs text-gray-500">{s.stripeSecretHint}</p>
+            </div>
+
+            <div>
+              <label htmlFor="stripe-publishable" className="mb-1.5 block text-sm font-medium text-gray-700">
+                {s.stripePublishableLabel}
+              </label>
+              <input
+                id="stripe-publishable"
+                type="text"
+                value={stripePublishableKey}
+                onChange={(e) => setStripePublishableKey(e.target.value)}
+                placeholder={
+                  stripe?.publishableConfigured
+                    ? s.stripePublishablePlaceholderUpdate
+                    : s.stripePublishablePlaceholder
+                }
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                dir="ltr"
+                autoComplete="off"
+              />
+              <p className="mt-1.5 text-xs text-gray-500">{s.stripePublishableHint}</p>
             </div>
 
             <div>
@@ -440,6 +495,17 @@ export const AdminSettingsPage: React.FC = () => {
               >
                 <Trash2 className="size-4" />
                 {s.clearStripeSecret}
+              </button>
+            )}
+            {stripe?.savedInPanel.publishable && (
+              <button
+                type="button"
+                onClick={handleClearStripePublishable}
+                disabled={savingStripe}
+                className="flex items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-60"
+              >
+                <Trash2 className="size-4" />
+                {s.clearStripePublishable}
               </button>
             )}
             {stripe?.savedInPanel.webhook && (

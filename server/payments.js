@@ -67,8 +67,13 @@ export async function handlePaymentsApi(req, res, urlPath) {
   try {
     if (urlPath === '/api/checkout/sessions' && req.method === 'POST') {
       const stripe = await createStripeClient();
+      const { publishableKey } = await getStripeCredentials();
       if (!stripe) {
         sendJson(res, 503, { error: 'stripe_not_configured' });
+        return true;
+      }
+      if (!publishableKey) {
+        sendJson(res, 503, { error: 'stripe_publishable_not_configured' });
         return true;
       }
 
@@ -97,11 +102,13 @@ export async function handlePaymentsApi(req, res, urlPath) {
 
       const origin = siteOrigin();
       const basePath = `/${body.lang}/${body.destinationSlug}/${body.serviceSlug}/apply`;
-      const successUrl = `${origin}${basePath}?session_id={CHECKOUT_SESSION_ID}`;
-      const cancelUrl = `${origin}${basePath}?payment_cancelled=1`;
+      const returnUrl = `${origin}${basePath}?session_id={CHECKOUT_SESSION_ID}`;
 
       const session = await stripe.checkout.sessions.create({
+        ui_mode: 'embedded',
         mode: 'payment',
+        redirect_on_completion: 'always',
+        return_url: returnUrl,
         customer_email: body.data.travelers[0].email.trim(),
         line_items: [
           {
@@ -119,14 +126,13 @@ export async function handlePaymentsApi(req, res, urlPath) {
         metadata: {
           applicationId: app.id,
         },
-        success_url: successUrl,
-        cancel_url: cancelUrl,
       });
 
       await setApplicationStripeSession(app.id, session.id);
 
       sendJson(res, 200, {
-        url: session.url,
+        clientSecret: session.client_secret,
+        publishableKey,
         sessionId: session.id,
         applicationId: app.id,
       });
