@@ -1,5 +1,5 @@
-export const SITE_NAME = 'سفر ذكي سفر سريع';
-export const SITE_NAME_EN = 'Travel Smart Travel Fast';
+export const SITE_NAME = 'DacGateway';
+export const SITE_NAME_EN = 'DacGateway';
 
 export const navLinks = [
   { label: 'كيفية التقديم', href: '#how-to-apply' },

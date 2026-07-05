@@ -32,9 +32,32 @@ export function isoToDateParts(iso: string): DateParts {
   return { year: y ?? '', month: String(Number(m)), day: String(Number(d)) };
 }
 
-export function getYearOptions(): string[] {
-  const y = new Date().getFullYear();
-  return [String(y), String(y + 1)];
+export type YearRangePreset = 'travel' | 'birth' | 'passportIssue' | 'passportExpiry';
+
+function rangeYears(start: number, end: number, descending = false): string[] {
+  const years: string[] = [];
+  if (descending) {
+    for (let y = end; y >= start; y -= 1) years.push(String(y));
+  } else {
+    for (let y = start; y <= end; y += 1) years.push(String(y));
+  }
+  return years;
+}
+
+export function getYearOptions(preset: YearRangePreset = 'travel'): string[] {
+  const now = new Date().getFullYear();
+
+  switch (preset) {
+    case 'birth':
+      return rangeYears(now - 100, now, true);
+    case 'passportIssue':
+      return rangeYears(now - 15, now, true);
+    case 'passportExpiry':
+      return rangeYears(now, now + 15);
+    case 'travel':
+    default:
+      return rangeYears(now, now + 1);
+  }
 }
 
 export function getMonthOptions(lang: 'en' | 'ar'): { value: string; label: string }[] {

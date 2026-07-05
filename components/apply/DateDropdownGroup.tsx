@@ -13,6 +13,7 @@ import {
   getDayOptions,
   getMonthOptions,
   getYearOptions,
+  type YearRangePreset,
 } from '../../utils/dateParts';
 
 interface DateDropdownGroupProps {
@@ -23,6 +24,7 @@ interface DateDropdownGroupProps {
   yearLabel: string;
   monthLabel: string;
   dayLabel: string;
+  yearRange?: YearRangePreset;
 }
 
 function DateSelect({
@@ -60,8 +62,9 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
   yearLabel,
   monthLabel,
   dayLabel,
+  yearRange = 'travel' as YearRangePreset,
 }) => {
-  const years = getYearOptions();
+  const years = getYearOptions(yearRange);
   const months = getMonthOptions(lang);
   const days = getDayOptions(value.year, value.month);
   const uid = label.replace(/\s+/g, '-').slice(0, 24);

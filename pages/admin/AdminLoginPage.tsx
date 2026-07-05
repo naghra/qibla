@@ -46,7 +46,7 @@ export const AdminLoginPage: React.FC = () => {
             })}
           </ul>
         </div>
-        <p className="text-xs text-slate-500">© Qibla Travel Documents</p>
+        <p className="text-xs text-slate-500">© DacGateway</p>
       </div>
 
       <div className="flex flex-1 items-center justify-center bg-slate-50 p-4 sm:p-8">
