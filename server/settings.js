@@ -42,8 +42,8 @@ function siteOrigin() {
 
 function stripeMode(secretKey) {
   if (!secretKey) return null;
-  if (secretKey.startsWith('sk_live_')) return 'live';
-  if (secretKey.startsWith('sk_test_')) return 'test';
+  if (secretKey.startsWith('sk_live_') || secretKey.startsWith('rk_live_')) return 'live';
+  if (secretKey.startsWith('sk_test_') || secretKey.startsWith('rk_test_')) return 'test';
   return 'unknown';
 }
 

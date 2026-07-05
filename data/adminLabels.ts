@@ -191,9 +191,9 @@ export const adminLabels = {
     stripeTitle: 'Stripe — الدفع الإلكتروني',
     stripeSubtitle: 'ربط حساب Stripe لاستقبال مدفوعات طلبات TDAC',
     stripeSecretLabel: 'Secret Key',
-    stripeSecretPlaceholder: 'sk_live_... أو sk_test_...',
+    stripeSecretPlaceholder: 'sk_live_... أو rk_live_... أو sk_test_...',
     stripeSecretPlaceholderUpdate: 'أدخل مفتاحاً جديداً للاستبدال (اتركه فارغاً للإبقاء على الحالي)',
-    stripeSecretHint: 'من Stripe Dashboard → Developers → API keys',
+    stripeSecretHint: 'Secret Key أو Restricted Key — من Stripe Dashboard → Developers → API keys. Restricted Key يحتاج: Checkout Sessions (Read + Write)',
     stripePublishableLabel: 'Publishable Key',
     stripePublishablePlaceholder: 'pk_live_... أو pk_test_...',
     stripePublishablePlaceholderUpdate: 'أدخل مفتاحاً جديداً للاستبدال (اتركه فارغاً للإبقاء على الحالي)',
@@ -219,7 +219,7 @@ export const adminLabels = {
     copy: 'نسخ',
     copied: 'تم النسخ',
     stripeSecurityNote:
-      'فعّل Apple Pay وGoogle Pay من Stripe Dashboard → Settings → Payment methods. أضف رابط Webhook واختر checkout.session.completed. المفاتيح تُخزَّن في قاعدة البيانات.',
+      'Restricted Key (rk_live_) مدعوم — فعّل Checkout Sessions Read+Write. Publishable Key (pk_live_) منفصل. Webhook: checkout.session.completed. Apple Pay/Google Pay من Stripe → Payment methods.',
   },
   pagination: {
     prev: 'السابق',
