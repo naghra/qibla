@@ -1,5 +1,5 @@
 import { Translations } from '../types';
-import { siteDefinition } from '../siteDefinition';
+import { siteDefinition, companyInfo } from '../siteDefinition';
 
 export const thailandTdacAr: Translations = {
   siteName: 'DacGateway',
@@ -132,6 +132,9 @@ export const thailandTdacAr: Translations = {
   },
   footer: {
     description: siteDefinition.ar,
+    companyInfoTitle: companyInfo.title.ar,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [

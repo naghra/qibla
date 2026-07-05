@@ -1,12 +1,15 @@
 import type { Lang, Translations } from './types';
 import type { DestinationDef, PageScope, ServiceDef } from '../destinations';
-import { siteDefinition } from './siteDefinition';
+import { siteDefinition, companyInfo } from './siteDefinition';
 import { thailandTdacEn } from './services/thailandTdacEn';
 import { thailandTdacAr } from './services/thailandTdacAr';
 
 const sharedFooter = {
   en: {
     description: siteDefinition.en,
+    companyInfoTitle: companyInfo.title.en,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
@@ -24,6 +27,9 @@ const sharedFooter = {
   },
   ar: {
     description: siteDefinition.ar,
+    companyInfoTitle: companyInfo.title.ar,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
