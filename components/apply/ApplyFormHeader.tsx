@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { X, Globe, AlignLeft } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { buildPath } from '../../data/destinations';
-import { countryFlag } from '../../data/countries';
+import { CountryFlag } from '../CountryFlag';
 import { getNavLinks } from '../../utils/navLinks';
 
 export const ApplyFormHeader: React.FC = () => {
@@ -32,8 +32,8 @@ export const ApplyFormHeader: React.FC = () => {
             to={buildPath(lang)}
             className="apply-logo-link relative order-2 flex -ms-4 items-center justify-center gap-2 overflow-hidden text-gray-800 transition active:scale-95 sm:ms-0"
           >
-            <span className="relative -ms-8 text-2xl leading-none sm:ms-0" aria-hidden>
-              {countryFlag(destination?.countryCode ?? 'UN')}
+            <span className="relative -ms-8 sm:ms-0" aria-hidden>
+              <CountryFlag code={destination?.countryCode ?? 'UN'} size={28} />
             </span>
             <img
               src="/images/logo.webp"
