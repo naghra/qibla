@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import type { Lang } from '../../data/i18n/types';
 import {
+  applyDateColDay,
+  applyDateColMonth,
+  applyDateColYear,
   applyDateGrid,
   applyDateQuestion,
   applyDateSection,
   applyDateSelectInner,
+  applyDateSelectInnerYear,
   applyDateSelectShell,
   applyDateSubLabel,
 } from './applyStyles';
@@ -30,21 +34,25 @@ function DateSelect({
   label,
   value,
   onChange,
+  columnClass,
+  selectClass = applyDateSelectInner,
   children,
 }: {
   id: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
+  columnClass: string;
+  selectClass?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0">
+    <div className={columnClass}>
       <label htmlFor={id} className={applyDateSubLabel}>
         {label}
       </label>
       <div className={applyDateSelectShell}>
-        <select id={id} className={applyDateSelectInner} value={value} onChange={(e) => onChange(e.target.value)}>
+        <select id={id} className={selectClass} value={value} onChange={(e) => onChange(e.target.value)}>
           {children}
         </select>
       </div>
@@ -82,6 +90,8 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
           label={yearLabel}
           value={value.year}
           onChange={(year) => onChange({ ...value, year })}
+          columnClass={applyDateColYear}
+          selectClass={applyDateSelectInnerYear}
         >
           {years.map((y) => (
             <option key={y} value={y}>
@@ -95,6 +105,7 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
           label={monthLabel}
           value={value.month}
           onChange={(month) => onChange({ ...value, month })}
+          columnClass={applyDateColMonth}
         >
           {months.map((m) => (
             <option key={m.value} value={m.value}>
@@ -108,6 +119,7 @@ export const DateDropdownGroup: React.FC<DateDropdownGroupProps> = ({
           label={dayLabel}
           value={value.day}
           onChange={(day) => onChange({ ...value, day })}
+          columnClass={applyDateColDay}
         >
           {days.map((d) => (
             <option key={d} value={d}>

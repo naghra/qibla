@@ -40,12 +40,17 @@ export const applyDividerText = 'px-3 text-xs text-gray-400';
 /** Step 1 date pickers — rounded boxes matching reference */
 export const applyDateSection = 'space-y-2';
 export const applyDateQuestion = 'text-base font-medium text-gray-950';
-export const applyDateGrid = 'apply-date-grid grid gap-4 sm:gap-8';
+export const applyDateGrid = 'apply-date-grid grid gap-2 sm:gap-8';
 export const applyDateSubLabel = 'mb-1 block text-sm font-medium text-gray-950';
+export const applyDateColYear = 'apply-date-col-year min-w-[5.75rem]';
+export const applyDateColMonth = 'apply-date-col-month min-w-0';
+export const applyDateColDay = 'apply-date-col-day min-w-[3.25rem] sm:min-w-0';
 export const applyDateSelectShell =
   'apply-date-select-shell relative flex min-w-0 rounded-2xl border border-gray-200 bg-white outline-none transition hover:border-gray-950 cursor-pointer';
 export const applyDateSelectInner =
-  'apply-date-select-inner w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent px-5 py-3.5 text-base text-gray-950 outline-none pe-10 sm:px-6';
+  'apply-date-select-inner w-full cursor-pointer appearance-none border-0 bg-transparent py-3.5 ps-3 pe-8 text-base text-gray-950 outline-none sm:px-6 sm:pe-10';
+export const applyDateSelectInnerYear =
+  'apply-date-select-inner apply-date-select-inner-year w-full cursor-pointer appearance-none border-0 bg-transparent py-3.5 ps-3 pe-7 text-base tabular-nums text-gray-950 outline-none sm:px-6 sm:pe-10';
 
 /** Step 3 resume — plan cards & eSIM row */
 export const applyResumePlanCard =
