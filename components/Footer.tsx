@@ -14,6 +14,9 @@ export const Footer: React.FC = () => {
       <div className="container mx-auto grid gap-10 px-4 md:grid-cols-4">
         <div className="space-y-5 md:col-span-2">
           <Logo />
+          {f.description && (
+            <p className="max-w-xl text-sm leading-relaxed text-gray-600">{f.description}</p>
+          )}
           <div>
             <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-900">
               {f.companyInfoTitle}
@@ -23,9 +26,6 @@ export const Footer: React.FC = () => {
               {f.companyAddress}
             </p>
           </div>
-          {f.description && (
-            <p className="max-w-xl text-sm leading-relaxed text-gray-600">{f.description}</p>
-          )}
         </div>
 
         <div>
