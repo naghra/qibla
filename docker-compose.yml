@@ -1,0 +1,11 @@
+services:
+  qibla:
+    build:
+      context: .
+      args:
+        VITE_SITE_ORIGIN: ${VITE_SITE_ORIGIN}
+        VITE_ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD}
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:3000"

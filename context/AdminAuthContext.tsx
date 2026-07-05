@@ -1,6 +1,7 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 const SESSION_KEY = 'qibla_admin_session';
+const PASSWORD_KEY = 'qibla_admin_pwd';
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? 'qibla-admin';
 
 interface AdminAuthContextValue {
@@ -22,12 +23,21 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const login = useCallback((password: string) => {
     if (password !== ADMIN_PASSWORD) return false;
     sessionStorage.setItem(SESSION_KEY, '1');
+    sessionStorage.setItem(PASSWORD_KEY, password);
     setIsAuthenticated(true);
     return true;
   }, []);
 
+  // Restore password for API calls when session exists (e.g. after deploy)
+  useEffect(() => {
+    if (readSession() && !sessionStorage.getItem(PASSWORD_KEY)) {
+      sessionStorage.setItem(PASSWORD_KEY, ADMIN_PASSWORD);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(PASSWORD_KEY);
     setIsAuthenticated(false);
   }, []);
 

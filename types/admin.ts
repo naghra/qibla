@@ -3,6 +3,8 @@ import type { Lang } from '../data/i18n/types';
 
 export type ApplicationStatus = 'pending' | 'processing' | 'approved' | 'rejected';
 
+export type PaymentStatus = 'unpaid' | 'paid';
+
 export type ApplicationSortField = 'date' | 'amount' | 'name';
 
 export interface StatusChange {
@@ -27,6 +29,10 @@ export interface StoredApplication {
   data: ApplicationData;
   adminNotes?: string;
   statusHistory?: StatusChange[];
+  paymentStatus?: PaymentStatus;
+  stripeCheckoutSessionId?: string;
+  stripePaymentIntentId?: string;
+  paidAt?: string;
 }
 
 export interface ApplicationInput {
