@@ -1,53 +1,55 @@
 #!/usr/bin/env bash
+# Deploy Qibla static app (single index.html) to Contabo VPS
 set -euo pipefail
 
-# Deploy script for Contabo VPS
-# Usage: ./deploy/deploy.sh [install-dir]
-# Default install dir: /var/www/qibla
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="$SCRIPT_DIR/.env"
+SOURCE_HTML="$ROOT_DIR/qibla-finder/index.html"
 
-INSTALL_DIR="${1:-/var/www/qibla}"
-REPO_URL="${REPO_URL:-https://github.com/naghra/qibla.git}"
-BRANCH="${BRANCH:-main}"
-
-echo "==> Deploying to ${INSTALL_DIR}"
-
-if [[ ! -f .env ]]; then
-  echo "ERROR: Create .env from .env.example before deploying (VITE_SITE_ORIGIN, VITE_ADMIN_PASSWORD)."
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "ERROR: Create deploy/.env from deploy/.env.example"
   exit 1
 fi
 
 # shellcheck disable=SC1091
-source .env
+source "$ENV_FILE"
 
-if [[ -z "${VITE_SITE_ORIGIN:-}" ]]; then
-  echo "ERROR: Set VITE_SITE_ORIGIN in .env (e.g. https://yourdomain.com)"
+for var in QIBLA_DOMAIN VPS_HOST VPS_PATH SSH_KEY; do
+  if [[ -z "${!var:-}" ]]; then
+    echo "ERROR: Set $var in deploy/.env"
+    exit 1
+  fi
+done
+
+if [[ ! -f "$SOURCE_HTML" ]]; then
+  echo "ERROR: Missing $SOURCE_HTML"
   exit 1
 fi
 
-echo "==> Installing dependencies"
-npm ci
-
-echo "==> Building production bundle"
-npm run build
-
-if [[ "$(id -u)" -eq 0 ]]; then
-  echo "==> Copying to ${INSTALL_DIR}"
-  mkdir -p "${INSTALL_DIR}"
-  rsync -a --delete \
-    dist/ "${INSTALL_DIR}/dist/" \
-    server/ "${INSTALL_DIR}/server/" \
-    deploy/ "${INSTALL_DIR}/deploy/" \
-    .env "${INSTALL_DIR}/.env"
-
-  echo "==> Restarting service"
-  systemctl restart qibla || echo "Run: sudo systemctl enable --now qibla"
-else
-  echo "==> Build complete. On the server (as root):"
-  echo "    sudo mkdir -p ${INSTALL_DIR}"
-  echo "    sudo rsync -a dist/ ${INSTALL_DIR}/dist/"
-  echo "    sudo rsync -a server/ ${INSTALL_DIR}/server/"
-  echo "    sudo cp .env ${INSTALL_DIR}/.env"
-  echo "    sudo systemctl restart qibla"
+SSH_KEY_EXPANDED="${SSH_KEY/#\~/$HOME}"
+if [[ ! -f "$SSH_KEY_EXPANDED" ]]; then
+  echo "ERROR: SSH key not found: $SSH_KEY_EXPANDED"
+  exit 1
 fi
 
-echo "==> Done. Site: ${VITE_SITE_ORIGIN}"
+SSH_OPTS=(-i "$SSH_KEY_EXPANDED" -o StrictHostKeyChecking=no -o BatchMode=yes)
+
+echo "==> Upload index.html to ${VPS_HOST}:${VPS_PATH}/"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "mkdir -p '$VPS_PATH'"
+scp "${SSH_OPTS[@]}" "$SOURCE_HTML" "${VPS_HOST}:${VPS_PATH}/index.html"
+
+echo "==> Install nginx config for ${QIBLA_DOMAIN}"
+NGINX_CONF="$(sed "s/__QIBLA_DOMAIN__/${QIBLA_DOMAIN}/g" "$SCRIPT_DIR/nginx.conf.template")"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "cat > /etc/nginx/sites-available/qibla-standalone.conf" <<< "$NGINX_CONF"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "ln -sf /etc/nginx/sites-available/qibla-standalone.conf /etc/nginx/sites-enabled/qibla-standalone.conf"
+
+echo "==> SSL certificate (Let's Encrypt)"
+EMAIL="${CERTBOT_EMAIL:-admin@${QIBLA_DOMAIN}}"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "nginx -t && certbot --nginx -d '${QIBLA_DOMAIN}' -d 'www.${QIBLA_DOMAIN}' --non-interactive --agree-tos -m '${EMAIL}' --redirect || true"
+
+echo "==> Reload nginx"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "nginx -t && systemctl reload nginx"
+
+echo ""
+echo "Deployed: https://${QIBLA_DOMAIN}/"

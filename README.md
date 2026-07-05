@@ -1,33 +1,21 @@
-# Travel Smart Travel Fast — Qibla
+# Qibla — مكتشف القبلة
 
-موقع مساعدة في مستندات السفر (React + Vite).
+تطبيق ويب ثابت لتحديد اتجاه القبلة (HTML + JavaScript).
 
-## التطوير المحلي
+**الإنتاج:** `qibla-finder/index.html` — ملف واحد، بدون API أو قاعدة بيانات.
 
-```bash
-npm install
-npm run dev
-```
+## النشر على Contabo
 
-## النشر على سيرفر Contabo (VPS)
-
-**الدليل الكامل:** [deploy/CONTABO.md](deploy/CONTABO.md)
+راجع **[DEPLOY.md](./DEPLOY.md)** للتعليمات الكاملة.
 
 ```bash
-cp .env.example .env   # عدّل VITE_SITE_ORIGIN و VITE_ADMIN_PASSWORD
-npm ci && npm run build
-npm start              # أو systemd: deploy/qibla.service
+cp deploy/.env.example deploy/.env
+chmod +x deploy/deploy.sh
+./deploy/deploy.sh
 ```
 
-Nginx + SSL: `deploy/nginx.conf.example`
+## محلي
 
-## البناء
+افتح `qibla-finder/index.html` في المتصفح (أو serve بـ `python3 -m http.server`).
 
-```bash
-npm run build
-npm run preview
-```
-
-## ملاحظة
-
-خدمة مساعدة خاصة — غير تابعة لأي جهة حكومية.
+> مجلد `App.tsx` / Vite في الجذر هو مشروع React منفصل (غير مستخدم في إنتاج القبلة).
