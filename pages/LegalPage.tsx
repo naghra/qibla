@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Footer } from '../components/Footer';
 import { Logo } from '../components/Logo';
-import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useLanguage } from '../context/LanguageContext';
 import {
   getLegalPage,
@@ -27,11 +26,10 @@ export const LegalPage: React.FC<LegalPageProps> = ({ slug }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b border-gray-200 bg-white">
-        <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-4">
-          <Link to={buildPath(lang)} className="shrink-0">
+        <div className="container mx-auto px-4 py-4">
+          <Link to={buildPath(lang)} className="inline-flex shrink-0">
             <Logo className="h-8" showText={false} />
           </Link>
-          <LanguageSwitcher />
         </div>
       </header>
 
