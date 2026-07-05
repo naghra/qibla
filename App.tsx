@@ -15,6 +15,7 @@ import { AdminApplicationsPage } from './pages/admin/AdminApplicationsPage';
 import { AdminApplicationDetailPage } from './pages/admin/AdminApplicationDetailPage';
 import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
 import { LegalPageRoute } from './pages/LegalPageRoute';
+import { SuccessPreviewPage } from './pages/SuccessPreviewPage';
 import { ScrollToTop } from './components/ScrollToTop';
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
           <Route path="/apply" element={<LegacyApplyRedirect />} />
           <Route path="/thailand/tdac/*" element={<Navigate to="/en/thailand/tdac" replace />} />
           <Route path="/:lang/legal/:slug" element={<LegalPageRoute />} />
+          <Route path="/:lang/success-preview" element={<SuccessPreviewPage />} />
           <Route path="/:lang" element={<LangLayout />}>
             <Route index element={<HubPage />} />
             <Route path=":country" element={<CountryPage />} />

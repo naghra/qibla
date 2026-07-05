@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, CheckCircle, User, Plane, Home, CreditCard, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, User, Plane, Home, CreditCard, Plus, Trash2 } from 'lucide-react';
 import { countriesData } from '../data/countries';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { getCountryName } from '../utils/countryName';
 import { saveApplication } from '../services/applicationStore';
+import { computeEstimatedProcessing } from '../utils/estimatedProcessing';
+import { ApplySuccessScreen } from './apply/ApplySuccessScreen';
 
 const emptyTraveler = (): TravelerData => ({
   firstName: '',
@@ -52,6 +54,9 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
   const selectedPlan = plans.find((p) => p.id === data.plan)!;
   const totalPerTraveler = selectedPlan.price + selectedPlan.priorityFee;
   const total = totalPerTraveler * data.travelers.length;
+  const estimatedAt = computeEstimatedProcessing(data.plan, lang);
+  const destinationLabel =
+    destination?.name[lang] ?? service?.shortName[lang] ?? (lang === 'ar' ? 'وجهتك' : 'your destination');
 
   const PrevIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
   const NextIcon = dir === 'rtl' ? ArrowLeft : ArrowRight;
@@ -394,22 +399,18 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
         )}
 
         {step === 3 && (
-          <div className="fade-in py-8 text-center">
-            <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-green-100">
-              <CheckCircle className="size-10 text-green-600" />
-            </div>
-            <h3 className="mb-3 text-2xl font-bold text-gray-900">{a.successTitle}</h3>
-            {submittedId && (
-              <p className="mb-4 rounded-xl bg-gray-50 px-4 py-2 font-mono text-sm text-gray-700" dir="ltr">
-                {lang === 'en' ? 'Reference' : 'رقم الطلب'}: {submittedId}
-              </p>
-            )}
-            <p className="mb-2 text-gray-600">{a.successThanks(data.travelers[0].firstName)}</p>
-            <p className="mb-6 font-bold text-blue-500" dir="ltr">{data.travelers[0].email}</p>
-            <p className="text-sm text-gray-500">
-              {a.expectedTime} <strong>{selectedPlan.time}</strong>
-            </p>
-          </div>
+          <ApplySuccessScreen
+            submittedId={submittedId}
+            applicantName={`${data.travelers[0].firstName} ${data.travelers[0].lastName}`.trim()}
+            email={data.travelers[0].email}
+            destinationName={destination?.name[lang] ?? destinationLabel}
+            serviceName={service?.shortName[lang] ?? destinationLabel}
+            planName={selectedPlan.name}
+            travelerCount={data.travelers.length}
+            total={total}
+            estimatedAt={estimatedAt}
+            onDone={handleDone}
+          />
         )}
       </div>
 
@@ -423,7 +424,7 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
             {a.prev}
           </button>
         )}
-        {step < 3 ? (
+        {step < 3 && (
           <button
             onClick={() => (step === 2 ? handleSubmit() : setStep(step + 1))}
             disabled={!canProceed()}
@@ -431,13 +432,6 @@ export const ApplicationWizard: React.FC<ApplicationWizardProps> = ({
           >
             {step === 2 ? a.submit : a.next}
             <NextIcon className="size-4" />
-          </button>
-        ) : (
-          <button
-            onClick={handleDone}
-            className="w-full rounded-2xl border border-blue-600 bg-blue-500 py-3 font-bold text-white hover:bg-blue-600"
-          >
-            {a.backToHome}
           </button>
         )}
       </div>
