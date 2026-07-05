@@ -254,6 +254,11 @@ export interface Translations {
     next: string;
     submit: string;
     backToHome: string;
+    paymentProcessing: string;
+    paymentVerifying: string;
+    paymentCancelled: string;
+    paymentError: string;
+    paymentPending: string;
   };
   glanceItems: GlanceItem[];
   requirements: string[];

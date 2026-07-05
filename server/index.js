@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initDatabase } from './db.js';
 import { handleApplicationsApi } from './applications.js';
+import { handlePaymentsApi, handleStripeWebhook, readRawBody } from './payments.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.resolve(__dirname, '../dist');
@@ -86,6 +87,17 @@ async function serveSpa(req, res) {
 async function handleRequest(req, res) {
   try {
     const urlPath = req.url?.split('?')[0] || '/';
+
+    if (urlPath === '/api/stripe/webhook' && req.method === 'POST') {
+      const rawBody = await readRawBody(req);
+      await handleStripeWebhook(req, res, rawBody);
+      return;
+    }
+
+    if (urlPath.startsWith('/api/checkout')) {
+      const handled = await handlePaymentsApi(req, res, urlPath);
+      if (handled) return;
+    }
 
     if (urlPath.startsWith('/api/applications')) {
       const handled = await handleApplicationsApi(req, res, urlPath);

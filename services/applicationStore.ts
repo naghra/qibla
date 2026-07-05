@@ -50,6 +50,10 @@ function generateId(): string {
   return `APP-${ts}-${rand}`;
 }
 
+function countsAsRevenue(app: StoredApplication): boolean {
+  return app.paymentStatus !== 'unpaid';
+}
+
 function weekStart(): Date {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -199,13 +203,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     (acc, app) => {
       acc.total += 1;
       acc[app.status] += 1;
-      acc.totalRevenue += app.totalAmount;
+      if (countsAsRevenue(app)) acc.totalRevenue += app.totalAmount;
 
       const created = new Date(app.createdAt);
       if (created.toDateString() === today) acc.todayCount += 1;
       if (created >= week) {
         acc.weekCount += 1;
-        acc.weekRevenue += app.totalAmount;
+        if (countsAsRevenue(app)) acc.weekRevenue += app.totalAmount;
       }
       return acc;
     },
@@ -255,13 +259,13 @@ export async function getTopDestinations(limit = 5): Promise<DestinationStat[]> 
     const existing = map.get(app.destinationSlug);
     if (existing) {
       existing.count += 1;
-      existing.revenue += app.totalAmount;
+      if (countsAsRevenue(app)) existing.revenue += app.totalAmount;
     } else {
       map.set(app.destinationSlug, {
         slug: app.destinationSlug,
         name: app.destinationName,
         count: 1,
-        revenue: app.totalAmount,
+        revenue: countsAsRevenue(app) ? app.totalAmount : 0,
       });
     }
   }
@@ -273,6 +277,7 @@ export function exportApplicationsCsv(apps: StoredApplication[]): string {
   const headers = [
     'ID',
     'Status',
+    'Payment',
     'Applicant',
     'Email',
     'Phone',
@@ -289,6 +294,7 @@ export function exportApplicationsCsv(apps: StoredApplication[]): string {
     return [
       app.id,
       app.status,
+      app.paymentStatus ?? 'unpaid',
       `${t?.firstName ?? ''} ${t?.lastName ?? ''}`.trim(),
       t?.email ?? '',
       t?.phone ?? '',

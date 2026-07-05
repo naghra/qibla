@@ -91,6 +91,9 @@ cat > /etc/dacgateway.env <<ENV
 DATABASE_URL=${DATABASE_URL}
 PORT=3000
 HOST=127.0.0.1
+SITE_ORIGIN=${VITE_SITE_ORIGIN}
+STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
 ENV
 chmod 600 /etc/dacgateway.env
 cp "${SCRIPT_DIR}/dacgateway-api.service" /etc/systemd/system/dacgateway-api.service 2>/dev/null || true

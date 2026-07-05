@@ -17,6 +17,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^6.30.4",
+    "stripe": "^22.3.0",
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {

@@ -153,6 +153,15 @@ export const adminLabels = {
     approved: 'موافق عليه',
     rejected: 'مرفوض',
   },
+  payment: {
+    title: 'الدفع',
+    status: 'حالة الدفع',
+    paid: 'مدفوع',
+    unpaid: 'غير مدفوع',
+    paidAt: 'تاريخ الدفع',
+    stripeSession: 'Stripe Session',
+    stripePayment: 'Stripe Payment Intent',
+  },
   pagination: {
     prev: 'السابق',
     next: 'التالي',

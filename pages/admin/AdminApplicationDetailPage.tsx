@@ -165,6 +165,15 @@ export const AdminApplicationDetailPage: React.FC = () => {
             <div className="min-w-0">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <StatusBadge status={app.status} />
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    app.paymentStatus === 'paid'
+                      ? 'bg-emerald-500/20 text-emerald-100'
+                      : 'bg-amber-500/20 text-amber-100'
+                  }`}
+                >
+                  {app.paymentStatus === 'paid' ? adminLabels.payment.paid : adminLabels.payment.unpaid}
+                </span>
                 <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-blue-100">
                   {app.lang.toUpperCase()}
                 </span>
@@ -293,6 +302,22 @@ export const AdminApplicationDetailPage: React.FC = () => {
                 </li>
               ))}
             </ul>
+            <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 ring-1 ring-gray-100">
+              <p className="text-xs text-gray-500">{adminLabels.payment.status}</p>
+              <p className={`mt-1 text-sm font-bold ${app.paymentStatus === 'paid' ? 'text-emerald-700' : 'text-amber-700'}`}>
+                {app.paymentStatus === 'paid' ? adminLabels.payment.paid : adminLabels.payment.unpaid}
+              </p>
+              {app.paidAt && (
+                <p className="mt-1 text-xs text-gray-500">
+                  {adminLabels.payment.paidAt}: {formatAdminDate(app.paidAt, true)}
+                </p>
+              )}
+              {app.stripeCheckoutSessionId && (
+                <p className="mt-2 break-all font-mono text-[11px] text-gray-400" dir="ltr">
+                  {adminLabels.payment.stripeSession}: {app.stripeCheckoutSessionId}
+                </p>
+              )}
+            </div>
             <div className="mt-4 flex items-center justify-between rounded-xl bg-blue-50 px-4 py-3 ring-1 ring-blue-100">
               <span className="text-sm font-bold text-blue-900">{adminLabels.applications.amount}</span>
               <span className="text-lg font-bold text-blue-700" dir="ltr">{formatCurrency(app.totalAmount)}</span>
