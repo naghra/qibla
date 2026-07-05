@@ -3,14 +3,11 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { detectLang, DEFAULT_LANG } from '../data/i18n';
 
 export const RootRedirect: React.FC = () => {
-  const location = useLocation();
-  const lang = detectLang(location.pathname, location.search);
-  return <Navigate to={`/${lang || DEFAULT_LANG}`} replace />;
+  return <Navigate to={`/${DEFAULT_LANG}`} replace />;
 };
 
 export const LegacyApplyRedirect: React.FC = () => {
-  const lang = detectLang();
-  return <Navigate to={`/${lang}/thailand/tdac/apply`} replace />;
+  return <Navigate to={`/${DEFAULT_LANG}/thailand/tdac/apply`} replace />;
 };
 
 /** Redirect old ?lang= query URLs to path-based routes */

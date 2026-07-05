@@ -1,5 +1,6 @@
 import React from 'react';
-import { countriesData, countryFlag } from '../../data/countries';
+import { countriesData } from '../../data/countries';
+import { CountryFlag } from '../CountryFlag';
 import { getPhoneMeta } from '../../data/phoneMeta';
 import type { Lang } from '../../data/i18n/types';
 import { getCountryName } from '../../utils/countryName';
@@ -34,8 +35,8 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, l
       <label className={applyLabel}>{label}</label>
       <div className={applySelectShell}>
         {value && (
-          <span className="pointer-events-none absolute start-4 top-1/2 z-[1] -translate-y-1/2 text-lg leading-none" aria-hidden>
-            {countryFlag(value)}
+          <span className="pointer-events-none absolute start-4 top-1/2 z-[1] -translate-y-1/2" aria-hidden>
+            <CountryFlag code={value} size={20} />
           </span>
         )}
         <select className={applySelectWithFlagInner} value={value} onChange={(e) => onChange(e.target.value)}>

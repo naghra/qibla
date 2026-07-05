@@ -5,7 +5,6 @@ import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
 import { buildPath } from '../data/destinations';
 import { Logo } from './Logo';
-import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   onApply: () => void;
@@ -42,7 +41,6 @@ export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
           </nav>
 
           <div className="order-3 flex items-center gap-3">
-            <LanguageSwitcher className="hidden sm:inline-flex" />
             <button
               onClick={() => setOpen(true)}
               className="text-white lg:hidden"
@@ -59,12 +57,9 @@ export const Header: React.FC<HeaderProps> = ({ onApply, hubMode = false }) => {
           <div className="flex min-h-full flex-col p-8">
             <div className="mb-8 flex items-center justify-between">
               <Logo />
-              <div className="flex items-center gap-3">
-                <LanguageSwitcher variant="light" />
-                <button onClick={() => setOpen(false)} className="text-gray-500">
-                  <X className="size-6" />
-                </button>
-              </div>
+              <button onClick={() => setOpen(false)} className="text-gray-500">
+                <X className="size-6" />
+              </button>
             </div>
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => {
