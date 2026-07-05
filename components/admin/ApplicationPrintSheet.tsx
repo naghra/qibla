@@ -13,6 +13,8 @@ import {
 } from '../../utils/adminFormatters';
 import './applicationPrint.css';
 
+const LOGO_SRC = '/images/logo.webp';
+
 interface ApplicationPrintSheetProps {
   app: StoredApplication;
   notes?: string;
@@ -55,6 +57,7 @@ const TravelerSection: React.FC<{
       <div className="print-section-head">
         <span className="print-section-icon">{index + 1}</span>
         <h3 className="print-section-title">{title}</h3>
+        <span className="print-section-line" aria-hidden />
       </div>
       <div className="print-section-body">
         <dl className="print-grid">
@@ -100,23 +103,35 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
   return (
     <div className="application-print-sheet" aria-hidden="true">
       <article className="print-doc" dir="rtl">
-        <header className="print-topbar">
-          <div className="print-brand-block">
-            <h1 className="print-brand">DacGateway</h1>
-            <p className="print-brand-sub">{L.siteTagline}</p>
+        <header className="print-hero">
+          <div className="print-hero-glow" aria-hidden />
+          <div className="print-hero-inner">
+            <div className="print-hero-brand">
+              <div className="print-logo-wrap">
+                <img src={LOGO_SRC} alt="DacGateway" className="print-logo" />
+              </div>
+              <div>
+                <h1 className="print-brand">DacGateway</h1>
+                <p className="print-brand-sub">{L.siteTagline}</p>
+              </div>
+            </div>
+            <div className="print-hero-meta">
+              <p className="print-meta-label">{D.printedAt}</p>
+              <p className="print-meta-value" dir="ltr">
+                {printedAt}
+              </p>
+            </div>
           </div>
-          <div className="print-meta-block">
-            <p className="print-meta-label">{D.printedAt}</p>
-            <p className="print-meta-value" dir="ltr">
-              {printedAt}
-            </p>
-          </div>
+          <div className="print-hero-rule" aria-hidden />
         </header>
 
-        <div className="print-title-band">
-          <div>
-            <h2 className="print-title-main">{D.printTitle}</h2>
-            <p className="print-title-sub">{applicantName}</p>
+        <div className="print-title-card">
+          <div className="print-title-main-wrap">
+            <p className="print-title-eyebrow">{D.printTitle}</p>
+            <h2 className="print-title-main">{applicantName}</h2>
+            <p className="print-title-sub">
+              {app.destinationName} · {app.serviceName}
+            </p>
           </div>
           <div className="print-ref-box">
             <p className="print-ref-label">{D.reference}</p>
@@ -129,6 +144,7 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
           </div>
         </div>
 
+        <p className="print-summary-heading">{D.orderSummary}</p>
         <div className="print-summary">
           <div className="print-summary-item">
             <p className="print-summary-label">{L.applications.destination}</p>
@@ -189,6 +205,7 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
           <div className="print-section-head">
             <span className="print-section-icon">T</span>
             <h3 className="print-section-title">{D.travelDetails}</h3>
+            <span className="print-section-line" aria-hidden />
           </div>
           <div className="print-section-body">
             <dl className="print-grid">
@@ -210,6 +227,7 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
             <div className="print-section-head">
               <span className="print-section-icon">N</span>
               <h3 className="print-section-title">{D.adminNotes}</h3>
+              <span className="print-section-line" aria-hidden />
             </div>
             <div className="print-notes">{notes.trim()}</div>
           </section>
@@ -219,14 +237,15 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
           <div className="print-section-head">
             <span className="print-section-icon">H</span>
             <h3 className="print-section-title">{D.timeline}</h3>
+            <span className="print-section-line" aria-hidden />
           </div>
-          <div className="print-section-body" style={{ padding: 0, overflow: 'hidden' }}>
+          <div className="print-section-body print-section-body--flush">
             <table className="print-timeline">
               <thead>
                 <tr>
                   <th>{L.applications.status}</th>
                   <th>{D.created}</th>
-                  <th>ملاحظة</th>
+                  <th>{D.timelineNote}</th>
                 </tr>
               </thead>
               <tbody>
@@ -247,7 +266,10 @@ export const ApplicationPrintSheet: React.FC<ApplicationPrintSheetProps> = ({ ap
         </section>
 
         <footer className="print-footer">
-          <span className="print-footer-brand">DacGateway</span>
+          <div className="print-footer-brand">
+            <img src={LOGO_SRC} alt="" className="print-footer-logo" aria-hidden />
+            <span className="print-footer-name">DacGateway</span>
+          </div>
           <span className="print-footer-note">{D.printConfidential}</span>
         </footer>
       </article>

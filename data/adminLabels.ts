@@ -123,6 +123,7 @@ export const adminLabels = {
     printTitle: 'تقرير الطلب',
     printConfidential: 'مستند داخلي — للاستخدام الإداري فقط',
     printedAt: 'تاريخ الطباعة',
+    timelineNote: 'ملاحظة',
     created: 'تاريخ الإنشاء',
     updated: 'آخر تحديث',
     notProvided: 'غير متوفر',
