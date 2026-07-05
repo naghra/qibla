@@ -32,3 +32,5 @@ const NAME_TO_ISO2 = {
   france: 'FR', 'germany': 'DE', 'netherlands': 'NL', 'india': 'IN', 'pakistan': 'PK',
   bangladesh: 'BD', 'thailand': 'TH', 'uae': 'AE', 'united arab emirates': 'AE',
 };
+
+export { ISO3_TO_ISO2, NAME_TO_ISO2 };
