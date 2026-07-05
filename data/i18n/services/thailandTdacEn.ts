@@ -1,8 +1,8 @@
 import { Translations } from '../types';
 
 export const thailandTdacEn: Translations = {
-  siteName: 'Travel Smart Travel Fast',
-  metaTitle: 'Thailand Digital Arrival Card (TDAC) — Travel Smart Travel Fast',
+  siteName: 'DacGateway',
+  metaTitle: 'Thailand Digital Arrival Card (TDAC) — DacGateway',
   metaDescription: 'Apply online for Thailand Digital Arrival Card (TDAC) — fast processing and 24/7 expert support',
   nav: {
     howToApply: 'How to apply',
