@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build and deploy Thailand TDAC travel site to Contabo (ksashort.shop)
+# Build and deploy Thailand TDAC travel site to Contabo
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -28,6 +28,7 @@ if [[ ! -f "$SSH_KEY_EXPANDED" ]]; then
 fi
 
 SSH_OPTS=(-i "$SSH_KEY_EXPANDED" -o StrictHostKeyChecking=no -o BatchMode=yes)
+REDIRECT_DOMAINS="${REDIRECT_DOMAINS:-}"
 
 echo "==> Build Thailand site (${VITE_SITE_ORIGIN})"
 cd "$ROOT_DIR"
@@ -40,6 +41,31 @@ ssh "${SSH_OPTS[@]}" "$VPS_HOST" "mkdir -p '$VPS_PATH' && rm -rf '${VPS_PATH:?}'
 tar czf /tmp/thailand-dist.tar.gz -C "$ROOT_DIR/dist" .
 scp "${SSH_OPTS[@]}" /tmp/thailand-dist.tar.gz "${VPS_HOST}:/tmp/thailand-dist.tar.gz"
 ssh "${SSH_OPTS[@]}" "$VPS_HOST" "tar xzf /tmp/thailand-dist.tar.gz -C '$VPS_PATH' && chown -R www-data:www-data '$VPS_PATH' && rm /tmp/thailand-dist.tar.gz"
+
+echo "==> Install nginx config for ${SITE_DOMAIN}"
+NGINX_CONF="$(sed -e "s/__SITE_DOMAIN__/${SITE_DOMAIN}/g" \
+  -e "s|__WEB_ROOT__|${VPS_PATH}|g" \
+  -e "s/__REDIRECT_DOMAINS__/${REDIRECT_DOMAINS//,/ /}/g" \
+  "$SCRIPT_DIR/thailand-nginx.conf.template")"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "cat > /etc/nginx/sites-available/thailand.conf" <<< "$NGINX_CONF"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "ln -sf /etc/nginx/sites-available/thailand.conf /etc/nginx/sites-enabled/thailand.conf"
+
+echo "==> SSL certificate (Let's Encrypt)"
+EMAIL="${CERTBOT_EMAIL:-admin@${SITE_DOMAIN}}"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "nginx -t && certbot --nginx -d '${SITE_DOMAIN}' -d 'www.${SITE_DOMAIN}' --non-interactive --agree-tos -m '${EMAIL}' --redirect"
+
+if [[ -n "$REDIRECT_DOMAINS" ]]; then
+  IFS=',' read -ra REDIR <<< "$REDIRECT_DOMAINS"
+  EXPAND_ARGS=(-d "${SITE_DOMAIN}" -d "www.${SITE_DOMAIN}")
+  for d in "${REDIR[@]}"; do
+    d="$(echo "$d" | xargs)"
+    [[ -n "$d" ]] && EXPAND_ARGS+=(-d "$d")
+  done
+  ssh "${SSH_OPTS[@]}" "$VPS_HOST" "certbot --nginx --expand ${EXPAND_ARGS[*]} --non-interactive --agree-tos -m '${EMAIL}' --redirect || true"
+fi
+
+echo "==> Disable old qibla-standalone config"
+ssh "${SSH_OPTS[@]}" "$VPS_HOST" "rm -f /etc/nginx/sites-enabled/qibla-standalone.conf"
 
 echo "==> Reload nginx"
 ssh "${SSH_OPTS[@]}" "$VPS_HOST" "nginx -t && systemctl reload nginx"

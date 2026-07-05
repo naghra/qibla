@@ -1,4 +1,4 @@
-# النشر على Contabo (ksashort.shop)
+# النشر على Contabo (dacgateway.com)
 
 ## موقع سفر تايلاند (الإنتاج الحالي)
 
@@ -13,7 +13,8 @@ chmod +x deploy/deploy-thailand.sh
 
 | البند | القيمة |
 |-------|--------|
-| الدومين | https://ksashort.shop |
+| الدومين الأساسي | https://dacgateway.com |
+| دومين ثانوي (تحويل) | https://ksashort.shop → dacgateway.com |
 | المسار | `/var/www/qibla` |
 | البناء | `npm run build` → `dist/` |
 
@@ -161,5 +162,6 @@ curl -fsSL https://raw.githubusercontent.com/naghra/qibla/cursor/ksashort-domain
 
 | الدومين | الحالة |
 |---------|--------|
-| https://ksashort.shop | **موقع سفر تايلاند** (React SPA) |
+| https://dacgateway.com | **موقع سفر تايلاند** (الدومين الأساسي) |
+| https://ksashort.shop | يُحوّل تلقائياً → dacgateway.com |
 | https://qibla.codform.shop | تطبيق القبلة (نسخة احتياطية) |
