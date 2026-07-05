@@ -21,6 +21,7 @@ import {
 import { StatusBadge } from '../../components/admin/StatusBadge';
 import { ActivityTimeline } from '../../components/admin/ActivityTimeline';
 import { DetailField, DetailGrid, DetailSection } from '../../components/admin/DetailSection';
+import { ApplicationPrintSheet } from '../../components/admin/ApplicationPrintSheet';
 import { adminLabels } from '../../data/adminLabels';
 import { getApplication, updateApplicationStatus } from '../../services/applicationStore';
 import type { ApplicationStatus, StoredApplication } from '../../types/admin';
@@ -140,7 +141,9 @@ export const AdminApplicationDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-full p-3 sm:p-6 lg:p-8">
+    <>
+    <ApplicationPrintSheet app={app} notes={notes} />
+    <div className="admin-detail-screen w-full max-w-full p-3 sm:p-6 lg:p-8">
       <button
         type="button"
         onClick={() => navigate('/admin/applications')}
@@ -353,5 +356,6 @@ export const AdminApplicationDetailPage: React.FC = () => {
         .action-btn--ghost:hover { background: rgba(255,255,255,0.18); }
       `}</style>
     </div>
+    </>
   );
 };
