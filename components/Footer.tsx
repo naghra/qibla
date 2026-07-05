@@ -1,20 +1,33 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { PaymentMethodBadges } from './PaymentMethodBadges';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
+import { legalPath, type LegalSlug } from '../data/i18n/legalPages';
 
 export const Footer: React.FC = () => {
-  const { t, pageScope } = useLanguage();
+  const { t, pageScope, lang } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
   const { footer: f } = t;
 
   return (
     <footer id="contact" className="border-t border-gray-100 bg-gray-50 py-16">
       <div className="container mx-auto grid gap-10 px-4 md:grid-cols-4">
-        <div className="space-y-4 md:col-span-2">
+        <div className="space-y-5 md:col-span-2">
           <Logo />
-          <p className="max-w-md text-sm leading-relaxed text-gray-600">{f.description}</p>
+          {f.description && (
+            <p className="max-w-xl text-sm leading-relaxed text-gray-600">{f.description}</p>
+          )}
+          <div>
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-900">
+              {f.companyInfoTitle}
+            </h4>
+            <p className="font-semibold text-gray-900">{f.companyName}</p>
+            <p className="mt-1.5 max-w-md text-sm leading-relaxed text-gray-600" dir="ltr">
+              {f.companyAddress}
+            </p>
+          </div>
         </div>
 
         <div>
@@ -34,10 +47,13 @@ export const Footer: React.FC = () => {
           <h4 className="mb-4 font-bold text-gray-900">{f.legal}</h4>
           <ul className="space-y-2">
             {f.legalLinks.map((link) => (
-              <li key={link.label}>
-                <a href={link.href} className="text-sm text-gray-600 transition hover:text-blue-500">
+              <li key={link.slug}>
+                <Link
+                  to={legalPath(lang, link.slug as LegalSlug)}
+                  className="text-sm text-gray-600 transition hover:text-blue-500"
+                >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -60,7 +76,9 @@ export const Footer: React.FC = () => {
           <p>© {new Date().getFullYear()} {t.siteName}. {f.copyright}</p>
           <p>{f.contact}</p>
         </div>
-        <p className="mt-4 text-center text-xs text-gray-400">{f.disclaimer}</p>
+        {f.disclaimer && (
+          <p className="mt-4 text-center text-xs text-gray-400">{f.disclaimer}</p>
+        )}
       </div>
     </footer>
   );

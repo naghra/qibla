@@ -1,8 +1,9 @@
 import { Translations } from '../types';
+import { siteDefinition, companyInfo } from '../siteDefinition';
 
 export const thailandTdacAr: Translations = {
-  siteName: 'سفر ذكي سفر سريع',
-  metaTitle: 'بطاقة الوصول الرقمية التايلاندية TDAC — سفر ذكي سفر سريع',
+  siteName: 'DacGateway',
+  metaTitle: 'بطاقة الوصول الرقمية التايلاندية TDAC — DacGateway',
   metaDescription: 'تقديم بطاقة الوصول الرقمية التايلاندية TDAC عبر الإنترنت — معالجة سريعة ودعم خبير على مدار الساعة',
   nav: {
     howToApply: 'كيفية التقديم',
@@ -130,21 +131,24 @@ export const thailandTdacAr: Translations = {
     button: 'احصل على بطاقة TDAC',
   },
   footer: {
-    description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    description: siteDefinition.ar,
+    companyInfoTitle: companyInfo.title.ar,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
-      { label: 'سياسة الخصوصية', href: '#' },
-      { label: 'شروط الخدمة', href: '#' },
-      { label: 'سياسة الاسترداد', href: '#' },
-      { label: 'إخلاء المسؤولية', href: '#' },
+      { label: 'سياسة الخصوصية', slug: 'privacy' },
+      { label: 'شروط الخدمة', slug: 'terms' },
+      { label: 'سياسة الاسترداد', slug: 'refund' },
+      { label: 'إخلاء المسؤولية', slug: 'disclaimer' },
     ],
     paymentMethodsTitle: 'طرق الدفع والأمان',
     paymentSslNote: 'تشفير SSL 256-bit',
     paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
-    disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة وليست الموقع الرسمي للحكومة التايلاندية.',
+    disclaimer: '',
   },
   chat: {
     title: 'دعم 24/7',

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Apply online for travel documents — fast processing and 24/7 expert support" />
-    <title>Travel Smart Travel Fast — Stress-free travel documents</title>
+    <title>DacGateway — Stress-free travel documents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -35,11 +35,15 @@
       [data-admin-layout] {
         width: 100%;
         max-width: 100vw;
-        overflow-x: hidden;
+        height: 100dvh;
+        overflow: hidden;
+        font-variant-numeric: lining-nums;
       }
       [data-admin-layout] .admin-main {
         width: 100%;
         max-width: 100%;
+        min-height: 0;
+        -webkit-overflow-scrolling: touch;
       }
       [data-admin-layout] .admin-cards-wrap,
       [data-admin-layout] .admin-bottom-nav {
@@ -83,6 +87,10 @@
         [data-admin-layout] .admin-mobile-drawer,
         [data-admin-layout] .admin-mobile-overlay {
           display: none !important;
+        }
+        [data-admin-layout] .admin-main {
+          overflow: visible !important;
+          height: auto !important;
         }
       }
 
