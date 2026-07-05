@@ -142,6 +142,9 @@ export interface Translations {
   };
   footer: {
     description: string;
+    companyInfoTitle: string;
+    companyName: string;
+    companyAddress: string;
     quickLinks: string;
     legal: string;
     legalLinks: { label: string; href: string }[];
