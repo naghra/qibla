@@ -9,6 +9,25 @@ import type {
 
 const STORAGE_KEY = 'qibla_applications';
 
+function useApi(): boolean {
+  return import.meta.env.PROD || import.meta.env.VITE_USE_API === 'true';
+}
+
+async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(path, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...init?.headers,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`API ${res.status}: ${path}`);
+  }
+  if (res.status === 204) return undefined as T;
+  return res.json() as Promise<T>;
+}
+
 function readAll(): StoredApplication[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -31,6 +50,10 @@ function generateId(): string {
   return `APP-${ts}-${rand}`;
 }
 
+function countsAsRevenue(app: StoredApplication): boolean {
+  return app.paymentStatus !== 'unpaid';
+}
+
 function weekStart(): Date {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -38,7 +61,18 @@ function weekStart(): Date {
   return d;
 }
 
-export function saveApplication(input: ApplicationInput): StoredApplication {
+export async function saveApplication(input: ApplicationInput): Promise<StoredApplication> {
+  if (useApi()) {
+    try {
+      return await apiFetch<StoredApplication>('/api/applications', {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
+    } catch {
+      // fall through to localStorage
+    }
+  }
+
   const now = new Date().toISOString();
   const record: StoredApplication = {
     id: generateId(),
@@ -54,25 +88,52 @@ export function saveApplication(input: ApplicationInput): StoredApplication {
   return record;
 }
 
-export function getApplications(): StoredApplication[] {
+export async function getApplications(): Promise<StoredApplication[]> {
+  if (useApi()) {
+    try {
+      return await apiFetch<StoredApplication[]>('/api/applications');
+    } catch {
+      // fall through
+    }
+  }
   return readAll().sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
-export function getApplication(id: string): StoredApplication | undefined {
+export async function getApplication(id: string): Promise<StoredApplication | undefined> {
+  if (useApi()) {
+    try {
+      const app = await apiFetch<StoredApplication>(`/api/applications/${encodeURIComponent(id)}`);
+      return app;
+    } catch {
+      // fall through
+    }
+  }
   return readAll().find((a) => a.id === id);
 }
 
-export function getPendingCount(): number {
-  return readAll().filter((a) => a.status === 'pending').length;
+export async function getPendingCount(): Promise<number> {
+  const apps = await getApplications();
+  return apps.filter((a) => a.status === 'pending').length;
 }
 
-export function updateApplicationStatus(
+export async function updateApplicationStatus(
   id: string,
   status: ApplicationStatus,
   adminNotes?: string
-): StoredApplication | undefined {
+): Promise<StoredApplication | undefined> {
+  if (useApi()) {
+    try {
+      return await apiFetch<StoredApplication>(`/api/applications/${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status, adminNotes }),
+      });
+    } catch {
+      // fall through
+    }
+  }
+
   const apps = readAll();
   const index = apps.findIndex((a) => a.id === id);
   if (index === -1) return undefined;
@@ -96,15 +157,36 @@ export function updateApplicationStatus(
   return apps[index];
 }
 
-export function bulkUpdateStatus(ids: string[], status: ApplicationStatus): number {
+export async function bulkUpdateStatus(ids: string[], status: ApplicationStatus): Promise<number> {
+  if (useApi()) {
+    try {
+      const result = await apiFetch<{ updated: number }>('/api/applications/bulk', {
+        method: 'PATCH',
+        body: JSON.stringify({ ids, status }),
+      });
+      return result.updated;
+    } catch {
+      // fall through
+    }
+  }
+
   let updated = 0;
   for (const id of ids) {
-    if (updateApplicationStatus(id, status)) updated += 1;
+    if (await updateApplicationStatus(id, status)) updated += 1;
   }
   return updated;
 }
 
-export function deleteApplication(id: string): boolean {
+export async function deleteApplication(id: string): Promise<boolean> {
+  if (useApi()) {
+    try {
+      await apiFetch<void>(`/api/applications/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      return true;
+    } catch {
+      // fall through
+    }
+  }
+
   const apps = readAll();
   const next = apps.filter((a) => a.id !== id);
   if (next.length === apps.length) return false;
@@ -112,8 +194,8 @@ export function deleteApplication(id: string): boolean {
   return true;
 }
 
-export function getDashboardStats(): DashboardStats {
-  const apps = readAll();
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const apps = await getApplications();
   const today = new Date().toDateString();
   const week = weekStart();
 
@@ -121,13 +203,13 @@ export function getDashboardStats(): DashboardStats {
     (acc, app) => {
       acc.total += 1;
       acc[app.status] += 1;
-      acc.totalRevenue += app.totalAmount;
+      if (countsAsRevenue(app)) acc.totalRevenue += app.totalAmount;
 
       const created = new Date(app.createdAt);
       if (created.toDateString() === today) acc.todayCount += 1;
       if (created >= week) {
         acc.weekCount += 1;
-        acc.weekRevenue += app.totalAmount;
+        if (countsAsRevenue(app)) acc.weekRevenue += app.totalAmount;
       }
       return acc;
     },
@@ -150,8 +232,8 @@ export function getDashboardStats(): DashboardStats {
   return stats;
 }
 
-export function getDailyCounts(days = 7): DailyCount[] {
-  const apps = readAll();
+export async function getDailyCounts(days = 7): Promise<DailyCount[]> {
+  const apps = await getApplications();
   const result: DailyCount[] = [];
 
   for (let i = days - 1; i >= 0; i -= 1) {
@@ -169,21 +251,21 @@ export function getDailyCounts(days = 7): DailyCount[] {
   return result;
 }
 
-export function getTopDestinations(limit = 5): DestinationStat[] {
-  const apps = readAll();
+export async function getTopDestinations(limit = 5): Promise<DestinationStat[]> {
+  const apps = await getApplications();
   const map = new Map<string, DestinationStat>();
 
   for (const app of apps) {
     const existing = map.get(app.destinationSlug);
     if (existing) {
       existing.count += 1;
-      existing.revenue += app.totalAmount;
+      if (countsAsRevenue(app)) existing.revenue += app.totalAmount;
     } else {
       map.set(app.destinationSlug, {
         slug: app.destinationSlug,
         name: app.destinationName,
         count: 1,
-        revenue: app.totalAmount,
+        revenue: countsAsRevenue(app) ? app.totalAmount : 0,
       });
     }
   }
@@ -195,6 +277,7 @@ export function exportApplicationsCsv(apps: StoredApplication[]): string {
   const headers = [
     'ID',
     'Status',
+    'Payment',
     'Applicant',
     'Email',
     'Phone',
@@ -211,6 +294,7 @@ export function exportApplicationsCsv(apps: StoredApplication[]): string {
     return [
       app.id,
       app.status,
+      app.paymentStatus ?? 'unpaid',
       `${t?.firstName ?? ''} ${t?.lastName ?? ''}`.trim(),
       t?.email ?? '',
       t?.phone ?? '',
@@ -237,8 +321,9 @@ export function downloadCsv(filename: string, content: string): void {
   URL.revokeObjectURL(url);
 }
 
-/** Seed demo data when store is empty (admin preview). */
-export function seedDemoApplicationsIfEmpty(): void {
+/** Seed demo data when store is empty (admin preview, dev only). */
+export async function seedDemoApplicationsIfEmpty(): Promise<void> {
+  if (import.meta.env.PROD) return;
   if (readAll().length > 0) return;
 
   const demos: ApplicationInput[] = [
@@ -281,11 +366,11 @@ export function seedDemoApplicationsIfEmpty(): void {
       destinationName: 'Thailand',
       serviceSlug: 'tdac',
       serviceName: 'Thailand Digital Arrival Card',
-      planId: 'express',
-      planName: 'Express',
+      planId: 'fast',
+      planName: 'Fast',
       totalAmount: 89,
       data: {
-        plan: 'express',
+        plan: 'fast',
         travelers: [
           {
             firstName: 'Sarah',
@@ -308,46 +393,13 @@ export function seedDemoApplicationsIfEmpty(): void {
         },
       },
     },
-    {
-      lang: 'en',
-      destinationSlug: 'jamaica',
-      destinationName: 'Jamaica',
-      serviceSlug: 'c5-form',
-      serviceName: 'Jamaica C5 Form',
-      planId: 'standard',
-      planName: 'Standard',
-      totalAmount: 55,
-      data: {
-        plan: 'standard',
-        travelers: [
-          {
-            firstName: 'Michael',
-            lastName: 'Brown',
-            passportNumber: 'UK4455667',
-            nationality: 'GB',
-            dateOfBirth: '1995-11-08',
-            gender: 'male',
-            email: 'michael@example.com',
-            phone: '+44 7700 900123',
-          },
-        ],
-        travel: {
-          arrivalDate: '2026-07-20',
-          departureDate: '2026-07-28',
-          flightNumber: 'BA178',
-          purposeOfVisit: 'tourism',
-          accommodationAddress: 'Montego Bay Resort',
-          accommodationCity: 'Montego Bay',
-        },
-      },
-    },
   ];
 
   for (const demo of demos) {
-    saveApplication(demo);
+    await saveApplication(demo);
   }
 
-  const apps = readAll();
-  if (apps[1]) updateApplicationStatus(apps[1].id, 'processing');
-  if (apps[2]) updateApplicationStatus(apps[2].id, 'approved', 'تم التحقق من البيانات');
+  const apps = await getApplications();
+  if (apps[1]) await updateApplicationStatus(apps[1].id, 'processing');
+  if (apps[2]) await updateApplicationStatus(apps[2].id, 'approved', 'تم التحقق من البيانات');
 }
