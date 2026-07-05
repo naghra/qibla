@@ -147,7 +147,7 @@ export interface Translations {
     companyAddress: string;
     quickLinks: string;
     legal: string;
-    legalLinks: { label: string; href: string }[];
+    legalLinks: { label: string; slug: string }[];
     paymentMethodsTitle: string;
     paymentSslNote: string;
     paymentPciNote: string;

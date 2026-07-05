@@ -14,6 +14,7 @@ import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminApplicationsPage } from './pages/admin/AdminApplicationsPage';
 import { AdminApplicationDetailPage } from './pages/admin/AdminApplicationDetailPage';
 import { AdminDestinationsPage } from './pages/admin/AdminDestinationsPage';
+import { LegalPageRoute } from './pages/LegalPageRoute';
 
 const App: React.FC = () => {
   return (
@@ -36,6 +37,7 @@ const App: React.FC = () => {
           <Route path="/" element={<RootRedirect />} />
           <Route path="/apply" element={<LegacyApplyRedirect />} />
           <Route path="/thailand/tdac/*" element={<Navigate to="/en/thailand/tdac" replace />} />
+          <Route path="/:lang/legal/:slug" element={<LegalPageRoute />} />
           <Route path="/:lang" element={<LangLayout />}>
             <Route index element={<HubPage />} />
             <Route path=":country" element={<CountryPage />} />

@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { PaymentMethodBadges } from './PaymentMethodBadges';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
+import { legalPath, type LegalSlug } from '../data/i18n/legalPages';
 
 export const Footer: React.FC = () => {
-  const { t, pageScope } = useLanguage();
+  const { t, pageScope, lang } = useLanguage();
   const navLinks = getNavLinks(t, pageScope.type);
   const { footer: f } = t;
 
@@ -45,10 +47,13 @@ export const Footer: React.FC = () => {
           <h4 className="mb-4 font-bold text-gray-900">{f.legal}</h4>
           <ul className="space-y-2">
             {f.legalLinks.map((link) => (
-              <li key={link.label}>
-                <a href={link.href} className="text-sm text-gray-600 transition hover:text-blue-500">
+              <li key={link.slug}>
+                <Link
+                  to={legalPath(lang, link.slug as LegalSlug)}
+                  className="text-sm text-gray-600 transition hover:text-blue-500"
+                >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
