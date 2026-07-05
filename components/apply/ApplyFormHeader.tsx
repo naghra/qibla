@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Globe, AlignLeft } from 'lucide-react';
+import { X, AlignLeft } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { buildPath } from '../../data/destinations';
-import { countryFlag } from '../../data/countries';
+import { CountryFlag } from '../CountryFlag';
 import { getNavLinks } from '../../utils/navLinks';
 
 export const ApplyFormHeader: React.FC = () => {
-  const { t, lang, setLang, pageScope, destination } = useLanguage();
+  const { t, lang, pageScope, destination } = useLanguage();
   const [open, setOpen] = useState(false);
   const navLinks = getNavLinks(t, pageScope.type);
-
-  const toggleLang = () => setLang(lang === 'en' ? 'ar' : 'en');
 
   return (
     <>
@@ -32,8 +30,8 @@ export const ApplyFormHeader: React.FC = () => {
             to={buildPath(lang)}
             className="apply-logo-link relative order-2 flex -ms-4 items-center justify-center gap-2 overflow-hidden text-gray-800 transition active:scale-95 sm:ms-0"
           >
-            <span className="relative -ms-8 text-2xl leading-none sm:ms-0" aria-hidden>
-              {countryFlag(destination?.countryCode ?? 'UN')}
+            <span className="relative -ms-8 sm:ms-0" aria-hidden>
+              <CountryFlag code={destination?.countryCode ?? 'UN'} size={28} />
             </span>
             <img
               src="/images/logo.webp"
@@ -43,16 +41,7 @@ export const ApplyFormHeader: React.FC = () => {
             <span className="sr-only font-bold">{t.siteName}</span>
           </Link>
 
-          <div className="order-3 ms-auto">
-            <button
-              type="button"
-              onClick={toggleLang}
-              className="flex items-center justify-center overflow-hidden rounded-2xl p-0 text-gray-800 transition hover:bg-gray-100 active:scale-95"
-              aria-label="Language"
-            >
-              <Globe className="size-8" strokeWidth={1.75} />
-            </button>
-          </div>
+          <div className="order-3 ms-auto size-12 shrink-0" aria-hidden />
         </div>
       </header>
 

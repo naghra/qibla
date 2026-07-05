@@ -26,8 +26,6 @@ export function detectLang(pathname = typeof window !== 'undefined' ? window.loc
     const params = new URLSearchParams(search || window.location.search);
     const queryLang = params.get('lang');
     if (queryLang === 'en' || queryLang === 'ar') return queryLang;
-    const stored = localStorage.getItem('lang');
-    if (stored === 'en' || stored === 'ar') return stored;
   }
   const path = pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
   if (path.startsWith('/en') || path.includes('/en/')) return 'en';
