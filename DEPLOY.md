@@ -1,6 +1,27 @@
+# النشر على Contabo (ksashort.shop)
+
+## موقع سفر تايلاند (الإنتاج الحالي)
+
+موقع **Travel Smart Travel Fast** — React SPA لطلب وثائق السفر (TDAC تايلاند).
+
+```bash
+cp deploy/.env.example deploy/.env
+# عدّل VITE_ADMIN_PASSWORD
+chmod +x deploy/deploy-thailand.sh
+./deploy/deploy-thailand.sh
+```
+
+| البند | القيمة |
+|-------|--------|
+| الدومين | https://ksashort.shop |
+| المسار | `/var/www/qibla` |
+| البناء | `npm run build` → `dist/` |
+
+---
+
 # مشروع Qibla (مكتشف القبلة)
 
-تطبيق ويب **ثابت** (HTML + JavaScript) لتحديد اتجاه القبلة.  
+تطبيق وеб **ثابت** (HTML + JavaScript) لتحديد اتجاه القبلة.  
 **لا يحتاج** قاعدة بيانات ولا Supabase ولا Codform.
 
 ## 1. المتطلبات
@@ -140,7 +161,5 @@ curl -fsSL https://raw.githubusercontent.com/naghra/qibla/cursor/ksashort-domain
 
 | الدومين | الحالة |
 |---------|--------|
-| https://qibla.codform.shop | يعمل — تطبيق القبلة |
-| https://ksashort.shop | **DNS غير مربوط** + nginx يعرض CodForm مؤقتاً |
-
-بعد إعداد DNS وتشغيل `./deploy/deploy.sh` أو `setup-ksashort-vnc.sh`، سيُعرض القبلة على `ksashort.shop`.
+| https://ksashort.shop | **موقع سفر تايلاند** (React SPA) |
+| https://qibla.codform.shop | تطبيق القبلة (نسخة احتياطية) |
