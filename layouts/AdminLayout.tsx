@@ -11,6 +11,7 @@ const pageTitles: Record<string, string> = {
   '/admin': adminLabels.dashboard.title,
   '/admin/applications': adminLabels.applications.title,
   '/admin/destinations': adminLabels.destinations.title,
+  '/admin/settings': adminLabels.settings.title,
 };
 
 function resolveTitle(pathname: string): string {

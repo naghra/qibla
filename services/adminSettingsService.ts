@@ -17,9 +17,13 @@ export interface AdminSettingsUpdate {
   clearOpenaiKey?: boolean;
 }
 
+function getAdminPassword(): string {
+  return sessionStorage.getItem('qibla_admin_pwd') || import.meta.env.VITE_ADMIN_PASSWORD || '';
+}
+
 function adminHeaders(): Record<string, string> {
-  const password = sessionStorage.getItem('qibla_admin_pwd');
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  const password = getAdminPassword();
   if (password) headers['X-Admin-Password'] = password;
   return headers;
 }

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 const MODEL_OPTIONS = ['gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini'];
 
 export const AdminSettingsPage: React.FC = () => {
-  const { isAuthenticated } = useAdminAuth();
+  const { isAuthenticated, logout } = useAdminAuth();
   const navigate = useNavigate();
   const s = adminLabels.settings;
 
@@ -35,13 +35,14 @@ export const AdminSettingsPage: React.FC = () => {
       })
       .catch((err) => {
         if (err instanceof Error && err.message === 'unauthorized') {
+          logout();
           navigate('/admin/login');
           return;
         }
         setError(s.loadError);
       })
       .finally(() => setLoading(false));
-  }, [isAuthenticated, navigate, s.loadError]);
+  }, [isAuthenticated, logout, navigate, s.loadError]);
 
   const handleSave = () => {
     setSaving(true);
@@ -60,6 +61,7 @@ export const AdminSettingsPage: React.FC = () => {
       })
       .catch((err) => {
         if (err instanceof Error && err.message === 'unauthorized') {
+          logout();
           navigate('/admin/login');
           return;
         }
