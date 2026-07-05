@@ -2,16 +2,16 @@ import Stripe from 'stripe';
 import { calculateOrderAmount } from './pricing.js';
 import {
   createApplication,
-  getApplicationById,
   getApplicationByStripeSession,
   markApplicationPaid,
   setApplicationStripeSession,
 } from './db.js';
+import { getStripeCredentials } from './settings.js';
 
-function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY?.trim();
-  if (!key) return null;
-  return new Stripe(key, { apiVersion: '2024-11-20.acacia' });
+async function createStripeClient() {
+  const { secretKey } = await getStripeCredentials();
+  if (!secretKey) return null;
+  return new Stripe(secretKey, { apiVersion: '2024-11-20.acacia' });
 }
 
 function siteOrigin() {
@@ -66,7 +66,7 @@ function validateCheckoutInput(body) {
 export async function handlePaymentsApi(req, res, urlPath) {
   try {
     if (urlPath === '/api/checkout/sessions' && req.method === 'POST') {
-      const stripe = getStripe();
+      const stripe = await createStripeClient();
       if (!stripe) {
         sendJson(res, 503, { error: 'stripe_not_configured' });
         return true;
@@ -136,7 +136,7 @@ export async function handlePaymentsApi(req, res, urlPath) {
     const verifyMatch = urlPath.match(/^\/api\/checkout\/sessions\/([^/]+)$/);
     if (verifyMatch && req.method === 'GET') {
       const sessionId = decodeURIComponent(verifyMatch[1]);
-      const stripe = getStripe();
+      const stripe = await createStripeClient();
 
       let app = await getApplicationByStripeSession(sessionId);
       if (!app) {
@@ -171,8 +171,8 @@ export async function handlePaymentsApi(req, res, urlPath) {
 }
 
 export async function handleStripeWebhook(req, res, rawBody) {
-  const stripe = getStripe();
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
+  const { secretKey, webhookSecret } = await getStripeCredentials();
+  const stripe = secretKey ? new Stripe(secretKey, { apiVersion: '2024-11-20.acacia' }) : null;
 
   if (!stripe || !webhookSecret) {
     res.writeHead(503);

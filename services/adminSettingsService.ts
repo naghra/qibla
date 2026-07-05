@@ -7,14 +7,32 @@ export interface AdminOpenAiSettings {
   savedInEnv: boolean;
 }
 
+export interface AdminStripeSettings {
+  configured: boolean;
+  webhookConfigured: boolean;
+  secretKeyPreview: string | null;
+  webhookSecretPreview: string | null;
+  mode: 'live' | 'test' | 'unknown' | null;
+  webhookUrl: string;
+  secretSource: 'database' | 'env' | 'none';
+  webhookSource: 'database' | 'env' | 'none';
+  savedInPanel: { secret: boolean; webhook: boolean };
+  savedInEnv: { secret: boolean; webhook: boolean };
+}
+
 export interface AdminSettingsResponse {
   openai: AdminOpenAiSettings;
+  stripe: AdminStripeSettings;
 }
 
 export interface AdminSettingsUpdate {
   openaiApiKey?: string;
   openaiVisionModel?: string;
   clearOpenaiKey?: boolean;
+  stripeSecretKey?: string;
+  stripeWebhookSecret?: string;
+  clearStripeSecretKey?: boolean;
+  clearStripeWebhookSecret?: boolean;
 }
 
 function getAdminPassword(): string {
