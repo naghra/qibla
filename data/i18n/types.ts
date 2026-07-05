@@ -259,6 +259,12 @@ export interface Translations {
     paymentCancelled: string;
     paymentError: string;
     paymentPending: string;
+    passportScanning: string;
+    passportScanSuccess: string;
+    passportScanError: string;
+    passportScanTooLarge: string;
+    passportScanInvalidType: string;
+    passportScanPartial: string;
   };
   glanceItems: GlanceItem[];
   requirements: string[];

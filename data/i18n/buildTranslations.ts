@@ -219,6 +219,12 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
       paymentCancelled: 'Payment was cancelled. You can review your order and try again.',
       paymentError: 'Payment could not be completed. Please try again.',
       paymentPending: 'Payment is still processing. Please wait a moment and refresh, or contact support with your order reference.',
+      passportScanning: 'Reading passport…',
+      passportScanSuccess: 'Passport data filled in — please review before continuing.',
+      passportScanError: 'Could not read the passport. Try a clearer photo or fill in manually.',
+      passportScanTooLarge: 'Image is too large. Please use a photo under 5 MB.',
+      passportScanInvalidType: 'Please upload a JPG, PNG, or WebP photo.',
+      passportScanPartial: 'Some fields could not be read. Please check and complete manually.',
     };
   }
   return {
@@ -318,6 +324,12 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     paymentCancelled: 'تم إلغاء الدفع. يمكنك مراجعة طلبك والمحاولة مرة أخرى.',
     paymentError: 'تعذّر إتمام الدفع. يرجى المحاولة مرة أخرى.',
     paymentPending: 'الدفع قيد المعالجة. انتظر قليلاً ثم حدّث الصفحة، أو تواصل مع الدعم مع رقم الطلب.',
+    passportScanning: 'جاري قراءة الجواز…',
+    passportScanSuccess: 'تم تعبئة البيانات — يرجى المراجعة قبل المتابعة.',
+    passportScanError: 'تعذّرت قراءة الجواز. جرّب صورة أوضح أو أكمل يدوياً.',
+    passportScanTooLarge: 'الصورة كبيرة جداً. استخدم صورة أقل من 5 ميجابايت.',
+    passportScanInvalidType: 'ارفع صورة بصيغة JPG أو PNG أو WebP.',
+    passportScanPartial: 'لم تُقرأ بعض الحقول. راجعها وأكملها يدوياً.',
   };
 }
 

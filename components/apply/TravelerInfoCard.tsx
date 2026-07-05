@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { Lang } from '../../data/i18n/types';
 import type { TravelerData } from '../../types';
@@ -19,6 +19,11 @@ import {
   applyTravelerHeader,
 } from './applyStyles';
 import { DateParts, defaultDateParts, isoToDateParts, datePartsToIso } from '../../utils/dateParts';
+import {
+  PassportScanError,
+  scanPassportImage,
+  type PassportScanData,
+} from '../../services/passportScanService';
 
 interface TravelerInfoCardProps {
   index: number;
@@ -30,6 +35,7 @@ interface TravelerInfoCardProps {
   onDobChange: (parts: DateParts) => void;
   onIssueChange: (parts: DateParts) => void;
   onExpiryChange: (parts: DateParts) => void;
+  onPassportExtracted: (data: PassportScanData) => void;
   dob: DateParts;
   issue: DateParts;
   expiry: DateParts;
@@ -46,17 +52,58 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
   onDobChange,
   onIssueChange,
   onExpiryChange,
+  onPassportExtracted,
   dob,
   issue,
   expiry,
   onRemove,
 }) => {
   const [open, setOpen] = useState(true);
+  const [scanning, setScanning] = useState(false);
+  const [scanMessage, setScanMessage] = useState<{ tone: 'success' | 'error' | 'warn'; text: string } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const title = isPrimary
     ? `${a.traveler(index + 1)}: ${a.travelerYourself}`
     : a.traveler(index + 1);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    setScanning(true);
+    setScanMessage(null);
+
+    void scanPassportImage(file)
+      .then(({ data, missing }) => {
+        onPassportExtracted(data);
+        if (missing.length > 0) {
+          setScanMessage({ tone: 'warn', text: a.passportScanPartial });
+        } else {
+          setScanMessage({ tone: 'success', text: a.passportScanSuccess });
+        }
+      })
+      .catch((err: unknown) => {
+        if (err instanceof PassportScanError) {
+          if (err.partial) onPassportExtracted(err.partial);
+          if (err.code === 'image_too_large') {
+            setScanMessage({ tone: 'error', text: a.passportScanTooLarge });
+            return;
+          }
+          if (err.code === 'invalid_image_type') {
+            setScanMessage({ tone: 'error', text: a.passportScanInvalidType });
+            return;
+          }
+          if (err.code === 'extraction_incomplete' && err.partial) {
+            setScanMessage({ tone: 'warn', text: a.passportScanPartial });
+            return;
+          }
+        }
+        setScanMessage({ tone: 'error', text: a.passportScanError });
+      })
+      .finally(() => setScanning(false));
+  };
 
   return (
     <article className={applyCard}>
@@ -67,11 +114,44 @@ export const TravelerInfoCard: React.FC<TravelerInfoCardProps> = ({
 
       {open && (
         <div className={`${applySectionInner} p-4 sm:p-5`}>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={handleFileChange}
+          />
 
-          <button type="button" onClick={() => fileRef.current?.click()} className={applyDashedBox}>
-            {a.autofillPassport}
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={scanning}
+            className={`${applyDashedBox} ${scanning ? 'pointer-events-none opacity-70' : ''}`}
+          >
+            {scanning ? (
+              <>
+                <Loader2 className="size-5 animate-spin text-blue-500" />
+                {a.passportScanning}
+              </>
+            ) : (
+              a.autofillPassport
+            )}
           </button>
+
+          {scanMessage && (
+            <p
+              className={`rounded-xl px-3 py-2 text-sm ${
+                scanMessage.tone === 'success'
+                  ? 'bg-emerald-50 text-emerald-800'
+                  : scanMessage.tone === 'warn'
+                    ? 'bg-amber-50 text-amber-900'
+                    : 'bg-red-50 text-red-800'
+              }`}
+              role="status"
+            >
+              {scanMessage.text}
+            </p>
+          )}
 
           <div className="relative flex items-center">
             <div className="h-px flex-1 bg-gray-200" />
@@ -207,3 +287,37 @@ export function travelerDateParts(
   if (field === 'passportIssueDate') return defaultDateParts(-365 * 3);
   return defaultDateParts(365 * 5);
 }
+
+function applyPassportData(
+  data: PassportScanData,
+  onUpdateTraveler: (index: number, field: keyof TravelerData, value: string) => void,
+  onDobChange: (index: number, parts: DateParts) => void,
+  onIssueChange: (index: number, parts: DateParts) => void,
+  onExpiryChange: (index: number, parts: DateParts) => void,
+  index: number
+) {
+  if (data.firstName) onUpdateTraveler(index, 'firstName', data.firstName);
+  if (data.lastName) onUpdateTraveler(index, 'lastName', data.lastName);
+  if (data.passportNumber) onUpdateTraveler(index, 'passportNumber', data.passportNumber);
+  if (data.nationality) onUpdateTraveler(index, 'nationality', data.nationality);
+  if (data.passportCountry) onUpdateTraveler(index, 'passportCountry', data.passportCountry);
+  if (data.gender) onUpdateTraveler(index, 'gender', data.gender);
+
+  if (data.dateOfBirth) {
+    const parts = isoToDateParts(data.dateOfBirth);
+    onDobChange(index, parts);
+    onUpdateTraveler(index, 'dateOfBirth', data.dateOfBirth);
+  }
+  if (data.passportIssueDate) {
+    const parts = isoToDateParts(data.passportIssueDate);
+    onIssueChange(index, parts);
+    onUpdateTraveler(index, 'passportIssueDate', data.passportIssueDate);
+  }
+  if (data.passportExpiryDate) {
+    const parts = isoToDateParts(data.passportExpiryDate);
+    onExpiryChange(index, parts);
+    onUpdateTraveler(index, 'passportExpiryDate', data.passportExpiryDate);
+  }
+}
+
+export { applyPassportData };

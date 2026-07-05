@@ -254,6 +254,12 @@ export const thailandTdacAr: Translations = {
     paymentCancelled: 'تم إلغاء الدفع. يمكنك مراجعة طلبك والمحاولة مرة أخرى.',
     paymentError: 'تعذّر إتمام الدفع. يرجى المحاولة مرة أخرى.',
     paymentPending: 'الدفع قيد المعالجة. انتظر قليلاً ثم حدّث الصفحة، أو تواصل مع الدعم مع رقم الطلب.',
+    passportScanning: 'جاري قراءة الجواز…',
+    passportScanSuccess: 'تم تعبئة البيانات — يرجى المراجعة قبل المتابعة.',
+    passportScanError: 'تعذّرت قراءة الجواز. جرّب صورة أوضح أو أكمل يدوياً.',
+    passportScanTooLarge: 'الصورة كبيرة جداً. استخدم صورة أقل من 5 ميجابايت.',
+    passportScanInvalidType: 'ارفع صورة بصيغة JPG أو PNG أو WebP.',
+    passportScanPartial: 'لم تُقرأ بعض الحقول. راجعها وأكملها يدوياً.',
   },
   glanceItems: [
     { icon: 'clock', title: 'وقت المعالجة', highlight: 'فوري', text: 'تُنشأ بطاقتك ورمز QR مباشرة بعد الإرسال.' },

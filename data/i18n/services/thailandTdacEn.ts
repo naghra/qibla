@@ -254,6 +254,12 @@ export const thailandTdacEn: Translations = {
     paymentCancelled: 'Payment was cancelled. You can review your order and try again.',
     paymentError: 'Payment could not be completed. Please try again.',
     paymentPending: 'Payment is still processing. Please wait a moment and refresh, or contact support with your order reference.',
+    passportScanning: 'Reading passport…',
+    passportScanSuccess: 'Passport data filled in — please review before continuing.',
+    passportScanError: 'Could not read the passport. Try a clearer photo or fill in manually.',
+    passportScanTooLarge: 'Image is too large. Please use a photo under 5 MB.',
+    passportScanInvalidType: 'Please upload a JPG, PNG, or WebP photo.',
+    passportScanPartial: 'Some fields could not be read. Please check and complete manually.',
   },
   glanceItems: [
     { icon: 'clock', title: 'Processing time', highlight: 'Instant', text: 'Your TDAC and QR code are generated immediately after submission.' },

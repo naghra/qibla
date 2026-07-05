@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react';
 import type { Translations } from '../../data/i18n/types';
 import type { Lang } from '../../data/i18n/types';
 import type { TravelerData } from '../../types';
-import { TravelerInfoCard, travelerDateParts } from './TravelerInfoCard';
+import { TravelerInfoCard, travelerDateParts, applyPassportData } from './TravelerInfoCard';
 import { applyBtnAddTraveler, applySection } from './applyStyles';
 import { DateParts, datePartsToIso } from '../../utils/dateParts';
 
@@ -52,6 +52,9 @@ export const YourInfoStep: React.FC<YourInfoStepProps> = ({
         }}
         onIssueChange={(parts) => onIssueChange(index, parts)}
         onExpiryChange={(parts) => onExpiryChange(index, parts)}
+        onPassportExtracted={(data) =>
+          applyPassportData(data, onUpdateTraveler, onDobChange, onIssueChange, onExpiryChange, index)
+        }
         dob={dobParts[index] ?? travelerDateParts(traveler, 'dateOfBirth')}
         issue={issueParts[index] ?? travelerDateParts(traveler, 'passportIssueDate')}
         expiry={expiryParts[index] ?? travelerDateParts(traveler, 'passportExpiryDate')}
