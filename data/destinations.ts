@@ -336,6 +336,10 @@ export function buildPath(
   return path;
 }
 
+export function buildPaymentPath(lang: Lang, destination: string, service: string): string {
+  return `/${lang}/${destination}/${service}/payment`;
+}
+
 export function swapLangInPath(pathname: string, newLang: Lang): string {
   return pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${newLang}`);
 }

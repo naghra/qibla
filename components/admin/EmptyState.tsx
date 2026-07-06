@@ -1,5 +1,6 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
+import { adminCard } from './adminStyles';
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -8,11 +9,11 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({ icon: Icon, title, description }) => (
-  <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center">
-    <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-gray-50 text-gray-400">
+  <div className={`${adminCard} flex flex-col items-center justify-center border-dashed border-slate-200/80 bg-slate-50/50 px-6 py-14 text-center`}>
+    <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/10 to-violet-500/10 text-indigo-500 ring-1 ring-indigo-500/10">
       <Icon className="size-6" />
     </div>
-    <p className="font-medium text-gray-700">{title}</p>
-    {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+    <p className="font-semibold text-slate-700">{title}</p>
+    {description && <p className="mt-1.5 text-sm text-slate-500">{description}</p>}
   </div>
 );

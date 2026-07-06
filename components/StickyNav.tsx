@@ -7,7 +7,6 @@ import { useScroll } from '../hooks/useScroll';
 import { useLanguage } from '../context/LanguageContext';
 import { getNavLinks } from '../utils/navLinks';
 import { buildPath } from '../data/destinations';
-import LanguageSwitcher from './LanguageSwitcher';
 
 interface StickyNavProps {
   onApply: () => void;
@@ -48,7 +47,6 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
           </nav>
 
           <div className="flex items-center gap-3">
-            <LanguageSwitcher variant="light" className="hidden sm:inline-flex" />
             <PrimaryButton onClick={onApply} className="hidden px-4 py-2 text-sm sm:inline-flex">
               {hubMode ? t.hero.cta : t.nav.applyNow}
             </PrimaryButton>
@@ -68,12 +66,9 @@ export const StickyNav: React.FC<StickyNavProps> = ({ onApply, hubMode = false }
           <div className="flex min-h-full flex-col p-6">
             <div className="mb-6 flex items-center justify-between">
               <span className="font-bold text-gray-900">{t.siteName}</span>
-              <div className="flex items-center gap-3">
-                <LanguageSwitcher variant="light" />
-                <button onClick={() => setOpen(false)} className="text-gray-500">
-                  <X className="size-6" />
-                </button>
-              </div>
+              <button onClick={() => setOpen(false)} className="text-gray-500">
+                <X className="size-6" />
+              </button>
             </div>
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => {

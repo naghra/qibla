@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { destinations, buildPath } from '../data/destinations';
-import { countryFlag } from '../data/countries';
+import { CountryFlag } from './CountryFlag';
 import { useLanguage } from '../context/LanguageContext';
 
 export const DestinationsGrid: React.FC = () => {
@@ -34,8 +34,8 @@ export const DestinationsGrid: React.FC = () => {
               className="group flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-white px-5 py-4 shadow-sm transition hover:border-blue-200 hover:shadow-md"
             >
               <div className="flex min-w-0 items-center gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gray-50 text-2xl leading-none">
-                  {countryFlag(dest.countryCode)}
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gray-50">
+                  <CountryFlag code={dest.countryCode} size={28} />
                 </span>
                 <div className="min-w-0 text-start">
                   <p className="truncate font-bold text-gray-900">{dest.name[lang]}</p>
