@@ -1,42 +1,49 @@
 import type { Lang, Translations } from './types';
 import type { DestinationDef, PageScope, ServiceDef } from '../destinations';
+import { siteDefinition, companyInfo } from './siteDefinition';
 import { thailandTdacEn } from './services/thailandTdacEn';
 import { thailandTdacAr } from './services/thailandTdacAr';
 
 const sharedFooter = {
   en: {
-    description: 'An independent private company providing travel document assistance. Not affiliated with any government agency.',
+    description: siteDefinition.en,
+    companyInfoTitle: companyInfo.title.en,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'Quick links',
     legal: 'Legal',
     legalLinks: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
-      { label: 'Refund Policy', href: '#' },
-      { label: 'Disclaimer', href: '#' },
+      { label: 'Privacy Policy', slug: 'privacy' },
+      { label: 'Terms of Service', slug: 'terms' },
+      { label: 'Refund Policy', slug: 'refund' },
+      { label: 'Disclaimer', slug: 'disclaimer' },
     ],
     paymentMethodsTitle: 'PAYMENT METHODS & SECURITY',
     paymentSslNote: '256-bit SSL encrypted',
     paymentPciNote: 'PCI-DSS compliant checkout',
     copyright: 'All rights reserved.',
     contact: 'support@travelsmart.example · Live chat 24/7',
-    disclaimer: 'Disclaimer: Private assistance service — not an official government website.',
+    disclaimer: '',
   },
   ar: {
-    description: 'شركة خاصة مستقلة تقدم مساعدة في طلبات مستندات السفر. غير تابعة لأي جهة حكومية.',
+    description: siteDefinition.ar,
+    companyInfoTitle: companyInfo.title.ar,
+    companyName: companyInfo.name,
+    companyAddress: companyInfo.address,
     quickLinks: 'روابط سريعة',
     legal: 'قانوني',
     legalLinks: [
-      { label: 'سياسة الخصوصية', href: '#' },
-      { label: 'شروط الخدمة', href: '#' },
-      { label: 'سياسة الاسترداد', href: '#' },
-      { label: 'إخلاء المسؤولية', href: '#' },
+      { label: 'سياسة الخصوصية', slug: 'privacy' },
+      { label: 'شروط الخدمة', slug: 'terms' },
+      { label: 'سياسة الاسترداد', slug: 'refund' },
+      { label: 'إخلاء المسؤولية', slug: 'disclaimer' },
     ],
     paymentMethodsTitle: 'طرق الدفع والأمان',
     paymentSslNote: 'تشفير SSL 256-bit',
     paymentPciNote: 'دفع متوافق مع PCI-DSS',
     copyright: 'جميع الحقوق محفوظة.',
     contact: 'support@travelsmart.example · دردشة مباشرة 24/7',
-    disclaimer: 'إخلاء مسؤولية: خدمة مساعدة خاصة — ليست الموقع الرسمي للحكومة.',
+    disclaimer: '',
   },
 };
 
@@ -46,14 +53,14 @@ const sharedTestimonials = {
     sectionSubtitle: 'Real experiences from travelers who trusted us with their travel document applications.',
     footerNote: 'Trusted by travelers worldwide',
     items: [
-      { quote: 'Quick and stress-free. I needed my travel documents processed on a tight deadline, and Travel Smart Travel Fast delivered ahead of schedule. Their real-time tracking kept me informed every step of the way.', name: 'Michael R.', role: 'Business Traveler' },
+      { quote: 'Quick and stress-free. I needed my travel documents processed on a tight deadline, and DacGateway delivered ahead of schedule. Their real-time tracking kept me informed every step of the way.', name: 'Michael R.', role: 'Business Traveler' },
       { quote: 'Applied for my entire family in one session. The group application feature saved us hours compared to doing it individually. Support team answered all our questions within minutes.', name: 'Sarah K.', role: 'Family Vacation' },
       { quote: 'As a first-time international traveler, I was nervous about the paperwork. The step-by-step guidance made everything crystal clear. I had my approved documents within days.', name: 'David M.', role: 'First-time Traveler' },
-      { quote: "I've used Travel Smart Travel Fast for three different countries now. Each time the process was smooth and the documents arrived faster than expected. It's my go-to service for every trip.", name: 'Emily W.', role: 'Digital Nomad' },
+      { quote: "I've used DacGateway for three different countries now. Each time the process was smooth and the documents arrived faster than expected. It's my go-to service for every trip.", name: 'Emily W.', role: 'Digital Nomad' },
       { quote: 'We needed travel documents for our honeymoon on short notice. The expedited processing was a lifesaver. Everything was approved within 48 hours. Absolutely fantastic service!', name: 'James T.', role: 'Honeymoon Trip' },
       { quote: 'The customer support is exceptional. I had a question about my application at midnight and got a response within 10 minutes. That level of dedication is rare and deeply appreciated.', name: 'Priya S.', role: 'Solo Traveler' },
       { quote: 'From application to approval, everything was transparent and straightforward. No hidden fees, no surprises. Just reliable, efficient service that made my trip planning stress-free.', name: 'Carlos G.', role: 'Adventure Traveler' },
-      { quote: 'I was overwhelmed with visa requirements for my study abroad program. Travel Smart Travel Fast broke it all down into simple steps. I couldn\'t have done it without them.', name: 'Anna L.', role: 'Study Abroad' },
+      { quote: 'I was overwhelmed with visa requirements for my study abroad program. DacGateway broke it all down into simple steps. I couldn\'t have done it without them.', name: 'Anna L.', role: 'Study Abroad' },
     ],
   },
   ar: {
@@ -61,14 +68,14 @@ const sharedTestimonials = {
     sectionSubtitle: 'تجارب حقيقية من مسافرين وثقوا بنا في طلبات مستندات السفر.',
     footerNote: 'موثوق من مسافرين حول العالم',
     items: [
-      { quote: 'سريع وبدون ضغط. احتجت معالجة مستنداتي في وقت ضيق، وTravel Smart Travel Fast سلّمت قبل الموعد. التتبع الفوري أبقاني على اطلاع في كل خطوة.', name: 'Michael R.', role: 'مسافر أعمال' },
+      { quote: 'سريع وبدون ضغط. احتجت معالجة مستنداتي في وقت ضيق، وDacGateway سلّمت قبل الموعد. التتبع الفوري أبقاني على اطلاع في كل خطوة.', name: 'Michael R.', role: 'مسافر أعمال' },
       { quote: 'قدّمت لعائلتي كاملة في جلسة واحدة. ميزة الطلب الجماعي وفّرت علينا ساعات. فريق الدعم أجاب خلال دقائق.', name: 'Sarah K.', role: 'عطلة عائلية' },
       { quote: 'كمسافر دولي لأول مرة، كنت قلقاً من الأوراق. الإرشاد خطوة بخطوة جعل كل شيء واضحاً. حصلت على مستنداتي خلال أيام.', name: 'David M.', role: 'مسافر لأول مرة' },
-      { quote: 'استخدمت Travel Smart Travel Fast لثلاث دول. في كل مرة كانت العملية سلسة والمستندات وصلت أسرع من المتوقع.', name: 'Emily W.', role: 'رحالة رقمي' },
+      { quote: 'استخدمت DacGateway لثلاث دول. في كل مرة كانت العملية سلسة والمستندات وصلت أسرع من المتوقع.', name: 'Emily W.', role: 'رحالة رقمي' },
       { quote: 'احتجنا مستندات سفر لشهر العسل في وقت قصير. المعالجة السريعة أنقذتنا. الموافقة خلال 48 ساعة!', name: 'James T.', role: 'شهر عسل' },
       { quote: 'دعم العملاء استثنائي. طرحت سؤالاً في منتصف الليل وحصلت على رد خلال 10 دقائق.', name: 'Priya S.', role: 'مسافر منفرد' },
       { quote: 'من التقديم إلى الموافقة، كل شيء كان شفافاً. لا رسوم مخفية. خدمة موثوقة جعلت تخطيط رحلتي بدون ضغط.', name: 'Carlos G.', role: 'مسافر مغامرات' },
-      { quote: 'كنت مرتبكاً بمتطلبات التأشيرة للدراسة بالخارج. Travel Smart Travel Fast بسّط كل شيء في خطوات واضحة.', name: 'Anna L.', role: 'دراسة بالخارج' },
+      { quote: 'كنت مرتبكاً بمتطلبات التأشيرة للدراسة بالخارج. DacGateway بسّط كل شيء في خطوات واضحة.', name: 'Anna L.', role: 'دراسة بالخارج' },
     ],
   },
 };
@@ -198,15 +205,33 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
       plan: 'Plan',
       feePerTraveler: 'Fee per traveler',
       total: 'Total',
-      termsNote: 'By continuing, you agree to our terms. Demo form — no real payment processed.',
+      termsNote: 'By continuing, you agree to our terms. Payment is completed securely on the payment page.',
       successTitle: 'Application submitted successfully!',
       successThanks: (name) => `Thank you ${name}! We will send your document to:`,
       successEmail: '',
       expectedTime: 'Expected processing time:',
       prev: 'Previous',
       next: 'Next',
-      submit: 'Submit application',
+      submit: 'Pay & submit',
       backToHome: 'Back to home',
+      paymentCheckoutTitle: 'Secure payment',
+      paymentCheckoutSubtitle: 'Pay with Apple Pay, Google Pay, or card',
+      paymentPageTitle: 'Complete your payment',
+      paymentBackToApply: 'Back to application',
+      paymentProcessing: 'Loading secure checkout…',
+      paymentVerifying: 'Confirming your payment…',
+      paymentCancelled: 'Payment was cancelled. You can review your order and try again.',
+      paymentError: 'Payment could not be completed. Please try again.',
+      paymentPending: 'Payment is still processing. Please wait a moment and refresh, or contact support with your order reference.',
+      passportScanning: 'Reading passport…',
+      passportScanSuccess: 'Passport data filled in — please review before continuing.',
+      passportScanError: 'Could not read the passport. Try a clearer photo or fill in manually.',
+      passportScanTooLarge: 'Image is too large. Please use a photo under 5 MB.',
+      passportScanInvalidType: 'Please upload a JPG, PNG, or WebP photo.',
+      passportScanPartial: 'Some fields could not be read. Please check and complete manually.',
+      passportScanOpenAiError: 'AI service error. Check your OpenAI key in admin settings or try again.',
+      passportScanNotConfigured: 'Passport scan is not configured. Add your OpenAI key in admin settings.',
+      passportScanHeic: 'HEIC photos are not supported. Change iPhone camera to «Most Compatible» (JPEG) or convert the photo.',
     };
   }
   return {
@@ -292,15 +317,33 @@ function genericApply(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
     plan: 'الخطة',
     feePerTraveler: 'رسوم لكل مسافر',
     total: 'الإجمالي',
-    termsNote: 'بالمتابعة، أنت توافق على شروط الخدمة. نموذج تجريبي — لا دفع حقيقي.',
+    termsNote: 'بالمتابعة، أنت توافق على شروط الخدمة. يتم الدفع بشكل آمن في صفحة الدفع.',
     successTitle: 'تم إرسال طلبك بنجاح!',
     successThanks: (name) => `شكراً ${name}! سنرسل مستندك إلى:`,
     successEmail: '',
     expectedTime: 'وقت المعالجة المتوقع:',
     prev: 'السابق',
     next: 'التالي',
-    submit: 'إرسال الطلب',
+    submit: 'ادفع وأرسل',
     backToHome: 'العودة للرئيسية',
+    paymentCheckoutTitle: 'الدفع الآمن',
+    paymentCheckoutSubtitle: 'ادفع عبر Apple Pay أو Google Pay أو البطاقة',
+    paymentPageTitle: 'أكمل عملية الدفع',
+    paymentBackToApply: 'العودة للطلب',
+    paymentProcessing: 'جاري تحميل نموذج الدفع…',
+    paymentVerifying: 'جاري تأكيد الدفع…',
+    paymentCancelled: 'تم إلغاء الدفع. يمكنك مراجعة طلبك والمحاولة مرة أخرى.',
+    paymentError: 'تعذّر إتمام الدفع. يرجى المحاولة مرة أخرى.',
+    paymentPending: 'الدفع قيد المعالجة. انتظر قليلاً ثم حدّث الصفحة، أو تواصل مع الدعم مع رقم الطلب.',
+    passportScanning: 'جاري قراءة الجواز…',
+    passportScanSuccess: 'تم تعبئة البيانات — يرجى المراجعة قبل المتابعة.',
+    passportScanError: 'تعذّرت قراءة الجواز. جرّب صورة أوضح أو أكمل يدوياً.',
+    passportScanTooLarge: 'الصورة كبيرة جداً. استخدم صورة أقل من 5 ميجابايت.',
+    passportScanInvalidType: 'ارفع صورة بصيغة JPG أو PNG أو WebP.',
+    passportScanPartial: 'لم تُقرأ بعض الحقول. راجعها وأكملها يدوياً.',
+    passportScanOpenAiError: 'خطأ في خدمة الذكاء الاصطناعي. تحقق من مفتاح OpenAI في الإعدادات أو حاول مجدداً.',
+    passportScanNotConfigured: 'قراءة الجواز غير مفعّلة. أضف مفتاح OpenAI من لوحة التحكم → الإعدادات.',
+    passportScanHeic: 'صور HEIC غير مدعومة. غيّر إعداد الكاميرا إلى JPEG أو حوّل الصورة.',
   };
 }
 
@@ -434,10 +477,10 @@ function buildGenericSections(lang: Lang, label: string, docLabel: string): Pick
 
 function buildHub(lang: Lang): Translations {
   const sections = buildGenericSections(lang, lang === 'en' ? 'travel' : 'السفر', lang === 'en' ? 'travel document' : 'مستند السفر');
-  const siteName = lang === 'en' ? 'Travel Smart Travel Fast' : 'سفر ذكي سفر سريع';
+  const siteName = lang === 'en' ? 'DacGateway' : 'DacGateway';
   return {
     siteName,
-    metaTitle: lang === 'en' ? 'Stress-free travel documents — Travel Smart Travel Fast' : 'مستندات سفر بدون تعقيد — سفر ذكي سفر سريع',
+    metaTitle: lang === 'en' ? 'Stress-free travel documents — DacGateway' : 'مستندات سفر بدون تعقيد — DacGateway',
     metaDescription: lang === 'en'
       ? 'Apply online for arrival cards, eVisas and travel documents with expert document review, real-time validation and 24/7 support.'
       : 'قدّم طلبات بطاقات الوصول والتأشيرات ومستندات السفر عبر الإنترنت مع مراجعة خبيرة وتحقق فوري ودعم 24/7.',
@@ -549,7 +592,7 @@ function buildCountry(lang: Lang, dest: DestinationDef): Translations {
   const docStatValue = lang === 'en' ? `${Math.max(docCount, 2)}+` : `${docCount}+`;
   return {
     ...hub,
-    metaTitle: lang === 'en' ? `Stress-free ${label} travel documents — Travel Smart Travel Fast` : `مستندات سفر ${label} — سفر ذكي سفر سريع`,
+    metaTitle: lang === 'en' ? `Stress-free ${label} travel documents — DacGateway` : `مستندات سفر ${label} — DacGateway`,
     metaDescription: lang === 'en'
       ? `Apply online for ${label} travel documents (${primaryDoc}) with expert review, real-time validation and 24/7 support.`
       : `قدّم مستندات سفر ${label} (${primaryDoc}) — مراجعة خبيرة وتحقق فوري ودعم 24/7.`,
@@ -672,7 +715,7 @@ function buildService(lang: Lang, dest: DestinationDef, service: ServiceDef): Tr
   const sections = buildGenericSections(lang, label, doc);
   return {
     ...country,
-    metaTitle: lang === 'en' ? `Stress-free ${doc} application — Travel Smart Travel Fast` : `تقديم ${doc} — سفر ذكي سفر سريع`,
+    metaTitle: lang === 'en' ? `Stress-free ${doc} application — DacGateway` : `تقديم ${doc} — DacGateway`,
     metaDescription: service.description[lang],
     nav: {
       ...country.nav,

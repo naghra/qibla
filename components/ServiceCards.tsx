@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Lock, Headphones, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { buildPath } from '../data/destinations';
-import { countryFlag } from '../data/countries';
+import { CountryFlag } from './CountryFlag';
 import { PrimaryButton } from './ui';
 
 export const ServiceCards: React.FC = () => {
@@ -29,7 +29,7 @@ export const ServiceCards: React.FC = () => {
           >
             <article className="p-6 sm:p-8">
               <div className="mb-4 flex items-start gap-3">
-                <span className="text-3xl">{countryFlag(destination.countryCode)}</span>
+                <CountryFlag code={destination.countryCode} size={36} />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold uppercase tracking-wide text-blue-500">
                     {service.shortName[lang]}

@@ -11,6 +11,7 @@ const pageTitles: Record<string, string> = {
   '/admin': adminLabels.dashboard.title,
   '/admin/applications': adminLabels.applications.title,
   '/admin/destinations': adminLabels.destinations.title,
+  '/admin/settings': adminLabels.settings.title,
 };
 
 function resolveTitle(pathname: string): string {
@@ -30,17 +31,19 @@ export const AdminLayout: React.FC = () => {
   return (
     <div
       data-admin-layout
-      className="admin-root flex min-h-[100dvh] w-full overflow-x-hidden bg-slate-50"
+      className="admin-root flex h-[100dvh] w-full overflow-hidden bg-slate-100"
       dir="rtl"
       style={{ maxWidth: '100vw' }}
     >
       <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex min-h-[100dvh] w-full min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <AdminMobileHeader title={title} onMenuClick={() => setSidebarOpen(true)} />
-        <AdminTopBar title={title} />
-        <main className="admin-main flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
-          <Outlet />
+        <AdminTopBar />
+        <main className="admin-main min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-y-auto pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
+          <div className="admin-fade-in">
+            <Outlet />
+          </div>
         </main>
         <AdminBottomNav />
       </div>

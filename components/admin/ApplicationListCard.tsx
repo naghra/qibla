@@ -37,7 +37,11 @@ export const ApplicationListCard: React.FC<ApplicationListCardProps> = ({
   };
 
   return (
-    <article className={`w-full max-w-full rounded-xl border bg-white p-4 shadow-sm transition ${selected ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100'}`}>
+    <article
+      className={`admin-card w-full max-w-full rounded-xl border bg-white/90 p-4 shadow-sm backdrop-blur-sm transition ${
+        selected ? 'border-indigo-300 ring-2 ring-indigo-100' : 'border-slate-100/80 hover:border-indigo-100 hover:shadow-md'
+      }`}
+    >
       <div className="mb-3 flex items-start gap-3">
         {selectable && (
           <input
@@ -105,6 +109,12 @@ export const ApplicationListCard: React.FC<ApplicationListCardProps> = ({
         <div>
           <dt className="text-gray-400">{adminLabels.applications.amount}</dt>
           <dd className="font-bold text-gray-900" dir="ltr">${app.totalAmount}</dd>
+        </div>
+        <div>
+          <dt className="text-gray-400">{adminLabels.payment.status}</dt>
+          <dd className={`font-medium ${app.paymentStatus === 'paid' ? 'text-emerald-700' : 'text-amber-700'}`}>
+            {app.paymentStatus === 'paid' ? adminLabels.payment.paid : adminLabels.payment.unpaid}
+          </dd>
         </div>
         <div>
           <dt className="text-gray-400">{adminLabels.applications.date}</dt>
