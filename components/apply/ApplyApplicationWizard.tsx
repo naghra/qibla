@@ -17,6 +17,7 @@ import { CheckoutError, createCheckoutSession, fetchCheckoutConfig, verifyChecko
 import { buildPaymentPath } from '../../data/destinations';
 import { saveCheckoutCache } from '../../services/checkoutCache';
 import { preloadStripe } from '../../services/stripeLoader';
+import { trackGoogleAdsPurchase } from '../../utils/googleAds';
 import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
@@ -152,6 +153,10 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
         .then((result) => {
           if (result.paid && result.application) {
             const primary = result.application.data.travelers[0];
+            trackGoogleAdsPurchase({
+              transactionId: result.application.id,
+              value: Number(result.application.totalAmount),
+            });
             setSubmittedId(result.application.id);
             if (primary?.email) setEmail(primary.email);
             setStep(3);
