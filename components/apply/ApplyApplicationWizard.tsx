@@ -13,8 +13,10 @@ import { applyBtnPrevious, applyBtnPrimary } from './applyStyles';
 import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
-import { CheckoutError, createCheckoutSession, verifyCheckoutSession } from '../../services/paymentService';
+import { CheckoutError, createCheckoutSession, fetchCheckoutConfig, verifyCheckoutSession } from '../../services/paymentService';
 import { buildPaymentPath } from '../../data/destinations';
+import { saveCheckoutCache } from '../../services/checkoutCache';
+import { preloadStripe } from '../../services/stripeLoader';
 import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
@@ -129,6 +131,13 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       setData((d) => ({ ...d, plan: 'fast' }));
     }
   }, [step, data.plan]);
+
+  useEffect(() => {
+    if (step !== 2) return;
+    void fetchCheckoutConfig().then((config) => {
+      if (config?.publishableKey) preloadStripe(config.publishableKey);
+    });
+  }, [step]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -305,8 +314,17 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
 
       void createCheckoutSession(input)
         .then((session) => {
+          preloadStripe(session.publishableKey);
+          const application = session.application ?? {
+            serviceName: input.serviceName,
+            destinationName: input.destinationName,
+            totalAmount: input.totalAmount,
+          };
+          const payload = { checkout: session, application };
+          saveCheckoutCache(session.sessionId, payload);
           navigate(
-            `${buildPaymentPath(lang, destination.slug, service.slug)}?session_id=${encodeURIComponent(session.sessionId)}`
+            `${buildPaymentPath(lang, destination.slug, service.slug)}?session_id=${encodeURIComponent(session.sessionId)}`,
+            { state: payload }
           );
         })
         .catch(async (err: unknown) => {

@@ -56,6 +56,7 @@ export async function initDatabase() {
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS stripe_checkout_session_id TEXT;
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS stripe_payment_intent_id TEXT;
       ALTER TABLE applications ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ;
+      ALTER TABLE applications ADD COLUMN IF NOT EXISTS stripe_checkout_client_secret TEXT;
       CREATE INDEX IF NOT EXISTS idx_applications_stripe_session ON applications(stripe_checkout_session_id);
     `);
 
@@ -85,6 +86,7 @@ function rowToApp(row) {
     paymentStatus: row.payment_status ?? 'unpaid',
     stripeCheckoutSessionId: row.stripe_checkout_session_id ?? undefined,
     stripePaymentIntentId: row.stripe_payment_intent_id ?? undefined,
+    stripeCheckoutClientSecret: row.stripe_checkout_client_secret ?? undefined,
     paidAt: row.paid_at ? row.paid_at.toISOString() : undefined,
   };
 }
@@ -148,14 +150,15 @@ export async function createApplication(input) {
   return rowToApp(rows[0]);
 }
 
-export async function setApplicationStripeSession(id, sessionId) {
+export async function setApplicationStripeSession(id, sessionId, clientSecret) {
   const now = new Date();
   const { rows } = await getPool().query(
     `UPDATE applications SET
       stripe_checkout_session_id = $2,
-      updated_at = $3
+      stripe_checkout_client_secret = $3,
+      updated_at = $4
     WHERE id = $1 RETURNING *`,
-    [id, sessionId, now]
+    [id, sessionId, clientSecret ?? null, now]
   );
   return rows[0] ? rowToApp(rows[0]) : null;
 }

@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Lock, ShieldCheck } from 'lucide-react';
 import { ApplyFormHeader } from './apply/ApplyFormHeader';
 import { EmbeddedCheckout } from './apply/EmbeddedCheckout';
 import { ChatWidget } from './ChatWidget';
 import { useLanguage } from '../context/LanguageContext';
 import { buildPath } from '../data/destinations';
-import {
-  CheckoutError,
-  fetchCheckoutEmbed,
-  verifyCheckoutSession,
-} from '../services/paymentService';
-import type { CheckoutSessionResponse } from '../services/paymentService';
-import type { StoredApplication } from '../types/admin';
+import { loadCheckoutCache, saveCheckoutCache, type CachedCheckoutPayload } from '../services/checkoutCache';
+import { CheckoutError, fetchCheckoutEmbed } from '../services/paymentService';
+import { preloadStripe } from '../services/stripeLoader';
+import type { CheckoutOrderSummary } from '../services/checkoutCache';
 
 export const PaymentPage: React.FC = () => {
   const { t, lang, destination, service } = useLanguage();
   const a = t.apply;
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
-  const [loading, setLoading] = useState(true);
-  const [checkout, setCheckout] = useState<CheckoutSessionResponse | null>(null);
-  const [application, setApplication] = useState<StoredApplication | null>(null);
+  const [checkout, setCheckout] = useState<CachedCheckoutPayload['checkout'] | null>(null);
+  const [application, setApplication] = useState<CheckoutOrderSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fetching, setFetching] = useState(false);
 
   const applyPath =
     destination && service ? buildPath(lang, destination.slug, service.slug, true) : buildPath(lang);
@@ -35,13 +33,33 @@ export const PaymentPage: React.FC = () => {
       return;
     }
 
+    const fromState = location.state as CachedCheckoutPayload | null;
+    const fromCache = loadCheckoutCache(sessionId);
+    const instant = fromState?.checkout?.sessionId === sessionId
+      ? fromState
+      : fromCache?.checkout?.sessionId === sessionId
+        ? fromCache
+        : null;
+
+    if (instant) {
+      setCheckout(instant.checkout);
+      setApplication(instant.application);
+      preloadStripe(instant.checkout.publishableKey);
+      saveCheckoutCache(sessionId, instant);
+    }
+
+    if (instant) {
+      setFetching(false);
+      return;
+    }
+
+    setFetching(true);
     void fetchCheckoutEmbed(sessionId)
-      .then((session) => {
-        setCheckout(session);
-        return verifyCheckoutSession(sessionId);
-      })
-      .then((result) => {
-        setApplication(result.application);
+      .then((payload) => {
+        setCheckout(payload.checkout);
+        setApplication(payload.application);
+        saveCheckoutCache(sessionId, payload);
+        preloadStripe(payload.checkout.publishableKey);
       })
       .catch((err: unknown) => {
         if (err instanceof CheckoutError && err.code === 'already_paid') {
@@ -50,12 +68,15 @@ export const PaymentPage: React.FC = () => {
         }
         setError(err instanceof Error ? err.message : a.paymentError);
       })
-      .finally(() => setLoading(false));
-  }, [sessionId, applyPath, navigate, a.paymentError]);
+      .finally(() => setFetching(false));
+  }, [sessionId, applyPath, navigate, a.paymentError, location.state]);
 
   const handleBack = () => {
     navigate(applyPath);
   };
+
+  const showCheckout = Boolean(checkout);
+  const showPageLoader = fetching && !checkout;
 
   return (
     <div
@@ -108,24 +129,24 @@ export const PaymentPage: React.FC = () => {
             </div>
           )}
 
-          {loading && (
-            <div className="flex min-h-[28rem] flex-col items-center justify-center gap-4 rounded-2xl border border-gray-200 bg-white py-16">
-              <Loader2 className="size-10 animate-spin text-indigo-600" />
+          {showPageLoader && (
+            <div className="flex min-h-[32rem] flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white py-16">
+              <div className="size-10 animate-spin rounded-full border-[3px] border-indigo-100 border-t-indigo-600" />
               <p className="text-sm font-medium text-gray-600">{a.paymentProcessing}</p>
             </div>
           )}
 
-          {error && !loading && (
+          {error && !showCheckout && (
             <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800" role="alert">
               {error}
             </div>
           )}
 
-          {checkout && !loading && (
+          {showCheckout && (
             <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg shadow-gray-200/50">
               <EmbeddedCheckout
-                publishableKey={checkout.publishableKey}
-                clientSecret={checkout.clientSecret}
+                publishableKey={checkout!.publishableKey}
+                clientSecret={checkout!.clientSecret}
                 onError={() => setError(a.paymentError)}
               />
             </section>

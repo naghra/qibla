@@ -1,15 +1,24 @@
-import type { ApplicationInput, StoredApplication } from '../types/admin';
+import type { ApplicationInput } from '../types/admin';
+import type { CheckoutOrderSummary } from './checkoutCache';
 
 export interface CheckoutSessionResponse {
   clientSecret: string;
   publishableKey: string;
   sessionId: string;
   applicationId: string;
+  application?: CheckoutOrderSummary;
 }
 
 export interface VerifySessionResponse {
   paid: boolean;
-  application: StoredApplication;
+  application: {
+    id: string;
+    serviceName: string;
+    destinationName: string;
+    totalAmount: number;
+    paymentStatus?: string;
+    [key: string]: unknown;
+  };
   clientSecret?: string;
   publishableKey?: string;
   sessionId?: string;
@@ -25,6 +34,13 @@ export class CheckoutError extends Error {
     this.status = status;
     this.code = code;
   }
+}
+
+export async function fetchCheckoutConfig(): Promise<{ publishableKey: string } | null> {
+  const res = await fetch('/api/checkout/config');
+  if (!res.ok) return null;
+  const data = (await res.json()) as { publishableKey?: string };
+  return data.publishableKey ? { publishableKey: data.publishableKey } : null;
 }
 
 export async function createCheckoutSession(
@@ -50,6 +66,7 @@ export async function createCheckoutSession(
     publishableKey?: string;
     sessionId?: string;
     applicationId?: string;
+    application?: CheckoutOrderSummary;
   };
 
   if (!res.ok) {
@@ -71,7 +88,10 @@ export async function verifyCheckoutSession(sessionId: string): Promise<VerifySe
   return res.json() as Promise<VerifySessionResponse>;
 }
 
-export async function fetchCheckoutEmbed(sessionId: string): Promise<CheckoutSessionResponse> {
+export async function fetchCheckoutEmbed(sessionId: string): Promise<{
+  checkout: CheckoutSessionResponse;
+  application: CheckoutOrderSummary;
+}> {
   const result = await verifyCheckoutSession(sessionId);
   if (result.paid) {
     throw new CheckoutError('already_paid', 409, 'already_paid');
@@ -79,10 +99,21 @@ export async function fetchCheckoutEmbed(sessionId: string): Promise<CheckoutSes
   if (!result.clientSecret || !result.publishableKey) {
     throw new CheckoutError('checkout_unavailable', 404, 'checkout_unavailable');
   }
+
+  const application: CheckoutOrderSummary = {
+    serviceName: result.application.serviceName,
+    destinationName: result.application.destinationName,
+    totalAmount: Number(result.application.totalAmount),
+  };
+
   return {
-    clientSecret: result.clientSecret,
-    publishableKey: result.publishableKey,
-    sessionId: result.sessionId ?? sessionId,
-    applicationId: result.application.id,
+    checkout: {
+      clientSecret: result.clientSecret,
+      publishableKey: result.publishableKey,
+      sessionId: result.sessionId ?? sessionId,
+      applicationId: result.application.id,
+      application,
+    },
+    application,
   };
 }

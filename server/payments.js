@@ -65,6 +65,16 @@ function validateCheckoutInput(body) {
 
 export async function handlePaymentsApi(req, res, urlPath) {
   try {
+    if (urlPath === '/api/checkout/config' && req.method === 'GET') {
+      const { publishableKey } = await getStripeCredentials();
+      if (!publishableKey) {
+        sendJson(res, 503, { error: 'stripe_publishable_not_configured' });
+        return true;
+      }
+      sendJson(res, 200, { publishableKey });
+      return true;
+    }
+
     if (urlPath === '/api/checkout/sessions' && req.method === 'POST') {
       const stripe = await createStripeClient();
       const { publishableKey } = await getStripeCredentials();
@@ -127,13 +137,18 @@ export async function handlePaymentsApi(req, res, urlPath) {
         },
       });
 
-      await setApplicationStripeSession(app.id, session.id);
+      await setApplicationStripeSession(app.id, session.id, session.client_secret);
 
       sendJson(res, 200, {
         clientSecret: session.client_secret,
         publishableKey,
         sessionId: session.id,
         applicationId: app.id,
+        application: {
+          serviceName: app.serviceName,
+          destinationName: app.destinationName,
+          totalAmount: Number(app.totalAmount),
+        },
       });
       return true;
     }
@@ -150,6 +165,19 @@ export async function handlePaymentsApi(req, res, urlPath) {
       }
 
       if (app.paymentStatus !== 'paid' && stripe) {
+        const { publishableKey } = await getStripeCredentials();
+
+        if (app.stripeCheckoutClientSecret && app.stripeCheckoutSessionId === sessionId) {
+          sendJson(res, 200, {
+            paid: false,
+            application: app,
+            clientSecret: app.stripeCheckoutClientSecret,
+            publishableKey,
+            sessionId,
+          });
+          return true;
+        }
+
         const session = await stripe.checkout.sessions.retrieve(sessionId);
         if (session.payment_status === 'paid') {
           app = await markApplicationPaid(
@@ -158,7 +186,6 @@ export async function handlePaymentsApi(req, res, urlPath) {
             typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id
           );
         } else {
-          const { publishableKey } = await getStripeCredentials();
           sendJson(res, 200, {
             paid: false,
             application: app,
