@@ -101,8 +101,7 @@ export async function handlePaymentsApi(req, res, urlPath) {
       });
 
       const origin = siteOrigin();
-      const basePath = `/${body.lang}/${body.destinationSlug}/${body.serviceSlug}/apply`;
-      const returnUrl = `${origin}${basePath}?session_id={CHECKOUT_SESSION_ID}`;
+      const returnUrl = `${origin}/${body.lang}/${body.destinationSlug}/${body.serviceSlug}/apply?session_id={CHECKOUT_SESSION_ID}`;
 
       const session = await stripe.checkout.sessions.create({
         ui_mode: 'embedded',
@@ -158,6 +157,16 @@ export async function handlePaymentsApi(req, res, urlPath) {
             session.id,
             typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id
           );
+        } else {
+          const { publishableKey } = await getStripeCredentials();
+          sendJson(res, 200, {
+            paid: false,
+            application: app,
+            clientSecret: session.client_secret,
+            publishableKey,
+            sessionId: session.id,
+          });
+          return true;
         }
       }
 

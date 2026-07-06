@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Loader2, Plane } from 'lucide-react';
 import { ApplyStepper } from './ApplyStepper';
 import { TripDetailsStep } from './TripDetailsStep';
@@ -14,8 +14,7 @@ import { ApplicationData, PlanId, TravelerData, TravelDetails } from '../../type
 import { useLanguage } from '../../context/LanguageContext';
 import { saveApplication } from '../../services/applicationStore';
 import { CheckoutError, createCheckoutSession, verifyCheckoutSession } from '../../services/paymentService';
-import type { CheckoutSessionResponse } from '../../services/paymentService';
-import { EmbeddedCheckout } from './EmbeddedCheckout';
+import { buildPaymentPath } from '../../data/destinations';
 import { computeEstimatedProcessing } from '../../utils/estimatedProcessing';
 import {
   DateParts,
@@ -91,6 +90,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   onSubmitted,
 }) => {
   const { t, lang, dir, destination, service } = useLanguage();
+  const navigate = useNavigate();
   const a = t.apply;
   const plans = t.pricing.plans;
   const [searchParams, setSearchParams] = useSearchParams();
@@ -99,9 +99,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   const [submittedId, setSubmittedId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  const [paymentCancelled, setPaymentCancelled] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-  const [checkoutSession, setCheckoutSession] = useState<CheckoutSessionResponse | null>(null);
   const [arrival, setArrival] = useState<DateParts>(() => defaultDateParts(7));
   const [departure, setDeparture] = useState<DateParts>(() => defaultDateParts(14));
   const [email, setEmail] = useState('');
@@ -164,7 +162,7 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
     }
 
     if (searchParams.get('payment_cancelled') === '1') {
-      setPaymentCancelled(true);
+      setPaymentError(a.paymentCancelled);
       const next = new URLSearchParams(searchParams);
       next.delete('payment_cancelled');
       setSearchParams(next, { replace: true });
@@ -304,13 +302,12 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
 
       setSubmitting(true);
       setPaymentError(null);
-      setPaymentCancelled(false);
-      setCheckoutSession(null);
 
       void createCheckoutSession(input)
         .then((session) => {
-          setCheckoutSession(session);
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+          navigate(
+            `${buildPaymentPath(lang, destination.slug, service.slug)}?session_id=${encodeURIComponent(session.sessionId)}`
+          );
         })
         .catch(async (err: unknown) => {
           const isStripeMissing =
@@ -337,11 +334,6 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
   };
 
   const handleBack = () => {
-    if (step === 2 && checkoutSession) {
-      setCheckoutSession(null);
-      setPaymentError(null);
-      return;
-    }
     if (step === 1) setData(syncTripToData());
     setStep(step - 1);
   };
@@ -393,16 +385,12 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
 
   return (
     <div data-apply-form-inner className="mb-0 flex flex-col items-start gap-8">
-      {(paymentCancelled || paymentError) && (
+      {(paymentError) && (
         <div
-          className={`w-full rounded-2xl border px-4 py-3 text-sm ${
-            paymentError
-              ? 'border-red-200 bg-red-50 text-red-800'
-              : 'border-amber-200 bg-amber-50 text-amber-900'
-          }`}
+          className="w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
           role="alert"
         >
-          {paymentError ?? a.paymentCancelled}
+          {paymentError}
         </div>
       )}
 
@@ -468,39 +456,19 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
       )}
 
       {step === 2 && (
-        <>
-          <ResumeStep
-            a={a}
-            plans={plans}
-            selectedPlanId={data.plan}
-            onPlanChange={(id) => {
-              if (!checkoutSession) setData({ ...data, plan: id });
-            }}
-            travelerCount={data.travelers.length}
-            total={total}
-            estimatedAt={estimatedAt}
-            destinationName={destinationLabel}
-          />
-
-          {checkoutSession && (
-            <section className="w-full space-y-3 rounded-2xl border border-gray-200 bg-gray-50/80 p-4 sm:p-5">
-              <div>
-                <h3 className="text-base font-semibold text-gray-950">{a.paymentCheckoutTitle}</h3>
-                <p className="mt-1 text-sm text-gray-600">{a.paymentCheckoutSubtitle}</p>
-              </div>
-              <EmbeddedCheckout
-                publishableKey={checkoutSession.publishableKey}
-                clientSecret={checkoutSession.clientSecret}
-                onError={() => setPaymentError(a.paymentError)}
-              />
-              <p className="text-xs text-gray-500">{a.termsNote}</p>
-            </section>
-          )}
-        </>
+        <ResumeStep
+          a={a}
+          plans={plans}
+          selectedPlanId={data.plan}
+          onPlanChange={(id) => setData({ ...data, plan: id })}
+          travelerCount={data.travelers.length}
+          total={total}
+          estimatedAt={estimatedAt}
+          destinationName={destinationLabel}
+        />
       )}
 
       <div className="mx-auto flex w-full flex-col gap-4">
-        {!checkoutSession && (
         <button
           type="button"
           onClick={handleContinue}
@@ -526,11 +494,10 @@ export const ApplyApplicationWizard: React.FC<ApplyApplicationWizardProps> = ({
             </>
           )}
         </button>
-        )}
         {step > 0 && (
           <button type="button" onClick={handleBack} className={applyBtnPrevious}>
             <PrevChevron className="size-4" />
-            {checkoutSession ? a.previousStep : a.previousStep}
+            {a.previousStep}
           </button>
         )}
       </div>

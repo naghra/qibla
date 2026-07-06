@@ -10,6 +10,9 @@ export interface CheckoutSessionResponse {
 export interface VerifySessionResponse {
   paid: boolean;
   application: StoredApplication;
+  clientSecret?: string;
+  publishableKey?: string;
+  sessionId?: string;
 }
 
 export class CheckoutError extends Error {
@@ -66,4 +69,20 @@ export async function verifyCheckoutSession(sessionId: string): Promise<VerifySe
     throw new CheckoutError('Payment verification failed', res.status);
   }
   return res.json() as Promise<VerifySessionResponse>;
+}
+
+export async function fetchCheckoutEmbed(sessionId: string): Promise<CheckoutSessionResponse> {
+  const result = await verifyCheckoutSession(sessionId);
+  if (result.paid) {
+    throw new CheckoutError('already_paid', 409, 'already_paid');
+  }
+  if (!result.clientSecret || !result.publishableKey) {
+    throw new CheckoutError('checkout_unavailable', 404, 'checkout_unavailable');
+  }
+  return {
+    clientSecret: result.clientSecret,
+    publishableKey: result.publishableKey,
+    sessionId: result.sessionId ?? sessionId,
+    applicationId: result.application.id,
+  };
 }

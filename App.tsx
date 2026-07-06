@@ -7,6 +7,7 @@ import { HubPage } from './pages/HubPage';
 import { CountryPage } from './pages/CountryPage';
 import { ServiceLandingPage } from './pages/ServiceLandingPage';
 import { ApplyRoutePage } from './pages/ApplyRoutePage';
+import { PaymentRoutePage } from './pages/PaymentRoutePage';
 import { RootRedirect, LegacyApplyRedirect } from './pages/redirects';
 import { AdminGuestRoute, AdminProtectedRoute } from './components/admin/AdminRouteGuards';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
@@ -49,6 +50,7 @@ const App: React.FC = () => {
             <Route path=":country" element={<CountryPage />} />
             <Route path=":country/:service" element={<ServiceLandingPage />} />
             <Route path=":country/:service/apply" element={<ApplyRoutePage />} />
+            <Route path=":country/:service/payment" element={<PaymentRoutePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

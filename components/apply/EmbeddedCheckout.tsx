@@ -50,7 +50,7 @@ export const EmbeddedCheckout: React.FC<EmbeddedCheckoutProps> = ({
   return (
     <div
       ref={containerRef}
-      className="embedded-checkout-host min-h-[28rem] w-full overflow-hidden rounded-2xl border border-gray-200 bg-white"
+      className="embedded-checkout-host min-h-[32rem] w-full overflow-hidden rounded-2xl bg-white"
     />
   );
 };

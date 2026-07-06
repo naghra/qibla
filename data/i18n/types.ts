@@ -256,6 +256,8 @@ export interface Translations {
     backToHome: string;
     paymentCheckoutTitle: string;
     paymentCheckoutSubtitle: string;
+    paymentPageTitle: string;
+    paymentBackToApply: string;
     paymentProcessing: string;
     paymentVerifying: string;
     paymentCancelled: string;
